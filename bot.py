@@ -38,10 +38,3 @@ async def clear(ctx, number):
 @bot.command(pass_context=True)
 async def ping(ctx):
     await bot.say('Pong!')
-
-
-
-
-
-
-bot.run('MzE5MjA1MzU0MDkxMDUzMDU2.DA9wFQ.f3LDGSBO_XlTQ1mWEJZFOfcQ-sg')
