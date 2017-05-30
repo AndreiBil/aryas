@@ -1,7 +1,10 @@
+import asyncio
 import discord
-
-from discord.ext import commands
 import random
+import secrets
+import bot
+from discord.ext import commands
+
 
 description = "Aryas-Bot"
 bot_prefix = '?'
@@ -19,6 +22,17 @@ async def on_ready():
     print('ID : {}'.format(bot.user.id))
     print(discord.__version__)
 
+
+
+@bot.command(pass_context = True)
+async def clear(ctx, number):
+    number = int(number) #Converting the amount of messages to delete to an integer
+    counter = 0
+    async for x in bot.logs_from(ctx.message.channel, limit = number):
+        if counter < number:
+            await bot.delete_message(x)
+            counter += 1
+            await asyncio.sleep(0.1) #1.2 second timer so the deleting process can be even
 
 @bot.command()
 async def add(left : int, right : int):
@@ -47,3 +61,8 @@ async def repeat(times : int, content='repeating...'):
     """Repeats a message multiple times."""
     for i in range(times):
         await bot.say(content)
+
+
+
+
+bot.run('MzE5MjA1MzU0MDkxMDUzMDU2.DA9wFQ.f3LDGSBO_XlTQ1mWEJZFOfcQ-sg')
