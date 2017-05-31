@@ -34,7 +34,7 @@ async def clear(ctx, number):
     inumber = int(number)
     # Sends a deleted confirmation message
     await bot.purge_from(ctx.message.channel, limit=inumber+1)
-    msg = await bot.say(number + " messgages purged")
+    msg = await bot.say(number + " Messages purged")
     # Waits 3.5 seconds and deleted the confirmation message.
     await asyncio.sleep(2)
     await bot.delete_message(msg)
