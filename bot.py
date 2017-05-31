@@ -26,13 +26,17 @@ async def on_ready():
 
 @bot.command(pass_context = True)
 async def clear(ctx, number):
-    number = int(number) #Converting the amount of messages to delete to an integer
-    counter = 0
-    async for x in bot.logs_from(ctx.message.channel, limit = number):
-        if counter < number:
-            await bot.delete_message(x)
-            counter += 1
-            await asyncio.sleep(0.1) #1.2 second timer so the deleting process can be even
+    """
+    Purges messages from the channel
+    :param number: The number of messages to purge
+    """
+    inumber = int(number)
+    # Sends a deleted confirmation message
+    await bot.purge_from(ctx.message.channel, limit=inumber+1)
+    msg = await bot.say(number + " messgages purged")
+    # Waits 3.5 seconds and deleted the confirmation message.
+    await asyncio.sleep(3.5)
+    await bot.delete_message(msg)
 
 
 @bot.command(pass_context=True)
