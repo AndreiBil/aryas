@@ -1,8 +1,6 @@
-import discord
-import random
-import bot
 import asyncio
 import json
+import discord
 from discord.ext import commands
 
 
@@ -15,7 +13,6 @@ with open('secrets.json') as data_file:
 bot = commands.Bot(command_prefix='?', description=description)
 
 
-
 @bot.event
 async def on_ready():
     print('Logged in')
@@ -24,24 +21,27 @@ async def on_ready():
     print(discord.__version__)
 
 
-
-@bot.command(pass_context = True)
+@bot.command(pass_context=True)
 async def clear(ctx, number):
     """
     Purges messages from the channel
+    :param ctx: The message context
     :param number: The number of messages to purge
     """
     inumber = int(number)
-    # Sends a deleted confirmation message
-    await bot.purge_from(ctx.message.channel, limit=inumber+1)
-    msg = await bot.say(number + " Messages purged")
-    # Waits 3.5 seconds and deleted the confirmation message.
-    await asyncio.sleep(2)
-    await bot.delete_message(msg)
+    if inumber <= 100:
+        # Sends a deleted confirmation message
+        await bot.purge_from(ctx.message.channel, limit=inumber+1)
+        msg = await bot.say(number + " Messages purged")
+        # Waits 3.5 seconds and deleted the confirmation message.
+        await asyncio.sleep(2)
+        await bot.delete_message(msg)
+    else:
+        await bot.say('Cannot delete more than 100 messages at a time.')
 
 
-@bot.command(pass_context=True)
-async def ping(ctx):
+@bot.command()
+async def ping():
     await bot.say('Pong!')
 
 bot.run(SECRETS['discord']['token'])
