@@ -1,17 +1,17 @@
-import asyncio
 import discord
 import random
-import secrets
 import bot
+import json
 from discord.ext import commands
 
 
 description = "Aryas-Bot"
 bot_prefix = '?'
 
+with open('secrets.json') as data_file:
+    SECRETS = json.load(data_file)
+
 bot = commands.Bot(command_prefix='?', description=description)
-
-
 
 
 
@@ -38,3 +38,5 @@ async def clear(ctx, number):
 @bot.command(pass_context=True)
 async def ping(ctx):
     await bot.say('Pong!')
+
+bot.run(SECRETS['discord']['token'])
