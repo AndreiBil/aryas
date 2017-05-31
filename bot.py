@@ -1,6 +1,7 @@
 import discord
 import random
 import bot
+import asyncio
 import json
 from discord.ext import commands
 
@@ -35,7 +36,7 @@ async def clear(ctx, number):
     await bot.purge_from(ctx.message.channel, limit=inumber+1)
     msg = await bot.say(number + " messgages purged")
     # Waits 3.5 seconds and deleted the confirmation message.
-    await asyncio.sleep(3.5)
+    await asyncio.sleep(2)
     await bot.delete_message(msg)
 
 
