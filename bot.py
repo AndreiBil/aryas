@@ -1,8 +1,10 @@
 import asyncio
 import json
 import discord
+import sqlite3
 from discord.ext import commands
 
+conn = sqlite3.connect('aryas.db')
 
 description = 'Aryas-Bot'
 bot_prefix = '?'
@@ -32,7 +34,7 @@ async def clear(ctx, number):
     inumber = int(number)
     if inumber <= 100:
         # Sends a deleted confirmation message
-        await bot.purge_from(ctx.message.channel, limit=inumber+1)
+        await bot.purge_from(ctx.message.channel, limit=inumber + 1)
         msg = await bot.say(number + ' Message purged')
         # Waits 3.5 seconds and deleted the confirmation message.
         await asyncio.sleep(2)
@@ -44,5 +46,42 @@ async def clear(ctx, number):
 @bot.command()
 async def ping():
     await bot.say('Pong!')
+
+
+@bot.command(pass_context=True)
+async def show_love(ctx, mention, love):
+    msg = ctx.message
+
+    giver = ctx.message.author
+    receiver = msg.raw_mentions[0]
+    channel = msg.channel.id
+    server = msg.server.id
+    love = int(love)
+
+    c = conn.cursor()
+    c.execute("""INSERT INTO love (giver, receiver, channel, server, amount) VALUES (?, ?, ?, ?, ?)""",
+              (giver.id,
+               receiver,
+               channel,
+               server,
+               love))
+    conn.commit()
+    await bot.say('<@{}> showed {}x❤ to {}'.format(giver.id, love, mention))
+
+
+@bot.command(pass_context=True)
+async def get_love(ctx, mention):
+    user_id = ctx.message.raw_mentions[0]
+
+    c = conn.cursor()
+    # The comma next to user_id needs to be there, don't ask me why.
+    c.execute("""SELECT SUM(amount) FROM love WHERE receiver=? """, (user_id,))
+    love = c.fetchone()[0]
+
+    if not love:
+        await bot.say("<@{}> doesn't have any ❤".format(user_id, love))
+    else:
+        await bot.say('<@{}> has {}x❤'.format(user_id, love))
+
 
 bot.run(SECRETS['discord']['token'])

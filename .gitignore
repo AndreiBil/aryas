@@ -100,3 +100,5 @@ ENV/
 
 secrets.json
 .idea
+
+*.db

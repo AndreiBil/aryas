@@ -11,4 +11,6 @@ A bot for the Developers Discord server
 }
 ```
 
-2. Run `bot.py`
+2. Run `setup.py`
+
+3. Run `bot.py`
