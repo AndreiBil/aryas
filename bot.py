@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 
 
-description = "Aryas-Bot"
+description = 'Aryas-Bot'
 bot_prefix = '?'
 
 with open('secrets.json') as data_file:
@@ -22,6 +22,7 @@ async def on_ready():
 
 
 @bot.command(pass_context=True)
+@commands.has_role('Admin')
 async def clear(ctx, number):
     """
     Purges messages from the channel
@@ -32,7 +33,7 @@ async def clear(ctx, number):
     if inumber <= 100:
         # Sends a deleted confirmation message
         await bot.purge_from(ctx.message.channel, limit=inumber+1)
-        msg = await bot.say(number + " Messages purged")
+        msg = await bot.say(number + ' Message purged')
         # Waits 3.5 seconds and deleted the confirmation message.
         await asyncio.sleep(2)
         await bot.delete_message(msg)
