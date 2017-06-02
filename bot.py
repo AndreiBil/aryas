@@ -44,8 +44,7 @@ async def kick(ctx, member: discord.Member, reason):
         send('Failed to kick ' + member.mention, ctx.message.channel, True)
 
 
-@bot.command()  # The API states that bot.say() only works inside commands
-@bot.has_role('Admin')
+@bot.has_role('Moderator')
 async def send(message, channel, delete=False, time=MESSAGE_SLEEP_TIME):
     """
     Sends a message to the server and deletes it after a period of time
