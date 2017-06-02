@@ -2,15 +2,11 @@
 A bot for the Developers Discord server
 
 ## Running the bot
-1. Create a `secrets.json` file in the project root with the following data:
-```json
-{
-  "discord": {
-    "token": "YOUR_BOT_TOKEN_HERE"
-  }
-}
+1. Run `setup.py` like so:
+
+```
+python3 setup.py --discord_token=YOUR_TOKEN_HERE
 ```
 
-2. Run `setup.py`
 
 3. Run `bot.py`
