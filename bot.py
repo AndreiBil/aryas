@@ -25,6 +25,11 @@ async def on_ready():
 
 @bot.command(pass_context=True)
 @commands.has_role('Admin')
+....
+
+
+@bot.command(pass_context=True)
+@commands.has_role('Admin')
 async def clear(ctx, number):
     """
     Purges messages from the channel
