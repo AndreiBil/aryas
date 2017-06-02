@@ -39,9 +39,9 @@ async def kick(ctx, member: discord.Member, reason):
     try:
         discord.Client.kick(discord.Server.get_member(ctx.message.server, member))
         msg = '{} was kicked by {}. reason: {}'.format(member.name, ctx.message.author.mention, reason)
-        send(msg, get_channel_by_name(ctx.message.server, MOD_LOG_CHANNEL_NAME))
+        await send(msg, get_channel_by_name(ctx.message.server, MOD_LOG_CHANNEL_NAME))
     except:
-        send('Failed to kick ' + member.mention, ctx.message.channel, True)
+        await send('Failed to kick ' + member.mention, ctx.message.channel, True)
 
 
 @commands.has_role('Moderator')
@@ -72,9 +72,9 @@ async def clear(ctx, number):
     if inumber <= MAX_CLEAR_NUM:
         # In order to delete the command message too, the number of messages to clear is incremented
         await bot.purge_from(ctx.message.channel, limit=inumber + 1)
-        send(number + ' Message cleared', ctx.message.channel, True)
+        await send(number + ' Message cleared', ctx.message.channel, True)
     else:
-        send('Cannot delete more than 100 messages at a time.', ctx.message.channel, True)
+        await send('Cannot delete more than 100 messages at a time.', ctx.message.channel, True)
 
 
 def get_channel_by_name(server, name):
@@ -117,7 +117,7 @@ async def show_love(ctx, member: discord.Member, love):
                server,
                love))
     conn.commit()
-    await bot.send('{} showed {}x❤ to {}'.format(giver.mention, love, member.mention), ctx.message.channel)
+    await send('{} showed {}x❤ to {}'.format(giver.mention, love, member.mention), ctx.message.channel)
 
 
 @bot.command(pass_context=True)
