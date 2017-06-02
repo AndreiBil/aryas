@@ -36,6 +36,7 @@ async def kick(ctx, member: discord.Member, reason):
     :param member: the member
     :param reason: the reason for the kick
     """
+    print(member)
     try:
         await bot.kick(discord.Server.get_member(ctx.message.server, member))
         msg = '{} was kicked by {}. reason: {}'.format(member.name, ctx.message.author.mention, reason)
