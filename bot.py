@@ -3,6 +3,8 @@ import json
 import discord
 import sqlite3
 from discord.ext import commands
+from random import randint
+
 
 conn = sqlite3.connect('aryas.db')
 
@@ -19,12 +21,26 @@ MOD_LOG_CHANNEL_NAME = 'mod_log'
 MAX_CLEAR_NUM = 100
 
 
+
 @bot.event
 async def on_ready():
     print('Logged in')
     print('Name : {}'.format(bot.user.name))
     print('ID : {}'.format(bot.user.id))
     print(discord.__version__)
+
+
+@bot.command(pass_context=True)
+async def roll(ctx):
+    """
+    Rolls a dice and outputs a message depending on the result
+    :param ctx: roll
+    """
+    randomdice = randint(1,6)
+    if randomdice < 4:
+      await bot.say('{} rolled **{}**'.format(ctx.message.author.mention,randomdice))
+    else:
+      await bot.say('{} The gods are with you, you rolled **{}**'.format(ctx.message.author.mention, randomdice))
 
 
 @bot.command(pass_context=True)
