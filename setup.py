@@ -28,10 +28,10 @@ def create_secret_json(**kwargs):
     # would only need to change the collection of expected arguments
     json_data = json.dumps({
         'discord': {
-            'token': kwargs['discord_token']
+            'token': kwargs['discord_token'][0]
         },
         'weather': {
-            'api_key': kwargs['OpenWeatherMap_api_key']
+            'api_key': kwargs['OpenWeatherMap_api_key'][0]
         }
     }, sort_keys=True, indent=2, separators=(',', ': '))
 
