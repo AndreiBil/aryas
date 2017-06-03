@@ -61,7 +61,7 @@ def main(argv):
 
     for arg in EXPECTED_ARGS:
         if arg not in arg_dict:
-            arg_dict[arg] = input('Enter {}: '.format(arg))
+            arg_dict[arg] = [input('Enter {}: '.format(arg))]
 
     create_love_table()
     create_secret_json(**arg_dict)
