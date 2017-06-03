@@ -13,7 +13,7 @@ class General:
         self.bot: commands.Bot = bot
 
     @commands.command(pass_context=True)
-    async def ping(self):
+    async def ping(self, ctx):
         before = time.monotonic()
         await self.bot.send_typing(ctx.message.author)
         after = time.monotonic()
