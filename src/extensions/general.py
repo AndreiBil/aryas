@@ -3,7 +3,7 @@ import pyowm
 from random import randint
 from discord.ext import commands
 from src.utility import send
-from src.globals import SECRETS, conn
+from src.globals import SECRETS, conn, logger
 
 
 class General:
@@ -70,7 +70,7 @@ class General:
             temperature = weather.get_temperature('celsius')['temp']
             await self.bot.say('The weather in {}, {} is {}° C'.format(country, city, temperature))
         except Exception as e:
-            print(e)
+            logger.error(e)
             send(self.bot, 'Could not get the weather in {}, {}.'.format(country, city), ctx.message.channel, True)
 
         # FIXME: Needs to update to use db instead of global status dictionary
