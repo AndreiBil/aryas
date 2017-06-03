@@ -25,7 +25,7 @@ class setstatus_module:
         if stat in possible_status:
             if stat != 'active':
                 status[name] = stat
-            else:
+            elif name in status:
                 status.pop(name)
             await self.bot.say("You are now " + stat)
 

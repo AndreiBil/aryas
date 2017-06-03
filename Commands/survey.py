@@ -5,37 +5,22 @@ from discord.ext import commands
 
 
 def setup(bot):
-    bot.add_cog(vote_module(bot))
+    bot.add_cog(survey_module(bot))
 
 
 # at least 2 choices, and at most 9 (decimal limitations)
 min_size_args = 2
-max_size_args = 9
+max_size_args = 20
 
-# reactions that can be used for the votes
-possible_votes = [
-    "\u0031\u20e3",  # 1
-    "\u0032\u20e3",  # 2
-    "\u0033\u20e3",  # 3
-    "\u0034\u20e3",  # 4
-    "\u0035\u20e3",  # 5
-    "\u0036\u20e3",  # 6
-    "\u0037\u20e3",  # 7
-    "\u0038\u20e3",  # 8
-    "\u0039\u20e3",  # 9
-]
+possible_surveys = range(26)
 
-vote_results = {
-    "\u0031\u20e3": 0,
-    "\u0032\u20e3": 1,
-    "\u0033\u20e3": 2,
-    "\u0034\u20e3": 3,
-    "\u0035\u20e3": 4,
-    "\u0036\u20e3": 5,
-    "\u0037\u20e3": 6,
-    "\u0038\u20e3": 7,
-    "\u0039\u20e3": 8,
-}
+
+def convert_surveys(l):
+    return [(chr(0x0001f1e6 + x)) for x in l]
+
+
+def survey_results(char_in):
+    return ord(char_in) - 0x0001f1e6
 
 
 def failed(x):
@@ -105,11 +90,11 @@ def read_args(string):
             current.append(arg + " ")
 
 
-def parse_vote(message):
+def parse_survey(message):
     """
-    Parses a vote string
+    Parses a survey string
         The format is like that:
-            question ? vote 1 - vote 2 - vote 3 - more votes : timeout in seconds
+            question ? survey 1 - survey 2 - survey 3 - more surveys : timeout in seconds
     :param message: the message to parse
     :return:    None if the string is malformed
                 (question, args, timeout) is the parse succeded
@@ -135,7 +120,7 @@ def parse_vote(message):
         return None
 
     # read the timeout
-    timeout = float(message[len(question) + nb_words])
+    timeout = float(message[len(question) + nb_words]) * 60
 
     if failed(timeout):
         return None
@@ -143,65 +128,65 @@ def parse_vote(message):
     return question, args, timeout
 
 
-def format_votes(question, args):
+def format_surveys(question, args):
     """
     :param question:    The question the users will have to answer
-    :param args:    The possible votes
-    :return:    The string that will be shown for the votes
+    :param args:    The possible surveys
+    :return:    The string that will be shown for the surveys
     """
     # underlined bold question
-    output = "__**" + l2str(question) + " ?**__\n"
+    output = "__**" + l2str(question) + "**__\n"
 
     # Eg: 1. Argument
     #     2. Argument 2
     for i, arg in enumerate(args):
-        output += "\t" + str(i + 1) + ".\t " + l2str(arg) + "\n"
+        output += "\t" + chr(ord('A') + i) + ".\t " + l2str(arg) + "\n"
 
     return output
 
 
-class vote_module:
+class survey_module:
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(pass_context=True)
     @commands.has_role('Moderator')
-    async def vote(self, ctx):
+    async def survey(self, ctx):
         """
         Creates an interactive poll for the moderators
             The format to ask a question is :
-                               '?vote <question here> ? <vote 1> - <vote 2> - ... ! <nb of seconds for timeout>')
+                               '?survey <question here> ? <survey 1> - <survey 2> - ... ! <nb of seconds for timeout>')
         :param ctx:     The context of the message (cf discord doc)
         """
         message = ctx.message.content.split()[1:]
         # The message of is then deleted, to avoid redundancy
         await self.bot.delete_message(ctx.message)
 
-        query = parse_vote(message)
+        query = parse_survey(message)
 
         # test if the parsing was correct
         if query is None:
-            await self.bot.say('Error in parsing.\n'
-                               'Number of args: minimum : 2 args, maximum: 9\n'
-                               'The format to ask a question is : ```xml\n'
-                               '?vote <question here> ? <vote 1> - <vote 2> - ... ! nb of seconds for timeout```')
+            await self.bot.say('Number of args: minimum : ' + str(min_size_args)
+                               + ' args, maximum: ' + str(max_size_args) + '\n'
+                               + 'The format to ask a question is : ```xml\n'
+                               + '?survey <question here> ? <survey 1> - <survey 2> - ... ! nb of seconds for timeout```')
         else:
 
             question, args, timeout = query
 
             # We create the poll's message
             em = discord.Embed(title="{0}'s poll".format(ctx.message.author.name),
-                               description=format_votes(question, args),
+                               description=format_surveys(question, args),
                                colour=discord.Colour.blue())
 
-            vote_emojis = possible_votes[:len(args):]
+            survey_emojis = convert_surveys(possible_surveys[:len(args):])
 
             msg = await self.bot.say("", embed=em)
             # we ask the user to wait
             to_delete = await self.bot.say("Please wait until the bot puts all the reactions")
 
             # We add the possible reactions to help the users
-            for emoji in vote_emojis:
+            for emoji in survey_emojis:
                 await self.bot.add_reaction(msg, emoji)
 
             # we delete the waiting message
@@ -212,29 +197,29 @@ class vote_module:
             total_time = 0
             start = time()
             while total_time < timeout:
-                res = await self.bot.wait_for_reaction(vote_emojis, message=msg, timeout=abs(timeout - total_time))
+                res = await self.bot.wait_for_reaction(survey_emojis, message=msg, timeout=abs(timeout - total_time))
                 if not failed(res) and res.user != self.bot.user:
                     outputs.append(res)
                 end = time()
                 total_time += end - start
                 start = end
 
-            votes = [0] * len(args)
-            nb_votes = len(outputs)
+            surveys = [0] * len(args)
+            nb_surveys = len(outputs)
 
             for output in outputs:
-                id_vote = vote_results[output.reaction.emoji]
-                votes[id_vote] += 1
-
+                id_survey = survey_results(output.reaction.emoji)
+                surveys[id_survey] += 1
 
             # We show the results
             output = ""
-            for i, vote in enumerate(votes):
-                if nb_votes != 0:
-                    percent = round(vote / nb_votes * 100, 2)
+            for i, survey in enumerate(surveys):
+                if nb_surveys != 0:
+                    percent = round(survey / nb_surveys * 100, 2)
                 else:
                     percent = 0
-                output += str(i + 1) + ".\t " + l2str(args[i]) + " -> " + str(vote) + " votes. (" + str(percent) + "%)\n"
+                output += str(i + 1) + ".\t " + l2str(args[i]) + " -> " + str(survey) + " surveys. (" + str(
+                    percent) + "%)\n"
 
             em = discord.Embed(title="Results of {0}'s poll".format(ctx.message.author.name),
                                description=output, colour=discord.Colour.dark_green())
