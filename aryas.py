@@ -8,7 +8,7 @@ bot_prefix = '?'
 bot = commands.Bot(command_prefix='?', description=description)
 
 # TODO: Build startup_extensions dynamically
-startup_extensions = ['general', 'survey', 'modtools']
+startup_extensions = ['general', 'survey', 'modtools', 'fun']
 
 
 @bot.event
