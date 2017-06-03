@@ -1,11 +1,13 @@
 import asyncio
+from typing import Union
 
 from discord.ext import commands
+from discord import Server, Channel
 
 from src.globals import MESSAGE_SLEEP_TIME
 
 
-def get_channel_by_name(server, name):
+def get_channel_by_name(server: Server, name: str) -> Union[Channel, None]:
     """
     Finds a channel by it's name and returns it's channel object
     :param server: the server where the channel is in
@@ -19,7 +21,8 @@ def get_channel_by_name(server, name):
 
 
 @commands.has_role('Moderator')
-async def send(bot, message, channel, delete=False, time=MESSAGE_SLEEP_TIME):
+async def send(bot: commands.Bot, message: str, channel: Channel, delete: bool=False,
+               time: float=MESSAGE_SLEEP_TIME) -> None:
     """
     Sends a message to the server and deletes it after a period of time
     :param bot:     the bot used to send the message
