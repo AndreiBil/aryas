@@ -2,7 +2,7 @@ import asyncio
 
 from discord.ext import commands
 
-from Bot.Globals import MESSAGE_SLEEP_TIME
+from src.globals import MESSAGE_SLEEP_TIME
 
 
 def get_channel_by_name(server, name):
