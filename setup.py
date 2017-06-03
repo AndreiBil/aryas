@@ -24,6 +24,8 @@ def create_secret_json(**kwargs):
     Create secrets.json file.
     :param kwargs: dictionary of json object properties
     """
+    # FIXME: make the creation of the secrets.json file modular, so if you change the required arguments you
+    # would only need to change the collection of expected arguments
     json_data = json.dumps({
         'discord': {
             'token': kwargs['discord_token']
