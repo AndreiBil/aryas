@@ -34,7 +34,7 @@ async def on_message(message):
     """
     for user in message.mentions:
         # we handle the mentions here
-        on_mention(message, user)
+        await on_mention(message, user)
 
     await bot.process_commands(message)
 

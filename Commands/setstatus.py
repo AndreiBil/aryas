@@ -24,4 +24,8 @@ class setstatus_module:
 
         if stat in possible_status:
             status[name] = stat
+            await self.bot.say("You are now " + stat)
+
+        else:
+            await self.bot.say("You need to call it like choose a status in these : " + str(possible_status))
         await self.bot.delete_message(ctx.message)

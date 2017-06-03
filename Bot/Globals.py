@@ -12,4 +12,8 @@ status = {}
 
 # FIXME --> do that dynamically
 # the commands
-extensions = ['ping', 'clear', 'love', 'ping', 'setstatus', 'vote']
+extensions = ['ping', 'clear', 'love', 'setstatus', 'vote', 'kick', 'roll']
+
+MESSAGE_SLEEP_TIME = 2
+MOD_LOG_CHANNEL_NAME = 'mod_log'
+MAX_CLEAR_NUM = 100
