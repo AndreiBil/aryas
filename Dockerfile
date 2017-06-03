@@ -1,6 +1,7 @@
 FROM python:3.6
 
 ARG DISCORD_TOKEN
+ARG WEATHER_KEY
 
 ADD ./requirements.txt ./
 RUN pip3 install -r requirements.txt
