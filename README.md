@@ -5,7 +5,7 @@ A bot for the Developers Discord server
 1. Run `setup.sh` like so:  
   
 ```
-$ ./setup.sh YOUR_TOKEN_HERE
+$ ./setup.sh YOUR_DISCORD_TOKEN YOUR_OWM_TOKEN
 ```
 
 
