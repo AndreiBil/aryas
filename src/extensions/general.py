@@ -14,6 +14,10 @@ class General:
 
     @commands.command(pass_context=True)
     async def ping(self, ctx):
+        """
+        Responds with the latency time.
+        Time took for Aryas to reply
+        """
         before = time.monotonic()
         await self.bot.send_typing(ctx.message.author)
         after = time.monotonic()
@@ -111,7 +115,7 @@ class General:
     #     if user_mentionned in status:
     #         await self.bot.send_message(message.channel, "`" + user_mentionned.name + "` is " + status[user_mentionned])
         
-    #@bot.command(pass_context=True)
+    #@commands.command(pass_context=True)
     #async def setreminder(self, ctx, string, hours, minutes):
     #    mins = int(minutes)
     #    hours = int(hours)
