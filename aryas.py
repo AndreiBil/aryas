@@ -2,12 +2,13 @@ import discord
 from discord.ext import commands
 import logging
 from src.globals import logger
+from src.aryas_formatter import AryasFormatter
 
 from src.globals import SECRETS
 
 description = 'Aryas-Bot'
 bot_prefix = '?'
-bot = commands.Bot(command_prefix='?', description=description)
+bot = commands.Bot(command_prefix='?', description=description, formatter=AryasFormatter(), pm_help=True)
 
 
 # Change this to get more/less logs.
