@@ -1,0 +1,27 @@
+from discord.ext import commands
+
+from Bot.Globals import possible_status, status
+
+
+def setup(bot):
+    bot.add_cog(setstatus_module(bot))
+
+
+class setstatus_module:
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.command(pass_context=True)
+    @commands.has_role('Support')
+    async def setstatus(self, ctx, stat):
+        """
+        Adds a status to the user.
+        The status is used when the user is mentioned.
+        :param ctx: The message context
+        :param stat: The status of the user (must be in possible_status)
+        """
+        name = ctx.message.author
+
+        if stat in possible_status:
+            status[name] = stat
+        await self.bot.delete_message(ctx.message)
