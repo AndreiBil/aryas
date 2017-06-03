@@ -9,4 +9,4 @@ python3 setup.py --discord_token=YOUR_TOKEN_HERE
 ```
 
 
-3. Run `bot.py`
+3. Run `Bot/bot.py`
