@@ -13,7 +13,6 @@ possible_status = {'away', 'vacation', 'active'}
 
 MESSAGE_SLEEP_TIME = 2
 MOD_LOG_CHANNEL_NAME = 'mod_log'
-WEATHER_API_KEY = '91bfa6f38476eca3508edd2a0fb98b9c'
 
 # Setup logging.
 logger = logging.getLogger('discord')

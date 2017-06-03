@@ -3,25 +3,7 @@ import sqlite3
 import sys
 from collections import defaultdict
 
-
-def main(argv):
-    """
-    Will create a love table, and a json file
-    :param argv:    the args
-        -> None: will use stdin
-        -> discord_token: the discord token that will be put in the json file
-    """
-    arg_dict = build_arg_list(argv)
-
-    if 'discord_token' in arg_dict:
-        # args
-        cred = arg_dict['discord_token'][0]
-    else:
-        # stdin
-        cred = input('Type the cred: ')
-
-    create_love_table()
-    create_secret_json(cred)
+EXPECTED_ARGS = ['discord_token', 'OpenWeatherMap_api_key']
 
 
 def build_arg_list(argv):
@@ -37,14 +19,17 @@ def build_arg_list(argv):
     return dict(d)
 
 
-def create_secret_json(token):
+def create_secret_json(**kwargs):
     """
-        Create secrets.json file.
-        :param token: the token of the bot to add in the json
+    Create secrets.json file.
+    :param kwargs: dictionary of json object properties
     """
     json_data = json.dumps({
         'discord': {
-            'token': token
+            'token': kwargs['discord_token']
+        },
+        'weather': {
+            'api_key': kwargs['OpenWeatherMap_api_key']
         }
     }, sort_keys=True, indent=2, separators=(',', ': '))
 
@@ -64,6 +49,20 @@ def create_love_table():
     c.execute("""CREATE TABLE IF NOT EXISTS love
                   (giver CHAR(18), receiver CHAR(18), channel CHAR(18), server CHAR(18), amount INTEGER)""")
 
+
+def main(argv):
+    """
+    Creates a love table, and the secret json file
+    :param argv: the arguments
+    """
+    arg_dict = build_arg_list(argv)
+
+    for arg in EXPECTED_ARGS:
+        if arg not in arg_dict:
+            arg_dict[arg] = input('Enter {}: '.format(arg))
+
+    create_love_table()
+    create_secret_json(**arg_dict)
 
 if __name__ == '__main__':
     main(sys.argv[1:])

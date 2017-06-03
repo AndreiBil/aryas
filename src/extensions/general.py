@@ -3,7 +3,7 @@ import pyowm
 from random import randint
 from discord.ext import commands
 from src.utility import send
-from src.globals import conn, WEATHER_API_KEY
+from src.globals import SECRETS, conn
 
 
 class General:
@@ -63,7 +63,7 @@ class General:
         :param country: the country
         :param city: the city
         """
-        owm = pyowm.OWM(WEATHER_API_KEY)
+        owm = pyowm.OWM(SECRETS['weather']['api_key'])
         try:
             forecast = owm.weather_at_place('{},{}'.format(city, country))
             weather = forecast.get_weather()
