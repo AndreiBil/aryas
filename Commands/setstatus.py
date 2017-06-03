@@ -23,7 +23,10 @@ class setstatus_module:
         name = ctx.message.author
 
         if stat in possible_status:
-            status[name] = stat
+            if stat != 'active':
+                status[name] = stat
+            elif name in status:
+                status.pop(name)
             await self.bot.say("You are now " + stat)
 
         else:
