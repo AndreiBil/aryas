@@ -2,15 +2,15 @@
 A bot for the Developers Discord server
 
 ## Running the bot
-1. Run `setup.py` like so:  
+1. Run `setup.sh` like so:  
   
 ```
-python3 setup.py --discord_token=YOUR_TOKEN_HERE
+$ ./setup.sh YOUR_TOKEN_HERE
 ```
 
 
-3. Run `aryas.py` like so:  
+3. Run `run.sh` like so:  
   
-```py
-python3 aryas.py
+```
+$ ./run.sh
 ```
