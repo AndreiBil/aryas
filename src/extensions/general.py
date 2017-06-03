@@ -71,7 +71,7 @@ class General:
             await self.bot.say('The weather in {}, {} is {}° C'.format(country, city, temperature))
         except Exception as e:
             logger.error(e)
-            send(self.bot, 'Could not get the weather in {}, {}.'.format(country, city), ctx.message.channel, True)
+            await send(self.bot, 'Could not get the weather in {}, {}.'.format(country, city), ctx.message.channel, True)
 
         # FIXME: Needs to update to use db instead of global status dictionary
         # @commands.command(pass_context=True)
