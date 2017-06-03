@@ -1,8 +1,9 @@
 import discord
+import pyowm
 from random import randint
 from discord.ext import commands
 from src.utility import send
-from src.globals import conn
+from src.globals import conn, WEATHER_API_KEY
 
 
 class General:
@@ -54,6 +55,23 @@ class General:
         conn.commit()
         await send(self.bot, '{} showed {}x❤ to {}'.format(giver.mention, love, member.mention), ctx.message.channel)
 
+    @commands.command(pass_context=True)
+    async def weather(self, ctx, country, city):
+        """
+        Gives info regarding the weather in a city
+        :param ctx: the message context
+        :param country: the country
+        :param city: the city
+        """
+        owm = pyowm.OWM(WEATHER_API_KEY)
+        try:
+            forecast = owm.weather_at_place('{},{}'.format(city, country))
+            weather = forecast.get_weather()
+            temperature = weather.get_temperature('celsius')['temp']
+            await self.bot.say('The weather in {}, {} is {}° C'.format(country, city, temperature))
+        except Exception as e:
+            print(e)
+            send(self.bot, 'Could not get the weather in {}, {}.'.format(country, city), ctx.message.channel, True)
 
     @commands.command(pass_context=True)
     async def roll(self, ctx):
