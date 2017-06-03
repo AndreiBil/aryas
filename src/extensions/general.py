@@ -1,9 +1,9 @@
 import discord
 import pyowm
-from random import randint
 from discord.ext import commands
-from src.utility import send
+
 from src.globals import SECRETS, conn, logger
+from src.utility import send
 
 
 class General:
@@ -71,7 +71,8 @@ class General:
             await self.bot.say('The weather in {}, {} is {}° C'.format(country, city, temperature))
         except Exception as e:
             logger.error(e)
-            await send(self.bot, 'Could not get the weather in {}, {}.'.format(country, city), ctx.message.channel, True)
+            await send(self.bot, 'Could not get the weather in {}, {}.'
+                       .format(country, city), ctx.message.channel, True)
 
         # FIXME: Needs to update to use db instead of global status dictionary
         # @commands.command(pass_context=True)
@@ -103,7 +104,8 @@ class General:
         #                 :param user:        The mentionned user
         #                 """
         #     if user_mentionned in status:
-        #         await self.bot.send_message(message.channel, "`" + user_mentionned.name + "` is " + status[user_mentionned])
+        #         await self.bot.send_message(message.channel, "`" + user_mentionned.name + "` is " +
+        #                                     status[user_mentionned])
 
 
 def setup(bot):

@@ -53,6 +53,7 @@ class ModTools:
         inumber = int(number)
         if inumber <= 100:
             # In order to delete the command message too, the number of messages to clear is incremented
+            # noinspection PyUnresolvedReferences
             await self.bot.purge_from(ctx.message.channel, limit=inumber + 1)
             await send(self.bot, number + ' Message cleared', ctx.message.channel, True)
         else:

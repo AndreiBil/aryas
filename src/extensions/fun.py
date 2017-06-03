@@ -1,8 +1,9 @@
-import discord
-from discord.ext import commands
 from random import randint
-from bs4 import BeautifulSoup
+
 import grequests
+from bs4 import BeautifulSoup
+from discord.ext import commands
+
 from src.globals import logger
 
 
