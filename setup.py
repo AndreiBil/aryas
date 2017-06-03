@@ -12,7 +12,7 @@ def main(argv):
         conn = sqlite3.connect('aryas.db')
         c = conn.cursor()
         # Create love table
-        c.execute("""CREATE TABLE IF NOT EXISTS love 
+        c.execute("""CREATE TABLE IF NOT EXISTS love
                       (giver CHAR(18), receiver CHAR(18), channel CHAR(18), server CHAR(18), amount INTEGER)""")
 
         # Create secrets.json file. Declared object inline for brevity.
@@ -27,7 +27,6 @@ def main(argv):
             outfile.write(json_data)
     else:
         return print('Please supply a discord_token')
-
 
 def build_arg_list(argv):
     """
