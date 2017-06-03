@@ -12,4 +12,4 @@ status = {}
 
 # FIXME --> do that dynamically
 # the commands
-extensions = ['ping', 'clear', 'love', 'ping', 'setstatus']
+extensions = ['ping', 'clear', 'love', 'ping', 'setstatus', 'vote']

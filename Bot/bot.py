@@ -39,7 +39,7 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
-if __name__ == "__main__":
+def main():
     for extension in extensions:
         extension = "Commands." + extension
         try:
@@ -47,3 +47,6 @@ if __name__ == "__main__":
         except Exception as e:
             raise e
     bot.run(SECRETS['discord']['token'])
+
+if __name__ == "__main__":
+    main()
