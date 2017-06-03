@@ -6,7 +6,7 @@ from src.aryas_formatter import AryasFormatter
 
 from src.globals import SECRETS
 
-description = 'Aryas-Bot'
+description = 'A in development python bot for the discord platform'
 bot_prefix = '?'
 bot = commands.Bot(command_prefix='?', description=description, formatter=AryasFormatter(), pm_help=True)
 
