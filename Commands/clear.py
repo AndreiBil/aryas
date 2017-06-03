@@ -1,8 +1,12 @@
-import asyncio
 from discord.ext import commands
+
+from Bot.Globals import MAX_CLEAR_NUM
+from Commands.utility import send
+
 
 def setup(bot):
     bot.add_cog(clear_module(bot))
+
 
 class clear_module:
     def __init__(self, bot):
@@ -17,12 +21,9 @@ class clear_module:
         :param number: The number of messages to purge
         """
         inumber = int(number)
-        if inumber <= 100:
-            # Sends a deleted confirmation message
+        if inumber <= MAX_CLEAR_NUM:
+            # In order to delete the command message too, the number of messages to clear is incremented
             await self.bot.purge_from(ctx.message.channel, limit=inumber + 1)
-            msg = await self.bot.say(number + ' Message purged')
-            # Waits 3.5 seconds and deleted the confirmation message.
-            await asyncio.sleep(2)
-            await self.bot.delete_message(msg)
+            await send(self.bot, number + ' Message cleared', ctx.message.channel, True)
         else:
-            await self.bot.say('Cannot delete more than 100 messages at a time.')
+            await send('Cannot delete more than 100 messages at a time.', ctx.message.channel, True)
