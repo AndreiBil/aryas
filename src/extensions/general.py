@@ -8,7 +8,7 @@ from src.globals import SECRETS, conn, logger
 
 class General:
     def __init__(self, bot):
-        self.bot = bot
+        self.bot: commands.Bot = bot
 
     @commands.command()
     async def ping(self):
