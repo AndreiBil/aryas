@@ -73,19 +73,6 @@ class General:
             print(e)
             send(self.bot, 'Could not get the weather in {}, {}.'.format(country, city), ctx.message.channel, True)
 
-    @commands.command(pass_context=True)
-    async def roll(self, ctx):
-        """
-                Rolls a dice and outputs a message depending on the result
-                :param ctx: roll
-                """
-        randomdice = randint(1, 6)
-        if randomdice < 4:
-            await self.bot.say('{} rolled **{}**'.format(ctx.message.author.mention, randomdice))
-        else:
-            await self.bot.say(
-                '{} The gods are with you, you rolled **{}**'.format(ctx.message.author.mention, randomdice))
-
         # FIXME: Needs to update to use db instead of global status dictionary
         # @commands.command(pass_context=True)
         # @commands.has_role('Support')
