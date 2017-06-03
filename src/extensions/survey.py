@@ -84,7 +84,7 @@ class Survey:
                     percent = round(survey / nb_surveys * 100, 2)
                 else:
                     percent = 0
-                output += str(i + 1) + ".\t " + l2str(args[i]) + " -> " + str(survey) + " surveys. (" + str(
+                output += str(i + 1) + ".\t " + l2str(args[i]) + " -> " + str(survey) + " votes. (" + str(
                     percent) + "%)\n"
 
             em = discord.Embed(title="Results of {0}'s poll".format(ctx.message.author.name),
