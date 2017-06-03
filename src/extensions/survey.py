@@ -12,7 +12,7 @@ possible_surveys = range(26)
 
 class Survey:
     def __init__(self, bot):
-        self.bot = bot
+        self.bot: commands.Bot = bot
 
     @commands.command(pass_context=True)
     @commands.has_role('Moderator')

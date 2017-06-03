@@ -6,7 +6,7 @@ from src.globals import MOD_LOG_CHANNEL_NAME
 
 class ModTools:
     def __init__(self, bot):
-        self.bot = bot
+        self.bot: commands.Bot = bot
 
     @commands.command(pass_context=True)
     @commands.has_role('Admin')
