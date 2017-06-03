@@ -1,7 +1,9 @@
 import discord
+import pyowm
+from random import randint
 from discord.ext import commands
 from src.utility import send
-from src.globals import conn
+from src.globals import SECRETS, conn, logger
 
 
 class General:
@@ -52,6 +54,24 @@ class General:
                    love))
         conn.commit()
         await send(self.bot, '{} showed {}x❤ to {}'.format(giver.mention, love, member.mention), ctx.message.channel)
+
+    @commands.command(pass_context=True)
+    async def weather(self, ctx, country, city):
+        """
+        Gives info regarding the weather in a city
+        :param ctx: the message context
+        :param country: the country
+        :param city: the city
+        """
+        owm = pyowm.OWM(SECRETS['weather']['api_key'])
+        try:
+            forecast = owm.weather_at_place('{},{}'.format(city, country))
+            weather = forecast.get_weather()
+            temperature = weather.get_temperature('celsius')['temp']
+            await self.bot.say('The weather in {}, {} is {}° C'.format(country, city, temperature))
+        except Exception as e:
+            logger.error(e)
+            await send(self.bot, 'Could not get the weather in {}, {}.'.format(country, city), ctx.message.channel, True)
 
         # FIXME: Needs to update to use db instead of global status dictionary
         # @commands.command(pass_context=True)

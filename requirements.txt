@@ -1,3 +1,4 @@
 discord.py
 bs4
 grequests
+pyowm
