@@ -1,5 +1,6 @@
 import json
 import sqlite3
+import logging
 
 conn = sqlite3.connect('aryas.db')
 
@@ -12,3 +13,6 @@ possible_status = {'away', 'vacation', 'active'}
 
 MESSAGE_SLEEP_TIME = 2
 MOD_LOG_CHANNEL_NAME = 'mod_log'
+
+# Setup logging.
+logger = logging.getLogger('discord')

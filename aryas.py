@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
-import logging
+import logger
+from src.globals import logger
 
 from src.globals import SECRETS
 
@@ -8,8 +9,7 @@ description = 'Aryas-Bot'
 bot_prefix = '?'
 bot = commands.Bot(command_prefix='?', description=description)
 
-# Setup logging.
-logger = logging.getLogger('discord')
+
 # Change this to get more/less logs.
 logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(filename='aryas.log', encoding='utf-8', mode='w')
