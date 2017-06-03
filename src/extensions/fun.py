@@ -3,6 +3,7 @@ from discord.ext import commands
 from random import randint
 from bs4 import BeautifulSoup
 import grequests
+from src.globals import logger
 
 
 class Fun:
@@ -24,6 +25,10 @@ class Fun:
 
     @commands.command(pass_context=True)
     async def randomfact(self, ctx):
+        """
+        Responds with a random fact scraped from unkno.com
+        :param ctx: The message context
+        """
         # Send typing as the request can take some time.
         await self.bot.send_typing(ctx.message.channel)
 
@@ -39,8 +44,13 @@ class Fun:
 
 
 def request_exception_handler(request, exception):
-    print('Request failed')
-    print(exception)
+    """
+    An exception handler for failed HTTP requests
+    :param request: The request that failed
+    :param exception: 
+    """
+    logger.exception('HTTP Request failed: {}'.format(request))
+    logger.exception('It failed with the following exception: \n {}'.format(exception))
 
 
 def setup(bot):
