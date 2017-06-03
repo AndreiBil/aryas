@@ -13,7 +13,7 @@ ADD ./src ./src
 
 ADD ./setup.py ./
 
-RUN python3 ./setup.py --discord_token=$DISCORD_TOKEN
+RUN python3 ./setup.py --discord_token=$DISCORD_TOKEN --OpenWeatherMap_api_key=$WEATHER_KEY
 
 RUN rm ./setup.py
 
