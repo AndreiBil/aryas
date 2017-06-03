@@ -12,7 +12,8 @@ python3 setup.py --discord_token=YOUR_TOKEN_HERE
 3. Run `run.py` like so:  
   
 ```py
-python3 run.py```
+python3 run.py
+```
   
   
 ## Adding a command
