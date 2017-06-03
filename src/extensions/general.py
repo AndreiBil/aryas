@@ -1,5 +1,4 @@
 import discord
-from random import randint
 from discord.ext import commands
 from src.utility import send
 from src.globals import conn
@@ -53,20 +52,6 @@ class General:
                    love))
         conn.commit()
         await send(self.bot, '{} showed {}x❤ to {}'.format(giver.mention, love, member.mention), ctx.message.channel)
-
-
-    @commands.command(pass_context=True)
-    async def roll(self, ctx):
-        """
-                Rolls a dice and outputs a message depending on the result
-                :param ctx: roll
-                """
-        randomdice = randint(1, 6)
-        if randomdice < 4:
-            await self.bot.say('{} rolled **{}**'.format(ctx.message.author.mention, randomdice))
-        else:
-            await self.bot.say(
-                '{} The gods are with you, you rolled **{}**'.format(ctx.message.author.mention, randomdice))
 
         # FIXME: Needs to update to use db instead of global status dictionary
         # @commands.command(pass_context=True)
