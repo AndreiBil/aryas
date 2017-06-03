@@ -18,7 +18,7 @@ def main(argv):
         cred = arg_dict['discord_token'][0]
     else:
         # stdin
-        cred = input('Type the cred: ')
+        cred = input('Enter your Discord bots secret token: ')
 
     create_love_table()
     create_secret_json(cred)
