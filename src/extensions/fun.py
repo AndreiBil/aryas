@@ -99,9 +99,9 @@ class Fun:
                 raise PollParseException("Timeout must be a whole number; `{}` given!".format(args[1]))
 
             options_ = args[2:]
-            if len(options) > 25:
+            if len(options_) > 25:
                 raise PollParseException("Too many options; at most 25 should be given, {} actually given!"
-                                         .format(len(options)))
+                                         .format(len(options_)))
 
             return question_, timeout_, options_
 
