@@ -41,7 +41,7 @@ class General:
             await send(self.bot, '{} has {}x❤'.format(member.mention, love), ctx.message.channel)
 
     @commands.command(pass_context=True)
-    async def show_love(self, ctx: commands.Context, member: discord.Member, love: str) -> None:
+    async def show_love(self, ctx: commands.Context, member: discord.Member, love: int) -> None:
         """
         Gives love to a user
         :param ctx: the message context
@@ -52,7 +52,6 @@ class General:
         giver = ctx.message.author
         channel = msg.channel.id
         server = msg.server.id
-        love = int(love)
 
         c = conn.cursor()
         c.execute("""INSERT INTO love (giver, receiver, channel, server, amount) VALUES (?, ?, ?, ?, ?)""",
