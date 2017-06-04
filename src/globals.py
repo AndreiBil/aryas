@@ -13,8 +13,8 @@ with open('secrets.json') as data_file:
 possible_status: Set[str] = {'away', 'vacation', 'active'}
 
 
-MESSAGE_SLEEP_TIME: int = 2
-MOD_LOG_CHANNEL_NAME: str = 'mod_log'
+MESSAGE_SLEEP_TIME = 2
+MOD_LOG_CHANNEL_NAME = 'mod_log'
 
 # Setup logging.
 logger: logging.Logger = logging.getLogger('discord')
