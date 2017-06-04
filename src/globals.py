@@ -1,8 +1,6 @@
 import json
-import sqlite3
 import logging
-
-from typing import Set
+import sqlite3
 
 conn: sqlite3.Connection = sqlite3.connect('aryas.db')
 
