@@ -87,7 +87,7 @@ class Fun:
         def parse_poll(message: str) -> Tuple[str, int, Tuple[str, ...]]:
             # "?poll "
             message = message[6:]  # Take out "?poll "
-            args = tuple(map(lambda arg: arg.trim(), message.split(";")))  # Split args by ";" and trim whitespace
+            args = tuple(map(lambda arg: arg.strip(), message.split(";")))  # Split args by ";" and trim whitespace
             if len(args) < 4:
                 raise PollParseException("At least 4 args must be supplied; {} given!".format(len(args)))
 
