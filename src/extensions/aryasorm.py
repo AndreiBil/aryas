@@ -2,6 +2,7 @@
 The database engine behind Aryas.
 """
 from discord.ext import commands
+
 from src.globals import logger, DATABASE
 from src.models import *
 
@@ -19,29 +20,34 @@ class AryasORM:
         self.Server = Server
         self.LoveTransaction = LoveTransaction
 
-    def setup(self, force=False):
+    async def setup(self, force=False):
         """
         Setups the db by creating all relevant tables.
         :param force: Set to true if you want to drop the tables first
         """
         if force:
+            await self.drop_all_tables()
+        else:
             try:
-                self.User.drop_table()
-                self.Message.drop_table()
-                self.Channel.drop_table()
-                self.Server.drop_table()
-                self.LoveTransaction.drop_table()
+                self.db.create_tables([User, Message, Channel, Server, LoveTransaction])
             except OperationalError as e:
                 logger.error(e)
 
-        self.User.create_table()
-        self.Message.create_table()
-        self.Channel.create_table()
-        self.Server.create_table()
-        self.LoveTransaction.create_table()
-
-    def update(self):
+    async def update_all(self):
+        """
+        Updates models to check for things like name changes, status changes etc.
+        :return: 
+        """
         pass
+
+    async def drop_all_tables(self):
+        """
+        Drops all tables in the database.
+        """
+        try:
+            self.db.drop_tables([User, Message, Channel, Server, LoveTransaction])
+        except OperationalError as e:
+            logger.error(e)
 
 
 def setup(bot: commands.Bot) -> None:

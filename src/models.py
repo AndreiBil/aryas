@@ -1,5 +1,5 @@
 from peewee import *
-import discord
+from discord import utils
 from src.globals import DATABASE
 
 
@@ -29,7 +29,7 @@ class User(DiscordModel):
     Models a Discord user.
     Whereas the discord.py library has sub classes such as Member, this is not relevant in db-land.
     """
-    username = CharField()
+    name = CharField(default='')
 
     # def find_or_create(self, discord_id, server):
     #     """
