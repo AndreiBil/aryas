@@ -10,7 +10,7 @@ class ModTools:
 
     @commands.command(pass_context=True)
     @commands.has_role('Admin')
-    async def kick(self, ctx, member: discord.Member, reason):
+    async def kick(self, ctx: commands.Context, member: discord.Member, reason) -> None:
         """
         Kicks the mentioned user from the server
         :param ctx: the message context
@@ -27,7 +27,7 @@ class ModTools:
 
     @commands.command(pass_context=True)
     @commands.has_role('Admin')
-    async def ban(self, ctx, member: discord.Member, reason):
+    async def ban(self, ctx: commands.Context, member: discord.Member, reason) -> None:
         """
         Bans the mentioned user from the server
         :param ctx: The message context
@@ -44,7 +44,7 @@ class ModTools:
 
     @commands.command(pass_context=True)
     @commands.has_role('Admin')
-    async def clear(self, ctx, number):
+    async def clear(self, ctx: commands.Context, number: str) -> None:
         """
         Purges messages from the channel
         :param ctx: The message context
@@ -56,7 +56,7 @@ class ModTools:
             await self.bot.purge_from(ctx.message.channel, limit=inumber + 1)
             await send(self.bot, number + ' Message cleared', ctx.message.channel, True)
         else:
-            await send('Cannot delete more than 100 messages at a time.', ctx.message.channel, True)
+            await send(self.bot, 'Cannot delete more than 100 messages at a time.', ctx.message.channel, True)
 
 
 def setup(bot):
