@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 import logging
 from src.globals import logger
-
 from src.globals import SECRETS
 
 description = 'A in development python bot for the discord platform'
