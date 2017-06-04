@@ -14,9 +14,8 @@ class Events:
     """
     if message.author != self.bot.user:
       if 'Moderator' not in message.author.roles:
-        pattern1 = 'https://discord.gg/[a-z0-9A-Z]+'
-        pattern2 = 'discord.gg/[a-z0-9A-Z]+'
-         if re.search(pattern1, message.content) or re.search(pattern2, message.content):
+        pattern = 'discord.gg/[a-z0-9A-Z]+'
+         if re.search(pattern, message.content)
             await self.bot.delete_message(message)
             await self.bot.send_message(message.author, 'Advertising is not allowed without permission!')
             await self.bot.kick(message.author)
