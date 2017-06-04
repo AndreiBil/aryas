@@ -4,15 +4,24 @@ from discord.ext import commands
 
 from src.globals import SECRETS, conn, logger
 from src.utility import send
+import time
 
 
 class General:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
 
-    @commands.command()
-    async def ping(self) -> None:
-        await self.bot.say('Pong')
+    @commands.command(pass_context=True)
+    async def ping(self, ctx) -> None:
+        """
+                Responds with the latency time.
+                Time took for Aryas to reply
+                """
+        before = time.monotonic()
+        await self.bot.send_typing(ctx.message.author)
+        after = time.monotonic()
+        latency = int(round((after - before) * 1000))
+        await self.bot.say('{}ms'.format(latency))
 
     @commands.command(pass_context=True)
     async def get_love(self, ctx: commands.Context, member: discord.Member) -> None:
