@@ -5,11 +5,30 @@ from discord.ext import commands
 from src.globals import SECRETS, conn, logger
 from src.utility import send
 import time
+import datetime
 
 
 class General:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
+
+    async def on_member_join(self, member: discord.Member):
+        """
+        Sends a private message to new users with welcome information
+        :param member: the member
+        """
+
+        # Create embed
+        title = 'Welcome to Developers'
+        desc = 'Stuff that happens here'
+        rules = '1. Don\'t do this\n2. And that\n3. So on'
+        message = discord.Embed(title=title, description=desc, color=0xff80ff)
+        message.add_field(name='Rules', value=rules, inline=False)
+        message.set_footer(text='I am a bot BEEP BOOP')
+
+        now = datetime.datetime.utcnow()
+        if (now - member.joined_at).total_seconds() < 5:
+            await self.bot.send_message(member, embed=message)
 
     @commands.command(pass_context=True)
     async def ping(self, ctx: commands.Context) -> None:
