@@ -58,7 +58,6 @@ class Fun:
         """
 
         usage: str = "?poll <question>; <length in seconds>; <option 1>; <option 2>; ..."
-        possible_answer_range: range = range(26)
 
         # <editor-fold desc="Helper Functions and Classes">
 
@@ -120,7 +119,7 @@ class Fun:
                            description=format_poll_prompt(question, options),
                            colour=discord.Colour.blue())
 
-        answer_emojis = get_answer_emojis(possible_answer_range[:len(options)])
+        answer_emojis = get_answer_emojis(len(options))
 
         msg: discord.Message = await self.bot.say("", embed=em)
 
