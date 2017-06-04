@@ -157,7 +157,7 @@ class General:
         service = build(SECRETS['google']['cse_name'], "v1",developerKey=SECRETS['google']['api_key'])
         result = service.cse().list(q=str(ctx.message.content.lstrip("$search")),cx=SECRETS['google']['cse_id'],).execute()
         try: 
-           lst = ""
+            lst = "Search results: \n"
             for i in range(5):
             lst += "**{}. {}**\n`{}`\n".format(i+1,result['items'][i]['title'],result['items'][i]['snippet'])
             await self.bot.send_message(ctx.message.channel, lst)
