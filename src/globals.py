@@ -22,8 +22,10 @@ RULES = """1. Be polite.
 9.  Use your common sense ¯\_(ツ)_/¯
 10. Don't ask people for help in PMs. Use the designated channels instead.
 
-11. But most importantly, HAVE FUN! That's so corny and cringy but I had to add that for the lulz"""
-INLINE_CODE = """\```python
+11. But most importantly, HAVE FUN! That's so corny and cringy but I had to add that for the lulz
+
+**Code formatting**
+\```python
 def your_awesome_func():
     return 1+1
 \```

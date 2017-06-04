@@ -2,7 +2,7 @@ import discord
 import pyowm
 from discord.ext import commands
 
-from src.globals import SECRETS, conn, logger, RULES, INLINE_CODE
+from src.globals import SECRETS, conn, logger, RULES
 from src.utility import send
 import time
 import datetime
@@ -17,33 +17,16 @@ class General:
         Sends a private message to new users with welcome information
         :param member: the member
         """
-
         # Create embed
         title = 'Welcome to Developers'
         desc = 'Stuff that happens here'
         message = discord.Embed(title=title, description=desc, color=0xff80ff)
         message.add_field(name='Rules', value=RULES, inline=False)
-        message.add_field(name='Inline code', value=INLINE_CODE, inline=False)
         message.set_footer(text='I am a bot BEEP BOOP')
 
         now = datetime.datetime.utcnow()
         if (now - member.joined_at).total_seconds() < 5:
             await self.bot.send_message(member, embed=message)
-
-    @commands.command()
-    async def welcome(self):
-        """
-        Prints welcome information
-        """
-        # Create embed
-        title = 'Welcome to Developers'
-        desc = 'Stuff that happens here'
-        message = discord.Embed(title=title, description=desc, color=0xff80ff)
-        message.add_field(name='Rules', value=RULES, inline=False)
-        message.add_field(name='Inline code', value=INLINE_CODE, inline=False)
-        message.set_footer(text='I am a bot BEEP BOOP')
-
-        await self.bot.say(embed=message)
 
     @commands.command(pass_context=True)
     async def ping(self, ctx: commands.Context) -> None:
