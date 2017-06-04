@@ -1,7 +1,7 @@
 import discord
 import pyowm
 from discord.ext import commands
-
+from src.extensions.aryasorm import AryasORM  # Imported purely for typehints, do not use directly.
 from src.globals import SECRETS, logger
 from src.utility import send
 import time
@@ -10,6 +10,7 @@ import time
 class General:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
+        self.orm: AryasORM = self.bot.cogs['AryasORM']
 
     @commands.command(pass_context=True)
     async def ping(self, ctx: commands.Context) -> None:
@@ -30,10 +31,7 @@ class General:
         :param ctx: the message context
         :param member: the member
         """
-        c = conn.cursor()
-        # The comma next to user_id needs to be there, don't ask me why.
-        c.execute("""SELECT SUM(amount) FROM love WHERE receiver=? """, (member.id,))
-        love = c.fetchone()[0]
+        love = self.orm.User.get(discord_id=member.id).total_love
 
         if not love:
             await send(self.bot, "{} doesn't have any ❤".format(member.mention, love), ctx.message.channel)
@@ -49,20 +47,31 @@ class General:
         :param love: the amount of love to give
         """
         msg = ctx.message
-        giver = ctx.message.author
-        channel = msg.channel.id
-        server = msg.server.id
         love = int(love)
 
-        c = conn.cursor()
-        c.execute("""INSERT INTO love (giver, receiver, channel, server, amount) VALUES (?, ?, ?, ?, ?)""",
-                  (giver.id,
-                   member.id,
-                   channel,
-                   server,
-                   love))
-        conn.commit()
-        await send(self.bot, '{} showed {}x❤ to {}'.format(giver.mention, love, member.mention), ctx.message.channel)
+        giver = self.orm.User.get_or_create(
+            discord_id=msg.author.id
+        )[0]
+        receiver = self.orm.User.get_or_create(
+            discord_id=member.id
+        )[0]
+        server = self.orm.Server.get_or_create(
+            discord_id=msg.server.id
+        )[0]
+        channel = self.orm.Channel.get_or_create(
+            discord_id=msg.channel.id,
+            server=server.id
+        )[0]
+
+        self.orm.LoveTransaction.create(
+            amount=love,
+            giver=giver,
+            receiver=receiver,
+            channel=channel
+        )
+
+        await send(self.bot, '{} showed {}x❤ to {}'
+                   .format(msg.author.mention, love, member.mention), ctx.message.channel)
 
     @commands.command(pass_context=True)
     async def weather(self, ctx: commands.Context, country, city) -> None:

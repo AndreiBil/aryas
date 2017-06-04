@@ -16,7 +16,8 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 
 # TODO: Build startup_extensions dynamically
-startup_extensions = ['general', 'modtools', 'fun', 'aryasorm']
+# AryasORM must be loaded first
+startup_extensions = ['aryasorm', 'general', 'modtools', 'fun']
 
 
 @bot.event

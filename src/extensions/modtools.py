@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from src.extensions.aryasorm import AryasORM  # Imported purely for typehints, do not use directly.
 from src.utility import get_channel_by_name, send
 from src.globals import MOD_LOG_CHANNEL_NAME
 
@@ -7,11 +8,22 @@ from src.globals import MOD_LOG_CHANNEL_NAME
 class ModTools:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
+        self.orm: AryasORM = self.bot.cogs['AryasORM']
 
-    @commands.command()
-    async def setup(self):
-        pass
-        # TODO: Implelent bot setup command
+    @commands.command(pass_context=True)
+    async def setup(self, ctx, force=''):
+        await self.bot.send_typing(ctx.message.channel)
+
+        try:
+            if force:
+                await self.orm.setup(force=True)
+            else:
+                await self.orm.setup()
+
+            await self.bot.say('Setup complete!')
+        except Exception as e:
+            await self.bot.say('The setup did not complete:\n`{}`'.format(e))
+
 
     @commands.command()
     async def update(self):

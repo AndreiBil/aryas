@@ -46,8 +46,12 @@ class User(DiscordModel):
     #     except Exception as e:
     #         print(e)
 
+    @property
     def total_love(self):
-        pass
+        total = 0
+        for love in LoveTransaction.select().where(LoveTransaction.receiver == self):
+            total += love.amount
+        return total
 
 
 class Message(DiscordModel):
