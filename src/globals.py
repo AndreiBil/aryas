@@ -2,9 +2,12 @@ import json
 import logging
 import sqlite3
 
-conn: sqlite3.Connection = sqlite3.connect('aryas.db')
+CACHE_DIR = "./.aryas/"
 
-with open('./cfg/cfg.json') as data_file:
+conn: sqlite3.Connection = sqlite3.connect(CACHE_DIR+'aryas.db')
+
+
+with open(CACHE_DIR+'cfg.json') as data_file:
     CFG = json.load(data_file)
 
 # The possible status an User can have
