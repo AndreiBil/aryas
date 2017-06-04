@@ -2,7 +2,7 @@ import discord
 import pyowm
 from discord.ext import commands
 
-from src.globals import SECRETS, conn, logger, RULES
+from src.globals import CFG, conn, logger, RULES
 from src.utility import send
 import time
 
@@ -85,7 +85,7 @@ class General:
         :param country: the country
         :param city: the city
         """
-        owm = pyowm.OWM(SECRETS['weather']['api_key'])
+        owm = pyowm.OWM(CFG['weather']['api_key'])
         try:
             forecast = owm.weather_at_place('{},{}'.format(city, country))
             weather = forecast.get_weather()
