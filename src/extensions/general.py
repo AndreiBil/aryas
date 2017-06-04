@@ -2,7 +2,7 @@ import discord
 import pyowm
 from discord.ext import commands
 
-from src.globals import SECRETS, conn, logger
+from src.globals import SECRETS, conn, logger, RULES
 from src.utility import send
 import time
 
@@ -10,6 +10,20 @@ import time
 class General:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
+
+    async def on_member_join(self, member: discord.Member):
+        """
+        Sends a private message to new users with welcome information
+        :param member: the member
+        """
+        # Create embed
+        title = 'Welcome to Developers'
+        desc = 'Stuff that happens here'
+        message = discord.Embed(title=title, description=desc, color=0xff80ff)
+        message.add_field(name='Rules', value=RULES, inline=False)
+        message.set_footer(text='I am a bot BEEP BOOP')
+
+        await self.bot.send_message(member, embed=message)
 
     @commands.command(pass_context=True)
     async def ping(self, ctx: commands.Context) -> None:
