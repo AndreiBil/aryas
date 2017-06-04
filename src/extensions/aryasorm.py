@@ -6,13 +6,13 @@ from src.globals import logger, DATABASE
 from src.models import *
 
 
-class AryaSQL:
+class AryasORM:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
         # Connects to the database.
         self.db = DATABASE
 
-        # Is there a nice way to scope all models within AryaSQL? Still want them defined in a separate file.
+        # Is there a nice way to scope all models within AryaORM? Still want them defined in a separate file.
         self.User = User
         self.Message = Message
         self.Channel = Channel
@@ -45,13 +45,4 @@ class AryaSQL:
 
 
 def setup(bot: commands.Bot) -> None:
-    bot.add_cog(AryaSQL(bot))
-
-# The main method is only here for testing purposes
-def main():
-    aryas = AryaSQL()
-    aryas.setup(force=True)
-
-
-if __name__ == '__main__':
-    main()
+    bot.add_cog(AryasORM(bot))

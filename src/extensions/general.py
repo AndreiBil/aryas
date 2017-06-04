@@ -2,7 +2,7 @@ import discord
 import pyowm
 from discord.ext import commands
 
-from src.globals import SECRETS, conn, logger
+from src.globals import SECRETS, logger
 from src.utility import send
 import time
 
