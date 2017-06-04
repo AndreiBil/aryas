@@ -4,6 +4,9 @@ from discord.ext import commands
 
 from src.globals import SECRETS, conn, logger, RULES
 from src.utility import send
+from urllib import request
+import json
+
 import time
 
 
@@ -76,6 +79,21 @@ class General:
                    love))
         conn.commit()
         await send(self.bot, '{} showed {}x❤ to {}'.format(giver.mention, love, member.mention), ctx.message.channel)
+
+    @commands.command(pass_context=True)
+    async def convert_currency(self, ctx: commands.Context, amount: float, base, to) -> None:
+        """
+        Calculates the requested conversion
+        :param ctx: the message context
+        :param amount: the amount to be converted
+        :param base: the base unit (e.g. USD, EUR)
+        :param to: the conversion unit (e.g. ILS, GBP)
+        """
+        await self.bot.send_typing(ctx.message.channel)
+        with request.urlopen('http://api.fixer.io/latest?base={}'.format(base)) as url:
+            data = json.loads(url.read().decode())
+            msg = '{} {} = {} {}'.format(amount, base, str(float(data['rates'][to]) * amount), to)
+            await self.bot.say(msg)
 
     @commands.command(pass_context=True)
     async def weather(self, ctx: commands.Context, country, city) -> None:
