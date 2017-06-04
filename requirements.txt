@@ -2,3 +2,4 @@ discord.py
 bs4
 grequests
 pyowm
+google-api-python-client

@@ -32,6 +32,11 @@ def create_secret_json(**kwargs):
         },
         'weather': {
             'api_key': kwargs['OpenWeatherMap_api_key'][0]
+        },
+        'google': {
+            'api_key': kwargs['google'][0],
+            'cse_id': kwargs['google'][1],
+            'cse_name': kwargs['google'][2]
         }
     }, sort_keys=True, indent=2, separators=(',', ': '))
 
