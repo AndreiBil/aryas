@@ -1,5 +1,4 @@
 import json
-import sqlite3
 import sys
 from collections import defaultdict
 
@@ -40,18 +39,6 @@ def create_secret_json(**kwargs):
         outfile.write(json_data)
 
 
-def create_love_table():
-    """
-    Creates a love table on a SQLite DB
-    """
-    # Create a SQLite DB and connect to it.
-    conn = sqlite3.connect('aryas.db')
-    c = conn.cursor()
-    # Create love table
-    c.execute("""CREATE TABLE IF NOT EXISTS love
-                  (giver CHAR(18), receiver CHAR(18), channel CHAR(18), server CHAR(18), amount INTEGER)""")
-
-
 def main(argv):
     """
     Creates a love table, and the secret json file
@@ -63,7 +50,6 @@ def main(argv):
         if arg not in arg_dict:
             arg_dict[arg] = [input('Enter {}: '.format(arg))]
 
-    create_love_table()
     create_secret_json(**arg_dict)
 
 if __name__ == '__main__':
