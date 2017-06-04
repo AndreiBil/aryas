@@ -5,7 +5,7 @@ import sys
 
 from jsonschema import validate
 
-CFG_DIR = "./cfg/"
+CFG_DIR = "./.aryas/"
 FILENAME = "cfg.json"
 
 DEFAULT_CFG = {

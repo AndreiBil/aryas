@@ -5,7 +5,7 @@ def main():
     if not check_setup():
         return
 
-    from aryas import main
+    from src.aryas import main
     main()
 
 if __name__ == '__main__':
