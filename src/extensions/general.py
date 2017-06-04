@@ -5,7 +5,6 @@ from discord.ext import commands
 from src.globals import SECRETS, conn, logger, RULES
 from src.utility import send
 import time
-import datetime
 
 
 class General:
@@ -24,9 +23,7 @@ class General:
         message.add_field(name='Rules', value=RULES, inline=False)
         message.set_footer(text='I am a bot BEEP BOOP')
 
-        now = datetime.datetime.utcnow()
-        if (now - member.joined_at).total_seconds() < 5:
-            await self.bot.send_message(member, embed=message)
+        await self.bot.send_message(member, embed=message)
 
     @commands.command(pass_context=True)
     async def ping(self, ctx: commands.Context) -> None:
