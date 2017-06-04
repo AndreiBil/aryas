@@ -100,5 +100,6 @@ ENV/
 
 secrets.json
 .idea
+cfg/
 
 *.db
