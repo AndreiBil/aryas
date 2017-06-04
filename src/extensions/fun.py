@@ -132,7 +132,7 @@ class Fun:
 
         totals: List[int] = [0 for _ in range(len(answer_emojis))]
         # TODO: Check whether the `Message` object auto-updates
-        updated_msg = self.bot.get_message(channel=msg.channel, id=msg.id)
+        updated_msg = await self.bot.get_message(channel=msg.channel, id=msg.id)
         for reaction in updated_msg.reactions:  # type: discord.Reaction
             if reaction.emoji in answer_emojis:
                 totals[answer_emojis.index(reaction.emoji)] = reaction.count - 1
