@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import logging
 from src.globals import logger
-from src.globals import SECRETS
+from src.globals import CFG
 
 description = 'A in development python bot for the discord platform'
 bot_prefix = '?'
@@ -27,7 +27,7 @@ async def on_ready():
     print(discord.__version__)
 
 
-if __name__ == "__main__":
+def main():
     for extension in startup_extensions:
         extension = 'src.extensions.' + extension
         try:
@@ -35,4 +35,4 @@ if __name__ == "__main__":
         except Exception as e:
             raise e
 
-    bot.run(SECRETS['discord']['token'])
+    bot.run(CFG['discord']['token'])
