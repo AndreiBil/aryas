@@ -3,3 +3,4 @@ bs4
 grequests
 pyowm
 mysqlclient
+peewee

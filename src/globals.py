@@ -1,8 +1,7 @@
 import json
 import logging
-import sqlite3
+from src.db import Database
 
-conn: sqlite3.Connection = sqlite3.connect('aryas.db')
 
 with open('secrets.json') as data_file:
     SECRETS = json.load(data_file)

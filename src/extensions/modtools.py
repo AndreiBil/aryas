@@ -8,6 +8,16 @@ class ModTools:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
 
+    @commands.command()
+    async def setup(self):
+        pass
+        # TODO: Implelent bot setup command
+
+    @commands.command()
+    async def update(self):
+        pass
+        # TODO: Implelent bot update command
+
     @commands.command(pass_context=True)
     @commands.has_role('Admin')
     async def kick(self, ctx: commands.Context, member: discord.Member, reason) -> None:
