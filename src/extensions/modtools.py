@@ -10,7 +10,7 @@ class ModTools:
 
     @commands.command(pass_context=True)
     @commands.has_role('Admin')
-    async def kick(self, ctx: commands.Context, member: discord.Member, reason: str) -> None:
+    async def kick(self, ctx: commands.Context, member: discord.Member, reason) -> None:
         """
         Kicks the mentioned user from the server
         :param ctx: the message context
@@ -27,7 +27,7 @@ class ModTools:
 
     @commands.command(pass_context=True)
     @commands.has_role('Admin')
-    async def ban(self, ctx: commands.Context, member: discord.Member, reason: str) -> None:
+    async def ban(self, ctx: commands.Context, member: discord.Member, reason) -> None:
         """
         Bans the mentioned user from the server
         :param ctx: The message context

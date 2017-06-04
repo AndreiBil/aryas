@@ -12,7 +12,7 @@ class General:
         self.bot: commands.Bot = bot
 
     @commands.command(pass_context=True)
-    async def ping(self, ctx) -> None:
+    async def ping(self, ctx: commands.Context) -> None:
         """
                 Responds with the latency time.
                 Time took for Aryas to reply
@@ -65,7 +65,7 @@ class General:
         await send(self.bot, '{} showed {}x❤ to {}'.format(giver.mention, love, member.mention), ctx.message.channel)
 
     @commands.command(pass_context=True)
-    async def weather(self, ctx: commands.Context, country: str, city: str) -> None:
+    async def weather(self, ctx: commands.Context, country, city) -> None:
         """
         Gives info regarding the weather in a city
         :param ctx: the message context
