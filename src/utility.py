@@ -1,9 +1,18 @@
 import asyncio
-
+import discord
 from discord.ext import commands
-
 from src.globals import MESSAGE_SLEEP_TIME
 
+
+async def kick_user(user, mod, server, bot, reason):
+    channel = discord.utils.get(server.channels, name='mod_log')
+    try:
+        await bot.ban(message.author)
+        msg = '{} was kicked by {}. Reason: {}'.format(user, mod, reason)
+        await bot.send_message(channel, msg)
+    except Exception as e:
+        print(e)
+        await bot.send_message(channel, 'Failed to kick {} for {}'.format(user, reason))
 
 def get_channel_by_name(server, name):
     """
