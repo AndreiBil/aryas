@@ -4,8 +4,8 @@ import sqlite3
 
 conn: sqlite3.Connection = sqlite3.connect('aryas.db')
 
-with open('secrets.json') as data_file:
-    SECRETS = json.load(data_file)
+with open('./cfg/cfg.json') as data_file:
+    CFG = json.load(data_file)
 
 # The possible status an User can have
 possible_status = {'away', 'vacation', 'active'}
