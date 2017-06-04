@@ -7,6 +7,8 @@ from src.globals import SECRETS, conn, logger
 import asyncio
 import time
 from googleapiclient.discovery import build
+
+
 class General:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
@@ -142,7 +144,10 @@ class General:
     #    await self.bot.say(message)
     #    await asyncio.sleep(seconds)
     #    await self.bot.say('{} you told me to remind you about "{}"'.format(ctx.message.author.mention, string))
+    
     @commands.command(pass_context=True)
+    @commands.has_role('Support')
+    @commands.has_role('Admin')
     async def search(self, ctx):
         """
         Searches google, returns the title of the first 5 results along with their descriptions.
