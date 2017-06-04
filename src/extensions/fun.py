@@ -1,10 +1,12 @@
+from asyncio import sleep
 from random import randint
 
+import discord
 import requests
 import grequests
 from bs4 import BeautifulSoup
 from discord.ext import commands
-from typing import List
+from typing import List, Tuple
 
 from src.globals import logger
 
@@ -44,6 +46,106 @@ class Fun:
         # res[0].content is the html in bytes
         soup = BeautifulSoup(res[0].content.decode(res[0].encoding), 'html.parser')
         await self.bot.say(soup.find(id='content').text)
+
+    @commands.command(pass_context=True)
+    @commands.has_role('Moderator')
+    async def poll(self, ctx: commands.Context) -> None:
+        """
+        Creates an interactive poll for the moderators
+            The format to ask a question is :
+                               '?survey <question here> ? <survey 1> - <survey 2> - ... ! <nb of minutes for timeout>')
+        :param ctx:     The context of the message (cf discord doc)
+        """
+
+        usage: str = "?poll <question>; <length in seconds>; <option 1>; <option 2>; ..."
+        possible_answer_range: range = range(26)
+
+        # <editor-fold desc="Helper Functions and Classes">
+
+        class PollParseException(RuntimeError):
+            pass
+
+        def format_poll_prompt(question_: str, options_: Tuple[str, ...]) -> str:
+            """
+            :param question_:    The question to ask
+            :param options_:    The possible answers
+            :return:    The poll prompt, eg:
+                    A. Argument 1
+                    B. Argument 2
+                    etc.
+            """
+
+            return "__**" + question_ + "**__\n" + \
+                   ("\n".join([
+                       "\t" + chr(ord('A') + i) + ".\t " + arg
+                       for i, arg in enumerate(options_)
+                   ]))
+
+        def get_answer_emojis(num: int) -> List[str]:
+            return [chr(0x0001f1e6 + x) for x in range(num)]
+
+        def parse_poll(message: str) -> Tuple[str, int, Tuple[str, ...]]:
+            # "?poll "
+            message = message[6:]  # Take out "?poll "
+            args = tuple(map(lambda arg: arg.trim(), message.split(";")))  # Split args by ";" and trim whitespace
+            if len(args) < 4:
+                raise PollParseException("At least 4 args must be supplied; {} given!".format(len(args)))
+
+            question_ = args[0]  # First arg is the question
+
+            try:
+                timeout_ = int(args[1])  # Second arg is the timeout
+            except ValueError:
+                raise PollParseException("Timeout must be a whole number; `{}` given!".format(args[1]))
+
+            options_ = args[2:]
+            if len(options) > 25:
+                raise PollParseException("Too many options; at most 25 should be given, {} actually given!"
+                                         .format(len(options)))
+
+            return question_, timeout_, options_
+
+        # </editor-fold>
+
+        try:
+            question, timeout, options = parse_poll(ctx.message.content)
+        except PollParseException as e:
+            await self.bot.say(str(e) + "\nCorrect usage: `{}`".format(usage))
+            return
+
+        await self.bot.delete_message(ctx.message)  # Delete the command message to avoid redundancy.
+
+        #  Send the poll prompt
+        em = discord.Embed(title="{}'s poll".format(ctx.message.author.name),
+                           description=format_poll_prompt(question, options),
+                           colour=discord.Colour.blue())
+
+        answer_emojis = get_answer_emojis(possible_answer_range[:len(options)])
+
+        msg: discord.Message = await self.bot.say("", embed=em)
+
+        to_delete = await self.bot.say("*Setting up poll; please wait...*")
+        for emoji in answer_emojis:  # Add possible answer emojis
+            await self.bot.add_reaction(msg, emoji)
+        await self.bot.delete_message(to_delete)
+
+        await sleep(timeout)
+
+        totals: List[int] = [0 for _ in range(len(answer_emojis))]
+        # TODO: Check whether the `Message` object auto-updates
+        updated_msg = self.bot.get_message(channel=msg.channel, id=msg.id)
+        for reaction in updated_msg.reactions:  # type: discord.Reaction
+            if reaction.emoji in answer_emojis:
+                totals[answer_emojis.index(reaction.emoji)] = reaction.count - 1
+
+        author: str = ctx.message.author.name
+        results_title = "__**Results of {} poll:**__\n" \
+            .format(author + "'" + ("" if author.lower().endswith("s") else "s"))
+        results_desc = "\n".join(["{} -> {}".format(answer, total) for answer, total in zip(options, totals)])
+
+        # TODO: Draw and post a graph of the results.
+        em = discord.Embed(title=results_title, description=results_desc, colour=discord.Colour.dark_green())
+        await self.bot.say('', embed=em)
 
 
 def request_exception_handler(request, exception) -> None:
