@@ -223,6 +223,37 @@ class General:
             await send(self.bot, 'Could not get the weather in {}, {}.'
                        .format(country, city), ctx.message.channel, True)
 
+    @commands.command(pass_context=True)
+    @commands.has_role('Admin')
+    async def search(self, ctx):
+        """
+        Searches google, returns the title of the first 5 results along with their descriptions.
+        Allows users to select a result then returns a link.
+        :param ctx:     The message content.
+        """
+        service = build(self.config['google']['cse_name'], "v1",developerKey=self.config['google']['api_key'])
+        result = service.cse().list(q=str(ctx.message.content.lstrip("$search")),cx=self.config['google']['cse_id'],safe="medium",).execute()
+        try:
+            if 'items' in result and len(result['items'])>0:
+               lst = "**Search results:** \n"
+               if len(result['items'])>=5:
+                   items = 5
+               else:
+                   items = len(result['items'])
+               for i in range(items):
+                   lst += "**{}. {}**\n`{}`\n".format(i+1,result['items'][i]['title'],result['items'][i]['snippet'])
+               await self.bot.send_message(ctx.message.channel, lst)
+               response = await self.bot.wait_for_message(timeout=20, channel=ctx.message.channel, check=lambda m: m.content.isnumeric() and int(m.content) in range(1,6))
+               if response:
+                   link= result['items'][int(response.content)-1]['link']
+                   await self.bot.send_message(ctx.message.channel, link)
+            else:
+                await self.bot.send_message(ctx.message.channel, 'No results found.')
+        except Exception as e:
+            logger.error(e)
+            await self.bot.send_message(ctx.message.channel,"Something went wrong while googling.")
 
-def setup(bot: commands.Bot) -> None:
+
+def setup(bot):
     bot.add_cog(General(bot))
+
