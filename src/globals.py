@@ -1,7 +1,9 @@
 import json
 import logging
-from src.db import Database
+from peewee import MySQLDatabase
 
+# Temporarily stored as a global. In the future this will change depending on the environment
+DATABASE = MySQLDatabase(database='aryas', user='root', password='')
 
 with open('secrets.json') as data_file:
     SECRETS = json.load(data_file)
