@@ -6,8 +6,7 @@ from src.utility import send
 from src.globals import SECRETS, conn, logger
 import asyncio
 import time
-
-
+from googleapiclient.discovery import build
 class General:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
@@ -143,6 +142,26 @@ class General:
     #    await self.bot.say(message)
     #    await asyncio.sleep(seconds)
     #    await self.bot.say('{} you told me to remind you about "{}"'.format(ctx.message.author.mention, string))
+    @commands.command(pass_context=True)
+    async def search(self, ctx):
+        """
+        Searches google, returns the title of the first 5 results along with their descriptions.
+        Allows users to select a result then returns a link.
+        :param ctx:     The message content.
+        """
+        service = build(SECRETS['google']['cse_name'], "v1",developerKey=SECRETS['google']['api_key'])
+        result = service.cse().list(q=str(ctx.message.content.lstrip("$search")),cx=SECRETS['google']['cse_id'],).execute()
+        try: 
+           lst = ""
+            for i in range(5):
+            lst += "**{}. {}**\n`{}`\n".format(i+1,result['items'][i]['title'],result['items'][i]['snippet'])
+            await self.bot.send_message(ctx.message.channel, lst)
+            response = await self.bot.wait_for_message(ctx.message.author,timeout=180)
+            link= result['items'][int(response.content)-1]['link']
+            await self.bot.send_message(ctx.message.channel, link)
+        except Exception as e:
+            logger.error(e)
+            await self.bot.send_message(ctx.message.channel,"Something went wrong while googling.")
 
 
 def setup(bot):
