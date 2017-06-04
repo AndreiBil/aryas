@@ -57,14 +57,14 @@ class Fun:
         :param ctx:     The context of the message (cf discord doc)
         """
 
-        usage: str = "?poll <question>; <length in seconds>; <option 1>; <option 2>; ..."
+        usage = "?poll <question>; <length in seconds>; <option 1>; <option 2>; ..."
 
         # <editor-fold desc="Helper Functions and Classes">
 
         class PollParseException(RuntimeError):
             pass
 
-        def format_poll_prompt(question_: str, options_: Tuple[str, ...]) -> str:
+        def format_poll_prompt(question_, options_: Tuple[str, ...]) -> str:
             """
             :param question_:    The question to ask
             :param options_:    The possible answers
@@ -83,7 +83,7 @@ class Fun:
         def get_answer_emojis(num: int) -> List[str]:
             return [chr(0x0001f1e6 + x) for x in range(num)]
 
-        def parse_poll(message: str) -> Tuple[str, int, Tuple[str, ...]]:
+        def parse_poll(message) -> Tuple[str, float, Tuple[str, ...]]:
             # "?poll "
             message = message[6:]  # Take out "?poll "
             args = tuple(map(lambda arg: arg.strip(), message.split(";")))  # Split args by ";" and trim whitespace
@@ -93,9 +93,11 @@ class Fun:
             question_ = args[0]  # First arg is the question
 
             try:
-                timeout_ = int(args[1])  # Second arg is the timeout
+                timeout_ = float(args[1])*60  # Second arg is the timeout, in minutes (now converted to seconds)
+                if timeout_ < 0:
+                    raise ValueError()
             except ValueError:
-                raise PollParseException("Timeout must be a whole number; `{}` given!".format(args[1]))
+                raise PollParseException("Timeout must be a positive number; `{}` given!".format(args[1]))
 
             options_ = args[2:]
             if len(options_) > 25:
@@ -137,7 +139,7 @@ class Fun:
             if reaction.emoji in answer_emojis:
                 totals[answer_emojis.index(reaction.emoji)] = reaction.count - 1
 
-        author: str = ctx.message.author.name
+        author = ctx.message.author.name
         results_title = "__**Results of {} poll:**__\n" \
             .format(author + "'" + ("" if author.lower().endswith("s") else "s"))
         results_desc = "\n".join(["{} -> {}".format(answer, total) for answer, total in zip(options, totals)])
