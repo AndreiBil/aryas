@@ -61,22 +61,9 @@ def cfg_file_is_valid() -> bool:
     return False
 
 
-def create_love_table():
-    """
-    Creates a love table on a SQLite DB
-    """
-    # Create a SQLite DB and connect to it.
-    conn = sqlite3.connect('aryas.db')
-    c = conn.cursor()
-    # Create love table
-    c.execute("""CREATE TABLE IF NOT EXISTS love
-                  (giver CHAR(18), receiver CHAR(18), channel CHAR(18), server CHAR(18), amount INTEGER)""")
-
-
 def check_setup() -> bool:
     """
     Performs neccesary checks when starting the bot.
     :return: A boolean stating whether the program should continue.
     """
-    create_love_table()
     return cfg_file_is_valid()
