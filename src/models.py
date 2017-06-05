@@ -1,5 +1,5 @@
+import datetime
 from peewee import *
-from discord import utils
 from src.globals import DATABASE
 
 
@@ -9,6 +9,11 @@ class BaseModel(Model):
     """
     # All models have an auto incrementing integer primary key.
     id = PrimaryKeyField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField
+
+    def save(self, *args, **kwargs):
+        self.updated_at = datetime.datetime.now()
 
     class Meta:
         # Uses the global database currently. Will use env vars to potentially differentiate between different
@@ -21,7 +26,6 @@ class DiscordModel(BaseModel):
     Applies to everything that directly models a discord object eg. User, Server, Channel, Message
     """
     discord_id = FixedCharField(18, index=True, unique=True)
-
 
 
 class User(DiscordModel):
