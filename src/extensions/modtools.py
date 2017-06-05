@@ -24,7 +24,6 @@ class ModTools:
         except Exception as e:
             await self.bot.say('The setup did not complete:\n`{}`'.format(e))
 
-
     @commands.command()
     async def update(self):
         pass

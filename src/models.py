@@ -22,7 +22,6 @@ class DiscordModel(BaseModel):
     discord_id = FixedCharField(18, index=True, unique=True)
 
 
-
 class User(DiscordModel):
     """
     Models a Discord user.
