@@ -1,7 +1,7 @@
 import discord
 import pyowm
 from discord.ext import commands
-from src.globals import SECRETS, conn, logger, RULES, LEN_UNITS, MASS_UNITS
+from src.globals import CFG, conn, logger, RULES, LEN_UNITS, MASS_UNITS
 
 from src.utility import send
 from urllib import request
