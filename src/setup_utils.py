@@ -1,6 +1,5 @@
 import json
 import os
-import sqlite3
 import sys
 
 from jsonschema import validate
@@ -9,6 +8,13 @@ CFG_DIR = "./.aryas/"
 FILENAME = "cfg.json"
 
 DEFAULT_CFG = {
+    'aryas': {
+        'db': {
+            'host': '127.0.0.1',
+            'user': '',
+            'pass': ''
+        }
+    },
     'discord': {
         'token': ''
     },
@@ -20,6 +26,19 @@ DEFAULT_CFG = {
 CFG_SCHEMA = {
     "type": "object",
     "properties": {
+        "aryas": {
+            "type": "object",
+            "properties": {
+                "db": {
+                    "type": "object",
+                    "properties": {
+                        "host": {"type": "string"},
+                        "user": {"type": "string"},
+                        "pass": {"type": "string"}
+                    }
+                }
+            }
+        },
         "discord": {
             "type": "object",
             "properties": {

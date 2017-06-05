@@ -1,6 +1,5 @@
 from peewee import *
-from discord import utils
-from src.globals import DATABASE
+from src.globals import DATABASE as _DATABASE
 
 
 class BaseModel(Model):
@@ -13,7 +12,7 @@ class BaseModel(Model):
     class Meta:
         # Uses the global database currently. Will use env vars to potentially differentiate between different
         # environments in the future eg. production env uses MySQL, dev env uses SQLite
-        database = DATABASE
+        database = _DATABASE
 
 
 class DiscordModel(BaseModel):
