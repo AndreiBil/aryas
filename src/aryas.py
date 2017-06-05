@@ -6,7 +6,7 @@ from src.globals import CACHE_DIR, CFG
 
 description = 'A in development python bot for the discord platform'
 bot_prefix = '?'
-bot = commands.Bot(command_prefix='?', description=description)
+bot = commands.Bot(command_prefix='?', description=description, pm_help=True, help_attrs=dict(hidden=True))
 
 
 # Change this to get more/less logs.
