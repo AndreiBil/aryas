@@ -1,6 +1,7 @@
-import discord
-from discord.ext import commands
 import re
+
+from discord.ext import commands
+
 from src.utility import kick_user
 
 
