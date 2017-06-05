@@ -38,7 +38,7 @@ class General:
         await self.bot.send_typing(ctx.message.author)
         after = time.monotonic()
         latency = int(round((after - before) * 1000))
-        await self.bot.say('{}ms'.format(latency))
+        await self.bot.say('Test {}ms'.format(latency))
 
     @commands.command(pass_context=True)
     async def get_love(self, ctx: commands.Context, member: discord.Member) -> None:

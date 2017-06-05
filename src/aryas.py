@@ -16,7 +16,7 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 
 # TODO: Build startup_extensions dynamically
-startup_extensions = ['general', 'modtools', 'fun']
+startup_extensions = ['general', 'modtools', 'fun', 'events']
 
 
 @bot.event
