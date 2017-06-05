@@ -1,8 +1,7 @@
 import asyncio
 import discord
 from discord.ext import commands
-from src.globals import MESSAGE_SLEEP_TIME, logger
-from src.utility import send
+from src.globals import MESSAGE_SLEEP_TIME, logger, MOD_LOG_CHANNEL_NAME
 
 
 async def kick_user(user, mod, server, bot, reason):
@@ -15,12 +14,14 @@ async def kick_user(user, mod, server, bot, reason):
     :param reason: Reason why user is being kicked
     """
     try:
-        await bot.kick(user)
+        await bot.kick(user, )
+        channel = get_channel_by_name(server, MOD_LOG_CHANNEL_NAME)
         msg = '{} was kicked by {}. Reason: {}'.format(user.name, mod.mention, reason)
         await send(bot, msg, channel, False)
     except Exception as e:
         logger.error(e)
         await send(bot, 'Failed to kick {} for {}'.format(user.mention, reason), channel, False)
+
 
 def get_channel_by_name(server, name):
     """
