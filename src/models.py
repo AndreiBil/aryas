@@ -1,4 +1,5 @@
 from peewee import *
+import datetime
 from src.globals import DATABASE as _DATABASE
 
 
@@ -8,6 +9,12 @@ class BaseModel(Model):
     """
     # All models have an auto incrementing integer primary key.
     id = PrimaryKeyField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
+
+    def save(self, *args, **kwargs):
+        self.updated_at = datetime.datetime.now()
+        return super(BaseModel, self).save(*args, **kwargs)
 
     class Meta:
         # Uses the global database currently. Will use env vars to potentially differentiate between different
@@ -28,21 +35,10 @@ class User(DiscordModel):
     Whereas the discord.py library has sub classes such as Member, this is not relevant in db-land.
     """
     name = CharField(default='')
-
-    # def find_or_create(self, discord_id, server):
-    #     """
-    #     :param discord_id:
-    #     :return: User model object.
-    #     """
-    #     # member = find(lambda m: m.name == 'Mighty', channel.server.members)
-    #     try:
-    #         user = discord.utils.find(lambda u: u.id == discord_id, server)
-    #         self.create(
-    #             discord_id=discord_id,
-    #             username=user.username
-    #         )
-    #     except Exception as e:
-    #         print(e)
+    game = CharField(default='')
+    status = CharField(default='')
+    discriminator = CharField(default='')
+    top_role = CharField(default='')
 
     @property
     def total_love(self):
@@ -57,7 +53,10 @@ class Message(DiscordModel):
     Models a Discord message.
     """
     user = ForeignKeyField(User, related_name='messages')
+    channel = ForeignKeyField(Channel, related_name='messages')
+    server = ForeignKeyField(Server, related_name='messages')
     body = CharField()
+    edited = DateTimeField(null=True)
 
 
 class Server(DiscordModel):
@@ -72,6 +71,17 @@ class Channel(DiscordModel):
     Models a Discord channel.
     """
     server = ForeignKeyField(Server, related_name='channels')
+
+
+class ServerNick(BaseModel):
+    """
+    Stores the relationship between servers and users' nicknames.
+    """
+    user = ForeignKeyField(User)
+    server = ForeignKeyField(Server)
+
+    class Meta:
+        primary_key = CompositeKey('user', 'server')
 
 
 class LoveTransaction(BaseModel):
