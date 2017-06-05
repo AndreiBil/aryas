@@ -98,7 +98,7 @@ ENV/
 # mypy
 .mypy_cache/
 
-secrets.json
 .idea
+.aryas/
 
 *.db

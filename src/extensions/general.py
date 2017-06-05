@@ -2,8 +2,10 @@ import discord
 import pyowm
 from discord.ext import commands
 from src.extensions.aryasorm import AryasORM  # Imported purely for typehints, do not use directly.
-from src.globals import SECRETS, logger
+from src.globals import CFG, logger, RULES, LEN_UNITS, MASS_UNITS
 from src.utility import send
+from urllib import request
+import json
 import time
 
 
@@ -11,6 +13,20 @@ class General:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
         self.orm: AryasORM = self.bot.cogs['AryasORM']
+
+    async def on_member_join(self, member: discord.Member):
+        """
+        Sends a private message to new users with welcome information
+        :param member: the member
+        """
+        # Create embed
+        title = 'Welcome to Developers'
+        desc = 'Stuff that happens here'
+        message = discord.Embed(title=title, description=desc, color=0xff80ff)
+        message.add_field(name='Rules', value=RULES, inline=False)
+        message.set_footer(text='I am a bot BEEP BOOP')
+
+        await self.bot.send_message(member, embed=message)
 
     @commands.command(pass_context=True)
     async def ping(self, ctx: commands.Context) -> None:
@@ -39,7 +55,7 @@ class General:
             await send(self.bot, '{} has {}x❤'.format(member.mention, love), ctx.message.channel)
 
     @commands.command(pass_context=True)
-    async def show_love(self, ctx: commands.Context, member: discord.Member, love: str) -> None:
+    async def show_love(self, ctx: commands.Context, member: discord.Member, love: int) -> None:
         """
         Gives love to a user
         :param ctx: the message context
@@ -74,6 +90,53 @@ class General:
                    .format(msg.author.mention, love, member.mention), ctx.message.channel)
 
     @commands.command(pass_context=True)
+    async def convert_currency(self, ctx: commands.Context, amount: float, base, to) -> None:
+        """
+        Calculates the requested currency conversion
+        :param ctx: the message context
+        :param amount: the amount to convert
+        :param base: the base unit (e.g. USD, EUR)
+        :param to: the conversion unit (e.g. ILS, GBP)
+        """
+        await self.bot.send_typing(ctx.message.channel)
+        with request.urlopen('http://api.fixer.io/latest?base={}'.format(base)) as url:
+            data = json.loads(url.read().decode())
+            msg = '{} {} = {} {}'.format(amount, base, str(float(data['rates'][to]) * amount), to)
+            await self.bot.say(msg)
+
+    @commands.command(pass_context=True)
+    async def convert_length(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
+        """
+        Calculates the requested length conversion
+        :param ctx: the message context
+        :param amount: the amount to convert
+        :param unit1: the original unit
+        :param unit2: the unit to convert to
+        """
+        try:
+            value = (LEN_UNITS[unit1] / LEN_UNITS[unit2]) * amount
+            await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
+        except Exception as e:
+            print(e)
+            await send(self.bot, 'Could not covert {} {} to {}'.format(amount, unit1, unit2), ctx.message.channel, True)
+
+    @commands.command(pass_context=True)
+    async def convert_mass(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
+        """
+        Calculates the requested mass conversion
+        :param ctx: the message context
+        :param amount: the amount to convert
+        :param unit1: the original unit
+        :param unit2: the unit to convert to
+        """
+        try:
+            value = (MASS_UNITS[unit1] / MASS_UNITS[unit2]) * amount
+            await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
+        except Exception as e:
+            print(e)
+            await send(self.bot, 'Could not covert {} {} to {}'.format(amount, unit1, unit2), ctx.message.channel, True)
+
+    @commands.command(pass_context=True)
     async def weather(self, ctx: commands.Context, country, city) -> None:
         """
         Gives info regarding the weather in a city
@@ -81,7 +144,10 @@ class General:
         :param country: the country
         :param city: the city
         """
-        owm = pyowm.OWM(SECRETS['weather']['api_key'])
+
+        owm = pyowm.OWM(CFG['weather']['api_key'])
+
+        await self.bot.send_typing(ctx.message.channel)
         try:
             forecast = owm.weather_at_place('{},{}'.format(city, country))
             weather = forecast.get_weather()

@@ -29,6 +29,28 @@ class Fun:
                 '{} The gods are with you, you rolled **{}**'.format(ctx.message.author.mention, random_dice))
 
     @commands.command(pass_context=True)
+    async def telljoke(self, ctx: commands.Context) -> None:
+        """
+        Responds with a random joke from theoatmeal.com
+        :param ctx: The message context
+        """
+        # TODO: get more joke formats (or a better source)
+        # Send typing as the request can take some time.
+        await self.bot.send_typing(ctx.message.channel)
+
+        # Build a new request object
+        req: grequests.AsyncRequest = grequests.get('http://theoatmeal.com/djtaf/', timeout=1)
+        # Send new request
+        res: List[requests.Response] = grequests.map([req], exception_handler=request_exception_handler)
+
+        # Since we only have one request we can just fetch the first one.
+        # res[0].content is the html in bytes
+        soup = BeautifulSoup(res[0].content.decode(res[0].encoding), 'html.parser')
+        joke_ul = soup.find(id='joke_0')
+        joke = joke_ul.find('h2', {'class': 'part1'}).text.lstrip() + '\n' + joke_ul.find(id='part2_0').text
+        await self.bot.say(joke)
+
+    @commands.command(pass_context=True)
     async def randomfact(self, ctx: commands.Context) -> None:
         """
         Responds with a random fact scraped from unkno.com

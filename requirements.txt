@@ -4,3 +4,4 @@ grequests
 pyowm
 mysqlclient
 peewee
+jsonschema
