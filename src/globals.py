@@ -3,20 +3,23 @@ import logging
 from peewee import MySQLDatabase
 
 
-# Temporarily stored as a global. In the future this will change depending on the environment
-DATABASE = MySQLDatabase(database='aryas', user='root', password='')
-
 CACHE_DIR = "./.aryas/"
 
 with open(CACHE_DIR+'cfg.json') as data_file:
     CFG = json.load(data_file)
+
+# Temporarily stored as a global. In the future this will change depending on the environment
+DATABASE = MySQLDatabase(database='aryas',
+                         user=CFG["aryas"]["db"]["user"],
+                         password=CFG["aryas"]["db"]["pass"],
+                         host=CFG["aryas"]["db"]["host"])
 
 # The possible status an User can have
 possible_status = {'away', 'vacation', 'active'}
 
 # Rules for the server
 RULES = """1. Be polite.
-2. Respect the opinion of others. ( Apple  > Android  tho and fuck anyone who says otherwise)
+2. Respect the opinion of others. ( Apple < Android  tho and fuck anyone who says otherwise)
 3. Don't spam.
 4. Try Google before you ask questions here
 5. Don't advertise any other discord server in any of the channels/DMs unless given permission by a mod/admin.
