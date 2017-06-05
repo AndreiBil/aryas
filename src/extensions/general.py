@@ -2,8 +2,11 @@ import discord
 import pyowm
 from discord.ext import commands
 
-from src.globals import SECRETS, conn, logger, RULES
+from src.globals import SECRETS, conn, logger, RULES, LEN_UNITS, MASS_UNITS
 from src.utility import send
+from urllib import request
+import json
+
 import time
 
 
@@ -78,6 +81,53 @@ class General:
         await send(self.bot, '{} showed {}x❤ to {}'.format(giver.mention, love, member.mention), ctx.message.channel)
 
     @commands.command(pass_context=True)
+    async def convert_currency(self, ctx: commands.Context, amount: float, base, to) -> None:
+        """
+        Calculates the requested currency conversion
+        :param ctx: the message context
+        :param amount: the amount to convert
+        :param base: the base unit (e.g. USD, EUR)
+        :param to: the conversion unit (e.g. ILS, GBP)
+        """
+        await self.bot.send_typing(ctx.message.channel)
+        with request.urlopen('http://api.fixer.io/latest?base={}'.format(base)) as url:
+            data = json.loads(url.read().decode())
+            msg = '{} {} = {} {}'.format(amount, base, str(float(data['rates'][to]) * amount), to)
+            await self.bot.say(msg)
+
+    @commands.command(pass_context=True)
+    async def convert_length(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
+        """
+        Calculates the requested length conversion
+        :param ctx: the message context
+        :param amount: the amount to convert
+        :param unit1: the original unit
+        :param unit2: the unit to convert to
+        """
+        try:
+            value = (LEN_UNITS[unit1] / LEN_UNITS[unit2]) * amount
+            await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
+        except Exception as e:
+            print(e)
+            await send(self.bot, 'Could not covert {} {} to {}'.format(amount, unit1, unit2), ctx.message.channel, True)
+
+    @commands.command(pass_context=True)
+    async def convert_mass(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
+        """
+        Calculates the requested mass conversion
+        :param ctx: the message context
+        :param amount: the amount to convert
+        :param unit1: the original unit
+        :param unit2: the unit to convert to
+        """
+        try:
+            value = (MASS_UNITS[unit1] / MASS_UNITS[unit2]) * amount
+            await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
+        except Exception as e:
+            print(e)
+            await send(self.bot, 'Could not covert {} {} to {}'.format(amount, unit1, unit2), ctx.message.channel, True)
+
+    @commands.command(pass_context=True)
     async def weather(self, ctx: commands.Context, country, city) -> None:
         """
         Gives info regarding the weather in a city
@@ -85,6 +135,7 @@ class General:
         :param country: the country
         :param city: the city
         """
+        await self.bot.send_typing(ctx.message.channel)
         owm = pyowm.OWM(SECRETS['weather']['api_key'])
         try:
             forecast = owm.weather_at_place('{},{}'.format(city, country))
