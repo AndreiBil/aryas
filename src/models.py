@@ -28,6 +28,8 @@ class User(DiscordModel):
     Whereas the discord.py library has sub classes such as Member, this is not relevant in db-land.
     """
     name = CharField(default='')
+    # TODO: make this autoincrement
+    total_messages = IntegerField(default=0)
 
     # def find_or_create(self, discord_id, server):
     #     """

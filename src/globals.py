@@ -1,6 +1,6 @@
 import json
 import logging
-from peewee import MySQLDatabase
+from peewee import SqliteDatabase
 
 
 CACHE_DIR = "./.aryas/"
@@ -9,10 +9,14 @@ with open(CACHE_DIR+'cfg.json') as data_file:
     CFG = json.load(data_file)
 
 # Temporarily stored as a global. In the future this will change depending on the environment
-DATABASE = MySQLDatabase(database='aryas',
-                         user=CFG["aryas"]["db"]["user"],
-                         password=CFG["aryas"]["db"]["pass"],
-                         host=CFG["aryas"]["db"]["host"])
+# DATABASE = MySQLDatabase(database='aryas',
+#                         user=CFG["aryas"]["db"]["user"],
+#                         password=CFG["aryas"]["db"]["pass"],
+#                         host=CFG["aryas"]["db"]["host"])
+DATABASE = SqliteDatabase('.aryas/aryas.db')
+
+# embed color
+COLOR = 0xff80ff
 
 # The possible status an User can have
 possible_status = {'away', 'vacation', 'active'}

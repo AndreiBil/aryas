@@ -5,6 +5,12 @@ from discord import Server, Channel
 from src.globals import MESSAGE_SLEEP_TIME, logger, MOD_LOG_CHANNEL_NAME
 
 
+def is_command(bot, cmd):
+    if not cmd.startswith(bot.command_prefix):
+        return False
+    cmd = cmd.lstrip(bot.command_prefix).split(' ')[0]
+    return cmd in bot.commands
+
 async def kick_user(user, mod, server, bot, reason):
     """
     Kicks a user and then logs it to the 'mod_log' channel
