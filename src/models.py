@@ -40,6 +40,23 @@ class User(DiscordModel):
     discriminator = CharField(default='')
     top_role = CharField(default='')
     is_bot = BooleanField(default=False)
+    # TODO: make this autoincrement
+    total_messages = IntegerField(default=0)
+
+    # def find_or_create(self, discord_id, server):
+    #     """
+    #     :param discord_id:
+    #     :return: User model object.
+    #     """
+    #     # member = find(lambda m: m.name == 'Mighty', channel.server.members)
+    #     try:
+    #         user = discord.utils.find(lambda u: u.id == discord_id, server)
+    #         self.create(
+    #             discord_id=discord_id,
+    #             username=user.username
+    #         )
+    #     except Exception as e:
+    #         print(e)
 
     @property
     def total_love(self):
