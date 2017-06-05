@@ -37,6 +37,10 @@ def your_awesome_func():
 
 MESSAGE_SLEEP_TIME = 2
 MOD_LOG_CHANNEL_NAME = 'mod_log'
+LEN_UNITS = {'millimeter': 0.001, 'centimeter': 0.01, 'meter': 1, 'kilometer': 1000,
+             'inch': 0.0254, 'foot': 3.28084, 'yard': 1.09361}
+MASS_UNITS = {'milligram': 0.000001, 'gram': 0.001, 'kilogram': 1, 'ton': 1000,
+              'pound': 0.453592, 'ounce': 0.0283495}
 
 # Setup logging.
 logger = logging.getLogger('discord')
