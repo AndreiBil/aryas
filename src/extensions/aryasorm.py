@@ -33,8 +33,7 @@ class AryasORM:
             except OperationalError as e:
                 logger.error(e)
 
-    @staticmethod
-    async def update_all():
+    async def update_all(self):
         """
         Updates models to check for things like name changes, status changes etc.
         :return: 

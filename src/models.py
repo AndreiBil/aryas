@@ -1,4 +1,3 @@
-import datetime
 from peewee import *
 from src.globals import DATABASE as _DATABASE
 
@@ -9,11 +8,6 @@ class BaseModel(Model):
     """
     # All models have an auto incrementing integer primary key.
     id = PrimaryKeyField()
-    created_at = DateTimeField(default=datetime.datetime.now)
-    updated_at = DateTimeField
-
-    def save(self, *args, **kwargs):
-        self.updated_at = datetime.datetime.now()
 
     class Meta:
         # Uses the global database currently. Will use env vars to potentially differentiate between different
