@@ -100,5 +100,6 @@ ENV/
 
 .idea
 .aryas/
+cfg/
 
 *.db
