@@ -14,9 +14,9 @@ async def kick_user(user, mod, server, bot, reason):
     :param bot: Bot instance to kick and log 
     :param reason: Reason why user is being kicked
     """
+    channel = get_channel_by_name(server, MOD_LOG_CHANNEL_NAME)
     try:
-        await bot.kick(user, )
-        channel = get_channel_by_name(server, MOD_LOG_CHANNEL_NAME)
+        await bot.kick(user)
         msg = '{} was kicked by {}. Reason: {}'.format(user.name, mod.mention, reason)
         await send(bot, msg, channel, False)
     except Exception as e:
