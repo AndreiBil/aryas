@@ -1,8 +1,8 @@
 import discord
 import pyowm
 from discord.ext import commands
-
 from src.globals import SECRETS, conn, logger, RULES, LEN_UNITS, MASS_UNITS
+
 from src.utility import send
 from urllib import request
 import json
@@ -135,8 +135,10 @@ class General:
         :param country: the country
         :param city: the city
         """
+
+        owm = pyowm.OWM(CFG['weather']['api_key'])
+
         await self.bot.send_typing(ctx.message.channel)
-        owm = pyowm.OWM(SECRETS['weather']['api_key'])
         try:
             forecast = owm.weather_at_place('{},{}'.format(city, country))
             weather = forecast.get_weather()
