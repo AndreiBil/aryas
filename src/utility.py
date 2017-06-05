@@ -37,7 +37,6 @@ def get_channel_by_name(server: Server, name: str) -> Union[Channel, None]:
     return None
 
 
-@commands.has_role('Moderator')
 async def send(bot: commands.Bot, message: str, channel: Channel, delete=False, time=MESSAGE_SLEEP_TIME) -> None:
     """
     Sends a message to the server and deletes it after a period of time
