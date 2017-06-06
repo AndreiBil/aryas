@@ -1,7 +1,6 @@
-from discord.ext.commands.formatter import HelpFormatter, Paginator
-from discord.ext.commands import Command
 import inspect
-import itertools
+
+from discord.ext.commands.formatter import HelpFormatter, Paginator
 
 
 class AryasFormatter(HelpFormatter):
