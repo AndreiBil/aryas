@@ -39,6 +39,7 @@ class User(DiscordModel):
     status = CharField(default='')
     discriminator = CharField(default='')
     top_role = CharField(default='')
+    is_bot = BooleanField(default=False)
 
     @property
     def total_love(self):
@@ -57,6 +58,7 @@ class Message(DiscordModel):
     server = ForeignKeyField(Server, related_name='messages')
     body = CharField()
     edited = DateTimeField(null=True)
+    is_command = BooleanField(default=False)
 
 
 class Server(DiscordModel):
