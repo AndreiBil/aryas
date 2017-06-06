@@ -2,23 +2,21 @@ import discord
 from discord.ext import commands
 import logging
 from src.globals import logger
-from src.aryas_formatter import AryasFormatter
-
-from src.globals import SECRETS
+from src.globals import CACHE_DIR, CFG
 
 description = 'A in development python bot for the discord platform'
 bot_prefix = '?'
-bot = commands.Bot(command_prefix='?', description=description, formatter=AryasFormatter(), pm_help=True)
+bot = commands.Bot(command_prefix='?', description=description, pm_help=True, help_attrs=dict(hidden=True))
 
 
 # Change this to get more/less logs.
 logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(filename='aryas.log', encoding='utf-8', mode='w')
+handler = logging.FileHandler(filename=CACHE_DIR+'aryas.log', encoding='utf-8', mode='w')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
 # TODO: Build startup_extensions dynamically
-startup_extensions = ['general', 'modtools', 'fun']
+startup_extensions = ['general', 'modtools', 'fun', 'events']
 
 
 @bot.event
@@ -29,7 +27,7 @@ async def on_ready():
     print(discord.__version__)
 
 
-if __name__ == "__main__":
+def main():
     for extension in startup_extensions:
         extension = 'src.extensions.' + extension
         try:
@@ -37,4 +35,4 @@ if __name__ == "__main__":
         except Exception as e:
             raise e
 
-    bot.run(SECRETS['discord']['token'])
+    bot.run(CFG['discord']['token'])

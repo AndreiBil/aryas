@@ -52,8 +52,8 @@ class ModTools:
         """
         if number <= 100:
             # In order to delete the command message too, the number of messages to clear is incremented
-            await self.bot.purge_from(ctx.message.channel, limit=number + 1)
-            await send(self.bot, '{} message(s) cleared.'.format(number), ctx.message.channel, True)
+            msgs = await self.bot.purge_from(ctx.message.channel, limit=number + 1)
+            await send(self.bot, '{} message(s) cleared.'.format(len(msgs)), ctx.message.channel, True)
         else:
             await send(self.bot, 'Cannot delete more than 100 messages at a time.', ctx.message.channel, True)
 

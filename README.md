@@ -2,15 +2,18 @@
 A bot for the Developers Discord server
 
 ## Running the bot
-1. Run `setup.sh` like so:  
-  
-```
-$ ./setup.sh YOUR_DISCORD_TOKEN YOUR_OWM_TOKEN
-```
+1 Clone the repo and `cd` into its root folder.
 
+2. `$ docker build . -t aryas_bot`
 
-3. Run `run.sh` like so:  
-  
-```
-$ ./run.sh
-```
+3. `$ ./run.sh`
+
+4. `$ docker rm -f [CONTAINER HASH]`
+
+5. `Edit `~/.aryas/cfg.json`, add the necessary API keys.`
+
+6. `$ ./run.sh`
+
+7) ...
+
+8) Profit!
