@@ -14,6 +14,9 @@ DATABASE = MySQLDatabase(database='aryas',
                          password=CFG["aryas"]["db"]["pass"],
                          host=CFG["aryas"]["db"]["host"])
 
+# embed color
+COLOR = 0xff80ff
+
 # The possible status an User can have
 possible_status = {'away', 'vacation', 'active'}
 

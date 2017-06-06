@@ -5,6 +5,19 @@ from discord import Server, Channel
 from src.globals import MESSAGE_SLEEP_TIME, logger, MOD_LOG_CHANNEL_NAME
 
 
+def is_command(bot, cmd):
+    """
+    Checks if the supplied string is a bot command
+    :param bot: the bot
+    :param cmd: the command
+    :return: True if command is a bot command False otherwise
+    """
+    # if the string does not start with the prefix it cannot be a command
+    if not cmd.startswith(bot.command_prefix):
+        return False
+    cmd = cmd.lstrip(bot.command_prefix).split(' ')[0]
+    return cmd in bot.commands
+
 async def kick_user(user, mod, server, bot, reason):
     """
     Kicks a user and then logs it to the 'mod_log' channel

@@ -17,7 +17,7 @@ logger.addHandler(handler)
 
 # TODO: Build startup_extensions dynamically
 # AryasORM must be loaded first
-startup_extensions = ['aryasorm', 'general', 'modtools', 'fun']
+startup_extensions = ['aryasorm', 'general', 'modtools', 'fun', 'statistics']
 
 
 @bot.event

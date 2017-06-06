@@ -40,6 +40,23 @@ class User(DiscordModel):
     discriminator = CharField(default='')
     top_role = CharField(default='')
     is_bot = BooleanField(default=False)
+    # TODO: make this autoincrement
+    total_messages = IntegerField(default=0)
+
+    # def find_or_create(self, discord_id, server):
+    #     """
+    #     :param discord_id:
+    #     :return: User model object.
+    #     """
+    #     # member = find(lambda m: m.name == 'Mighty', channel.server.members)
+    #     try:
+    #         user = discord.utils.find(lambda u: u.id == discord_id, server)
+    #         self.create(
+    #             discord_id=discord_id,
+    #             username=user.username
+    #         )
+    #     except Exception as e:
+    #         print(e)
 
     @property
     def total_love(self):
@@ -47,18 +64,6 @@ class User(DiscordModel):
         for love in LoveTransaction.select().where(LoveTransaction.receiver == self):
             total += love.amount
         return total
-
-
-class Message(DiscordModel):
-    """
-    Models a Discord message.
-    """
-    user = ForeignKeyField(User, related_name='messages')
-    channel = ForeignKeyField(Channel, related_name='messages')
-    server = ForeignKeyField(Server, related_name='messages')
-    body = CharField()
-    edited = DateTimeField(null=True)
-    is_command = BooleanField(default=False)
 
 
 class Server(DiscordModel):
@@ -94,3 +99,14 @@ class LoveTransaction(BaseModel):
     giver = ForeignKeyField(User, related_name='love_givers', index=True)
     receiver = ForeignKeyField(User, related_name='love_receivers', index=True)
     channel = ForeignKeyField(Channel)
+
+
+class Message(DiscordModel):
+    """
+    Models a Discord message.
+    """
+    user = ForeignKeyField(User, related_name='messages')
+    channel = ForeignKeyField(Channel, related_name='messages')
+    body = CharField()
+    edited = DateTimeField(null=True)
+    is_command = BooleanField(default=False)
