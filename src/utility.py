@@ -1,7 +1,9 @@
 import asyncio
 from typing import Union
-from discord.ext import commands
+
 from discord import Server, Channel
+from discord.ext import commands
+
 from src.globals import MESSAGE_SLEEP_TIME, logger, MOD_LOG_CHANNEL_NAME
 
 
@@ -51,3 +53,8 @@ async def send(bot: commands.Bot, message: str, channel: Channel, delete=False, 
     if delete:
         await asyncio.sleep(time)
         await bot.delete_message(msg)
+
+async def error(ctx: commands.Context, msg=None, prefix=True):
+    error_msg = ("Oops! That command failed!\n```\n{}\n```".format(ctx.message.content) if prefix else "") + \
+                ("\n" if msg is not "" else "")
+    await ctx.bot.send_message(ctx.message.author, error_msg)
