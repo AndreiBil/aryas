@@ -66,18 +66,6 @@ class User(DiscordModel):
         return total
 
 
-class Message(DiscordModel):
-    """
-    Models a Discord message.
-    """
-    user = ForeignKeyField(User, related_name='messages')
-    channel = ForeignKeyField(Channel, related_name='messages')
-    server = ForeignKeyField(Server, related_name='messages')
-    body = CharField()
-    edited = DateTimeField(null=True)
-    is_command = BooleanField(default=False)
-
-
 class Server(DiscordModel):
     """
     Models a Discord Server.
@@ -111,3 +99,14 @@ class LoveTransaction(BaseModel):
     giver = ForeignKeyField(User, related_name='love_givers', index=True)
     receiver = ForeignKeyField(User, related_name='love_receivers', index=True)
     channel = ForeignKeyField(Channel)
+
+
+class Message(DiscordModel):
+    """
+    Models a Discord message.
+    """
+    user = ForeignKeyField(User, related_name='messages')
+    channel = ForeignKeyField(Channel, related_name='messages')
+    body = CharField()
+    edited = DateTimeField(null=True)
+    is_command = BooleanField(default=False)

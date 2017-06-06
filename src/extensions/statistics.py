@@ -17,22 +17,41 @@ class Statistics:
         increments the users total messages.
         :param msg: the message
         """
-        if msg.author.bot or is_command(self.bot, msg.content):
-            return
         user = self.orm.User.get_or_create(
             discord_id=msg.author.id
+        )[0]
+        server = self.orm.Server.get_or_create(
+            discord_id=msg.channel.server.id
+        )[0]
+        channel = self.orm.Channel.get_or_create(
+            discord_id=msg.channel.id,
+            server=server
         )[0]
         self.orm.Message.create(
             discord_id=msg.id,
             user=user,
-            body=msg.content
+            channel=channel,
+            body=msg.content,
+            is_command=is_command(self.bot, msg.content)
         )
         user.name = msg.author.name
+        user.is_bot = msg.author.bot
         # TODO: autoincrement
-        user.total_messages += 1
+        if not is_command(self.bot, msg.content):
+            user.total_messages += 1
         user.save()
 
-    @commands.command(pass_context=True)
+    @commands.group(pass_context=True)
+    @commands.has_role('Admin')
+    async def stats(self, ctx: commands.Context):
+        """
+        Group of statistics commands
+        :param ctx: the context
+        """
+        if ctx.invoked_subcommand is None:
+            await self.bot.say('`Usage: ?stats <subcommand>`')
+
+    @stats.command(pass_context=True)
     @commands.has_role('Admin')
     async def online(self, ctx: commands.Context):
         """
@@ -43,7 +62,7 @@ class Statistics:
         online = [1 if m.status == discord.Status.online else 0 for m in server.members]
         await self.bot.say('{} users online'.format(sum(online)))
 
-    @commands.group(pass_context=True)
+    @stats.group(pass_context=True)
     @commands.has_role('Admin')
     async def messages(self, ctx: commands.Context):
         """
@@ -51,7 +70,7 @@ class Statistics:
         :param ctx: the context
         """
         if ctx.invoked_subcommand is None:
-            await self.bot.say('`Usage: ?messages <subcommand>`')
+            await self.bot.say('`Usage: ?stats messages <subcommand>`')
 
     @messages.command()
     @commands.has_role('Admin')
@@ -59,7 +78,13 @@ class Statistics:
         """
         Show total amount of messages on server
         """
-        await self.bot.say('Total messages: {}'.format(self.orm.Message.select().count()))
+        count = (self.orm.Message
+                 .select(self.orm.Message, self.orm.User)
+                 .join(self.orm.User) # INNER join since every message has a user
+                 # peewee needs this to be ==
+                 .where(self.orm.Message.is_command == False, self.orm.User.is_bot == False)
+                 .count())
+        await self.bot.say('Total messages: {}'.format(count))
 
     @messages.command()
     @commands.has_role('Admin')
@@ -72,7 +97,13 @@ class Statistics:
         # Show at least 1 user and 20 at most
         count = max(1, count)
         count = min(20, count)
-        users = self.orm.User.select().order_by(self.orm.User.total_messages.desc()).limit(count)
+
+        users = (self.orm.User
+                 .select()
+                 # peewee needs this to be ==
+                 .where(self.orm.User.is_bot == False)
+                 .order_by(self.orm.User.total_messages.desc())
+                 .limit(count))
 
         embed = discord.Embed(color=discord.Color(COLOR), timestamp=datetime.datetime.now())
         embed.set_footer(text='Global footer for all embeds', icon_url='https://cdn.discordapp.com/embed/avatars/2.png')
