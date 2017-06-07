@@ -70,6 +70,6 @@ async def send(bot: commands.Bot, message: str, channel: Channel, delete=False, 
         await bot.delete_message(msg)
 
 async def command_error(ctx: commands.Context, msg=None, prefix=True):
-    error_msg = ("Oops! That command failed!\n```\n{}\n```".format(ctx.message.content) if prefix else "") + \
+    error_msg = ("Oops! That command failed!\n```\n{}\n```".format(ctx.message.clean_content) if prefix else "") + \
                 ("\n"+msg if msg is not "" else "")
     await ctx.bot.send_message(ctx.message.author, error_msg)
