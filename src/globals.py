@@ -38,7 +38,7 @@ def your_awesome_func():
     return 1+1
 ```"""
 
-MESSAGE_SLEEP_TIME = 2
+MESSAGE_SLEEP_TIME = 3
 MOD_LOG_CHANNEL_NAME = 'mod_log'
 LEN_UNITS = {'millimeter': 0.001, 'centimeter': 0.01, 'meter': 1, 'kilometer': 1000,
              'inch': 0.0254, 'foot': 3.28084, 'yard': 1.09361}
