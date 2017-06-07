@@ -2,7 +2,9 @@ import asyncio
 from typing import Union
 from discord.ext import commands
 from discord import Server, Channel
-from src.globals import MESSAGE_SLEEP_TIME, logger, MOD_LOG_CHANNEL_NAME
+from src.extensions.config import Config
+
+_config = Config()
 
 
 async def kick_user(user, mod, server, bot, reason):
@@ -14,13 +16,13 @@ async def kick_user(user, mod, server, bot, reason):
     :param bot: Bot instance to kick and log 
     :param reason: Reason why user is being kicked
     """
+    channel = get_channel_by_name(server, _config['aryas']['mod_log_channel_name'])
     try:
         await bot.kick(user, )
-        channel = get_channel_by_name(server, MOD_LOG_CHANNEL_NAME)
         msg = '{} was kicked by {}. Reason: {}'.format(user.name, mod.mention, reason)
         await send(bot, msg, channel, False)
     except Exception as e:
-        logger.error(e)
+        _config.logger.error(e)
         await send(bot, 'Failed to kick {} for {}'.format(user.mention, reason), channel, False)
 
 
@@ -37,7 +39,8 @@ def get_channel_by_name(server: Server, name: str) -> Union[Channel, None]:
     return None
 
 
-async def send(bot: commands.Bot, message: str, channel: Channel, delete=False, time=MESSAGE_SLEEP_TIME) -> None:
+async def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
+               time=_config['aryas']['message_sleep_time']) -> None:
     """
     Sends a message to the server and deletes it after a period of time
     :param bot:     the bot used to send the message

@@ -1,6 +1,22 @@
 from peewee import *
 import datetime
-from src.globals import DATABASE as _DATABASE
+from src.extensions.config import Config
+
+_config = Config()
+database_proxy = _config.db['database_proxy']
+
+# Based on the `env` config variable, use a different database provider
+if _config.env == 'dev':
+    database = SqliteDatabase(_config.cache_dir + _config.db['name'] + '.db')
+elif _config.env == 'prod':
+    database = MySQLDatabase(
+        database=_config.db['name'],
+        user=_config.db['user'],
+        password=_config.db['pass'],
+        host=_config.db['host']
+    )
+else:
+    raise Exception('{} is not a valid environment.'.format(_config.env))
 
 
 class BaseModel(Model):
@@ -19,7 +35,7 @@ class BaseModel(Model):
     class Meta:
         # Uses the global database currently. Will use env vars to potentially differentiate between different
         # environments in the future eg. production env uses MySQL, dev env uses SQLite
-        database = _DATABASE
+        database = database_proxy
 
 
 class DiscordModel(BaseModel):
@@ -49,18 +65,6 @@ class User(DiscordModel):
         return total
 
 
-class Message(DiscordModel):
-    """
-    Models a Discord message.
-    """
-    user = ForeignKeyField(User, related_name='messages')
-    channel = ForeignKeyField(Channel, related_name='messages')
-    server = ForeignKeyField(Server, related_name='messages')
-    body = CharField()
-    edited = DateTimeField(null=True)
-    is_command = BooleanField(default=False)
-
-
 class Server(DiscordModel):
     """
     Models a Discord Server.
@@ -73,6 +77,18 @@ class Channel(DiscordModel):
     Models a Discord channel.
     """
     server = ForeignKeyField(Server, related_name='channels')
+
+
+class Message(DiscordModel):
+    """
+    Models a Discord message.
+    """
+    user = ForeignKeyField(User, related_name='messages')
+    channel = ForeignKeyField(Channel, related_name='messages')
+    server = ForeignKeyField(Server, related_name='messages')
+    body = CharField()
+    edited = DateTimeField(null=True)
+    is_command = BooleanField(default=False)
 
 
 class ServerNick(BaseModel):
@@ -94,3 +110,5 @@ class LoveTransaction(BaseModel):
     giver = ForeignKeyField(User, related_name='love_givers', index=True)
     receiver = ForeignKeyField(User, related_name='love_receivers', index=True)
     channel = ForeignKeyField(Channel)
+
+database_proxy.initialize(database)

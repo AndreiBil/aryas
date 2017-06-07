@@ -1,19 +1,18 @@
 from asyncio import sleep
 from random import randint
-
 import discord
 import requests
 import grequests
 from bs4 import BeautifulSoup
 from discord.ext import commands
 from typing import List, Tuple
-
-from src.globals import logger
+from src.extensions.config import Config
 
 
 class Fun:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
+        self.config: Config = self.bot.cogs['Config']
 
     @commands.command(pass_context=True)
     async def roll(self, ctx: commands.Context) -> None:
@@ -177,6 +176,7 @@ def request_exception_handler(request, exception) -> None:
     :param request: The request that failed
     :param exception: 
     """
+    logger = Config().logger
     logger.exception('HTTP Request failed: {}'.format(request))
     logger.exception('It failed with the following exception: \n {}'.format(exception))
 

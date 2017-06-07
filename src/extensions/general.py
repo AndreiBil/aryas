@@ -1,18 +1,21 @@
 import discord
 import pyowm
 from discord.ext import commands
-from src.extensions.aryasorm import AryasORM  # Imported purely for typehints, do not use directly.
-from src.globals import CFG, logger, RULES, LEN_UNITS, MASS_UNITS
+from src.globals import RULES, LEN_UNITS, MASS_UNITS
 from src.utility import send
 from urllib import request
 import json
 import time
+# The following are imported purely for typehints, do not use directly.
+from src.extensions.aryasorm import AryasORM
+from src.extensions.config import Config
 
 
 class General:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
         self.orm: AryasORM = self.bot.cogs['AryasORM']
+        self.config: Config = self.bot.cogs['Config']
 
     async def on_member_join(self, member: discord.Member):
         """
@@ -145,7 +148,7 @@ class General:
         :param city: the city
         """
 
-        owm = pyowm.OWM(CFG['weather']['api_key'])
+        owm = pyowm.OWM(self.config['weather']['api_key'])
 
         await self.bot.send_typing(ctx.message.channel)
         try:
@@ -154,7 +157,7 @@ class General:
             temperature = weather.get_temperature('celsius')['temp']
             await self.bot.say('The weather in {}, {} is {}° C'.format(country, city, temperature))
         except Exception as e:
-            logger.error(e)
+            self.config.logger.error(e)
             await send(self.bot, 'Could not get the weather in {}, {}.'
                        .format(country, city), ctx.message.channel, True)
 

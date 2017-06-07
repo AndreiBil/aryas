@@ -4,15 +4,17 @@ import sys
 
 from jsonschema import validate
 
-CFG_DIR = "./.aryas/"
-FILENAME = "cfg.json"
+CFG_DIR = './.aryas/'
+FILENAME = 'cfg.json'
 
 DEFAULT_CFG = {
     'aryas': {
+        'env': 'dev',
+        'log_level': 'DEBUG',
+        'message_sleep_time': 2,
+        'mod_log_channel_name': 'mod_log',
         'db': {
-            'host': '127.0.0.1',
-            'user': '',
-            'pass': ''
+            'name': 'aryas'
         }
     },
     'discord': {
@@ -24,37 +26,43 @@ DEFAULT_CFG = {
 }
 
 CFG_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "aryas": {
-            "type": "object",
-            "properties": {
-                "db": {
-                    "type": "object",
-                    "properties": {
-                        "host": {"type": "string"},
-                        "user": {"type": "string"},
-                        "pass": {"type": "string"}
+    'type': 'object',
+    'properties': {
+        'aryas': {
+            'type': 'object',
+            'properties': {
+                'env': {'type': 'string'},
+                'log_level': {'type': 'string'},
+                'message_sleep_time': {'type': 'integer'},
+                'mod_log_channel_name': {'type': 'string'},
+                'db': {
+                    'type': 'object',
+                    'properties': {
+                        'name': {'type': 'string'},
+                        'provider': {'type': 'string'},
+                        'host': {'type': 'string'},
+                        'user': {'type': 'string'},
+                        'pass': {'type': 'string'}
                     }
                 }
             }
         },
-        "discord": {
-            "type": "object",
-            "properties": {
-                "token": {"type": "string"}
+        'discord': {
+            'type': 'object',
+            'properties': {
+                'token': {'type': 'string'}
             },
-            "required": ["token"]
+            'required': ['token']
         },
-        "weather": {
-            "type": "object",
-            "properties": {
-                "api_key": {"type": "string"}
+        'weather': {
+            'type': 'object',
+            'properties': {
+                'api_key': {'type': 'string'}
             },
-            "required": ["api_key"]
+            'required': ['api_key']
         }
     },
-    "required": ["discord", "weather"]
+    'required': ['discord', 'weather']
 }
 
 
@@ -67,15 +75,15 @@ def cfg_file_is_valid() -> bool:
         os.mkdir(CFG_DIR)
 
     try:
-        with open(CFG_DIR+FILENAME, "r") as f:
+        with open(CFG_DIR+FILENAME, 'r') as f:
             data = json.load(f)
             validate(data, CFG_SCHEMA)
             return True
     except FileNotFoundError:
-        print("cfg.json does not exist!", file=sys.stderr)
-        with open(CFG_DIR+FILENAME, "w") as f:
+        print('cfg.json does not exist!', file=sys.stderr)
+        with open(CFG_DIR+FILENAME, 'w') as f:
             json.dump(DEFAULT_CFG, f, indent=2, separators=(',', ': '))
-        print("Please enter necessary info and try again.", file=sys.stderr)
+        print('Please enter necessary info into {}{} and try again.'.format(CFG_DIR, FILENAME), file=sys.stderr)
 
     return False
 

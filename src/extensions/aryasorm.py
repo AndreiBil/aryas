@@ -2,17 +2,16 @@
 The database engine behind Aryas.
 """
 from discord.ext import commands
-
-from src.globals import logger, DATABASE
+from src.extensions.config import Config  # Imported for linting purposes only
 from src.models import *
 
 
 class AryasORM:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
-        # Connects to the database.
-        self.db = DATABASE
-
+        self.config: Config = self.bot.cogs['Config']
+        # Uses the database proxy object for our db as we don't know which database provider to use until runtime.
+        self.db = database_proxy
         # Is there a nice way to scope all models within AryaORM? Still want them defined in a separate file.
         self.User = User
         self.Message = Message
@@ -31,7 +30,7 @@ class AryasORM:
             try:
                 self.db.create_tables([User, Message, Channel, Server, LoveTransaction])
             except OperationalError as e:
-                logger.error(e)
+                self.config.logger.error(e)
 
     async def update_all(self):
         """
@@ -47,7 +46,7 @@ class AryasORM:
         try:
             self.db.drop_tables([User, Message, Channel, Server, LoveTransaction])
         except OperationalError as e:
-            logger.error(e)
+            self.config.logger.error(e)
 
 
 def setup(bot: commands.Bot) -> None:
