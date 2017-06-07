@@ -71,7 +71,7 @@ async def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
             return "\n`💣" + "-"*(width-progress) + "*`" if width-progress > 0 else "💥"
         return "\n`|" + "•"*(width-progress) + " "*max(progress, 0) + "|`"
 
-    msg = await bot.send_message(channel, message + (dot_bar(0) if show_dots else ""))
+    msg = await bot.send_message(channel, message + (dot_bar(0) if delete and show_dots else ""))
     # Waits *time* seconds and deletes the confirmation message.
     if delete:
         if not show_dots:
