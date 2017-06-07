@@ -1,7 +1,6 @@
 import discord
 import pyowm
 from discord.ext import commands
-from src.globals import RULES, LEN_UNITS, MASS_UNITS
 from src.utility import send
 from urllib import request
 import json
@@ -26,7 +25,7 @@ class General:
         title = 'Welcome to Developers'
         desc = 'Stuff that happens here'
         message = discord.Embed(title=title, description=desc, color=0xff80ff)
-        message.add_field(name='Rules', value=RULES, inline=False)
+        message.add_field(name='Rules', value=self.config.rules, inline=False)
         message.set_footer(text='I am a bot BEEP BOOP')
 
         await self.bot.send_message(member, embed=message)
@@ -116,8 +115,9 @@ class General:
         :param unit1: the original unit
         :param unit2: the unit to convert to
         """
+        len_units = self.config.len_units
         try:
-            value = (LEN_UNITS[unit1] / LEN_UNITS[unit2]) * amount
+            value = (len_units / len_units) * amount
             await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
         except Exception as e:
             print(e)
@@ -132,8 +132,9 @@ class General:
         :param unit1: the original unit
         :param unit2: the unit to convert to
         """
+        mass_units = self.config.mass_units
         try:
-            value = (MASS_UNITS[unit1] / MASS_UNITS[unit2]) * amount
+            value = (mass_units[unit1] / mass_units[unit2]) * amount
             await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
         except Exception as e:
             print(e)
