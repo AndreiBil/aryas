@@ -1,7 +1,7 @@
 import discord
 import pyowm
 from discord.ext import commands
-from src.utility import send
+from src.utility import send, command_error
 from urllib import request
 import json
 import time
@@ -64,6 +64,10 @@ class General:
         :param member: the member to give the love to
         :param love: the amount of love to give
         """
+        if love < 0:
+            await command_error(ctx, "You can't give someone negative love!")
+            return
+
         msg = ctx.message
         love = int(love)
 
@@ -101,10 +105,14 @@ class General:
         :param to: the conversion unit (e.g. ILS, GBP)
         """
         await self.bot.send_typing(ctx.message.channel)
-        with request.urlopen('http://api.fixer.io/latest?base={}'.format(base)) as url:
-            data = json.loads(url.read().decode())
-            msg = '{} {} = {} {}'.format(amount, base, str(float(data['rates'][to]) * amount), to)
-            await self.bot.say(msg)
+        try:
+            with request.urlopen('http://api.fixer.io/latest?base={}'.format(base)) as url:
+                data = json.loads(url.read().decode())
+                msg = '{} {} = {} {}'.format(amount, base, str(float(data['rates'][to]) * amount), to)
+                await self.bot.say(msg)
+        except Exception as e:
+            self.config.logger.error(e)
+            await send(self.bot, 'Could not convert {} {} to {}'.format(amount, base, to), ctx.message.channel, True)
 
     @commands.command(pass_context=True)
     async def convert_length(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
@@ -120,8 +128,9 @@ class General:
             value = (len_units / len_units) * amount
             await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
         except Exception as e:
-            print(e)
-            await send(self.bot, 'Could not covert {} {} to {}'.format(amount, unit1, unit2), ctx.message.channel, True)
+            self.config.logger.error(e)
+            await send(self.bot, 'Could not convert {} {} to {}'.format(amount, unit1, unit2),
+                       ctx.message.channel, True)
 
     @commands.command(pass_context=True)
     async def convert_mass(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
@@ -137,16 +146,17 @@ class General:
             value = (mass_units[unit1] / mass_units[unit2]) * amount
             await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
         except Exception as e:
-            print(e)
-            await send(self.bot, 'Could not covert {} {} to {}'.format(amount, unit1, unit2), ctx.message.channel, True)
+            self.config.logger.error(e)
+            await send(self.bot, 'Could not convert {} {} to {}'.format(amount, unit1, unit2),
+                       ctx.message.channel, True)
 
     @commands.command(pass_context=True)
-    async def weather(self, ctx: commands.Context, country, city) -> None:
+    async def weather(self, ctx: commands.Context, city, country) -> None:
         """
         Gives info regarding the weather in a city
         :param ctx: the message context
-        :param country: the country
         :param city: the city
+        :param country: the country
         """
 
         owm = pyowm.OWM(self.config['weather']['api_key'])
@@ -156,44 +166,11 @@ class General:
             forecast = owm.weather_at_place('{},{}'.format(city, country))
             weather = forecast.get_weather()
             temperature = weather.get_temperature('celsius')['temp']
-            await self.bot.say('The weather in {}, {} is {}° C'.format(country, city, temperature))
+            await self.bot.say('The weather in {}, {} is {}° C'.format(city, country, temperature))
         except Exception as e:
             self.config.logger.error(e)
             await send(self.bot, 'Could not get the weather in {}, {}.'
                        .format(country, city), ctx.message.channel, True)
-
-        # FIXME: Needs to update to use db instead of global status dictionary
-        # @commands.command(pass_context=True)
-        # @commands.has_role('Support')
-        # async def setstatus(self, ctx, status):
-        #     """
-        #     Adds a status to the user.
-        #     The status is used when the user is mentioned.
-        #     :param ctx: The message context
-        #     :param status: The status of the user (must be in possible_status)
-        #     """
-        #     name = ctx.message.author
-        #
-        #     if status in possible_status:
-        #         if status != 'active':
-        #             status[name] = status
-        #         elif name in status:
-        #             status.pop(name)
-        #         await self.bot.say("You are now " + status)
-        #
-        #     else:
-        #         await self.bot.say("You need to call it like choose a status in these : " + str(possible_status))
-        #     await self.bot.delete_message(ctx.message)
-
-        # async def on_mention(message, user_mentionned):
-        #     """
-        #                 When a mention happens, this function will be called, and handle it
-        #                 :param message:     The message that contains the mention
-        #                 :param user:        The mentionned user
-        #                 """
-        #     if user_mentionned in status:
-        #         await self.bot.send_message(message.channel, "`" + user_mentionned.name + "` is " +
-        #                                     status[user_mentionned])
 
 
 def setup(bot: commands.Bot) -> None:

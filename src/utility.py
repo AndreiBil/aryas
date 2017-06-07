@@ -1,6 +1,6 @@
+from discord.ext import commands
 import asyncio
 from typing import Union
-from discord.ext import commands
 from discord import Server, Channel
 from src.extensions.config import Config
 
@@ -31,7 +31,7 @@ async def kick_user(user, mod, server, bot, reason):
     """
     channel = get_channel_by_name(server, _config['aryas']['mod_log_channel_name'])
     try:
-        await bot.kick(user, )
+        await bot.kick(user)
         msg = '{} was kicked by {}. Reason: {}'.format(user.name, mod.mention, reason)
         await send(bot, msg, channel, False)
     except Exception as e:
@@ -53,17 +53,36 @@ def get_channel_by_name(server: Server, name: str) -> Union[Channel, None]:
 
 
 async def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
-               time=_config['aryas']['message_sleep_time']) -> None:
+               time=_config['aryas']['message_sleep_time'], show_dots=True, bomb_themed_dots=False) -> None:
     """
     Sends a message to the server and deletes it after a period of time
     :param bot:     the bot used to send the message
     :param message: the content of the message
     :param channel: the channel in which the message will be sent
-    :param delete: bool indicating whether to delete the message after sending it
+    :param delete: whether to delete the message after sending it
     :param time: the time to wait before deleting the message
+    :param show_dots: whether to show countdown dots for message deletion (this will round down `time` if it is a float)
+    :param bomb_themed_dots: whether to theme the dots using a bomb and fuse instead of plain dots
     """
-    msg = await bot.send_message(channel, message)
+
+    def dot_bar(progress):
+        width = int(time)
+        if bomb_themed_dots:
+            return "\n`💣" + "-"*(width-progress) + "*`" if width-progress > 0 else "💥"
+        return "\n`|" + "•"*(width-progress) + " "*max(progress, 0) + "|`"
+
+    msg = await bot.send_message(channel, message + (dot_bar(0) if show_dots else ""))
     # Waits *time* seconds and deletes the confirmation message.
     if delete:
-        await asyncio.sleep(time)
+        if not show_dots:
+            await asyncio.sleep(time)
+        else:
+            for i in range(int(time)):
+                await asyncio.sleep(1)
+                await bot.edit_message(msg, message+dot_bar(i+1))
         await bot.delete_message(msg)
+
+async def command_error(ctx: commands.Context, msg=None, prefix=True):
+    error_msg = ("Oops! That command failed!\n```\n{}\n```".format(ctx.message.clean_content) if prefix else "") + \
+                ("\n"+msg if msg is not "" else "")
+    await ctx.bot.send_message(ctx.message.author, error_msg)

@@ -5,6 +5,7 @@ import requests
 import grequests
 from bs4 import BeautifulSoup
 from discord.ext import commands
+from urllib.parse import quote_plus
 from typing import List, Tuple
 from src.extensions.config import Config
 
@@ -13,6 +14,15 @@ class Fun:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
         self.config: Config = self.bot.cogs['Config']
+
+    @commands.command()
+    async def lmgtfy(self, *, search) -> None:
+        """
+        For when Googling is enough
+        """
+        search = quote_plus(search)
+        url = 'http://lmgtfy.com/?q={}'.format(search)
+        await self.bot.say(url)
 
     @commands.command(pass_context=True)
     async def roll(self, ctx: commands.Context) -> None:

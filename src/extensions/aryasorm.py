@@ -19,18 +19,25 @@ class AryasORM:
         self.Server = Server
         self.LoveTransaction = LoveTransaction
 
-    async def setup(self, force=False):
+    @commands.command(pass_context=True)
+    @commands.has_role('Admin')
+    async def setup(self, ctx, force=''):
+        await self.bot.send_typing(ctx.message.channel)
         """
         Setups the db by creating all relevant tables.
         :param force: Set to true if you want to drop the tables first
         """
-        if force:
-            await self.drop_all_tables()
-        else:
-            try:
+        try:
+            if force == 'force':
+                await self.drop_all_tables()
+            else:
                 self.db.create_tables([User, Message, Channel, Server, LoveTransaction])
-            except OperationalError as e:
-                self.config.logger.error(e)
+        except Exception as e:
+            self.config.logger.error(e)
+            await self.bot.say('The setup did not complete:\n`{}`'.format(e))
+            return
+
+        await self.bot.say('Setup complete!')
 
     async def update_all(self):
         """
