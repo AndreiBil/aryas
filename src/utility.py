@@ -1,7 +1,7 @@
 import asyncio
 from typing import Union
 from discord.ext import commands
-from discord import Server, Channel, Message
+from discord import Server, Channel
 from src.globals import MESSAGE_SLEEP_TIME, logger, MOD_LOG_CHANNEL_NAME
 
 
