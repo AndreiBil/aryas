@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from src.utility import get_channel_by_name, send
-from src.globals import MOD_LOG_CHANNEL_NAME
+from src.globals import MOD_LOG_CHANNEL_NAME, raid_mode
 
 
 class ModTools:
@@ -58,6 +58,19 @@ class ModTools:
             await send(self.bot, '{} message(s) cleared.'.format(len(msgs) - 1), ctx.message.channel, True)
         else:
             await send(self.bot, 'Cannot delete more than 100 messages at a time.', ctx.message.channel, True)
+
+	@commands.command(pass_context=True)
+    @commands.has_role('Admin')
+	async def panic(ctx):
+		"""
+		Sets a bool for Anti-Raid mode
+		"""
+		if raid_mode:
+			raid_mode = False
+			await send(self.bot, 'Anti-Raid mode disabled!', ctx.message.channel, False)
+		else:
+			raid_mode = True
+			await send(self.bot, 'Anti-Raid mode enabled!', ctx.message.channel, False)
 
 
 def setup(bot):

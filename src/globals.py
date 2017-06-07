@@ -22,7 +22,7 @@ RULES = """1. Be polite.
 6. Use the appropriate channels for your question.
 7. Don't have anything relevant to add in the programming channels? Stay quiet :smiley: :kissing_heart: 
 8. Don't post any NSFW content.
-9.  Use your common sense ¯\_(ツ)_/¯
+9. Use your common sense ¯\_(ツ)_/¯
 10. Don't ask people for help in PMs. Use the designated channels instead.
 
 11. But most importantly, HAVE FUN! That's so corny and cringy but I had to add that for the lulz
@@ -38,8 +38,15 @@ def your_awesome_func():
     return 1+1
 ```"""
 
+#Default time to remove a message
 MESSAGE_SLEEP_TIME = 2
+
+#Channel name to log moderation actions
 MOD_LOG_CHANNEL_NAME = 'mod_log'
+
+#A dictionary containing channel names and their Anti-Raid status
+raid_mode = {}
+
 LEN_UNITS = {'millimeter': 0.001, 'centimeter': 0.01, 'meter': 1, 'kilometer': 1000,
              'inch': 0.0254, 'foot': 3.28084, 'yard': 1.09361}
 MASS_UNITS = {'milligram': 0.000001, 'gram': 0.001, 'kilogram': 1, 'ton': 1000,
