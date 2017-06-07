@@ -3,7 +3,7 @@ import pyowm
 from discord.ext import commands
 from src.globals import CFG, conn, logger, RULES, LEN_UNITS, MASS_UNITS
 
-from src.utility import send
+from src.utility import send, command_error
 from urllib import request
 import json
 
@@ -65,6 +65,11 @@ class General:
         :param member: the member to give the love to
         :param love: the amount of love to give
         """
+
+        if love < 0:
+            await command_error(ctx, "You can't give someone negative love!")
+            return
+
         msg = ctx.message
         giver = ctx.message.author
         channel = msg.channel.id
