@@ -90,10 +90,14 @@ class General:
         :param to: the conversion unit (e.g. ILS, GBP)
         """
         await self.bot.send_typing(ctx.message.channel)
-        with request.urlopen('http://api.fixer.io/latest?base={}'.format(base)) as url:
-            data = json.loads(url.read().decode())
-            msg = '{} {} = {} {}'.format(amount, base, str(float(data['rates'][to]) * amount), to)
-            await self.bot.say(msg)
+        try:
+            with request.urlopen('http://api.fixer.io/latest?base={}'.format(base)) as url:
+                data = json.loads(url.read().decode())
+                msg = '{} {} = {} {}'.format(amount, base, str(float(data['rates'][to]) * amount), to)
+                await self.bot.say(msg)
+        except Exception as e:
+            logger.error(e)
+            await send(self.bot, 'Could not convert {} {} to {}'.format(amount, base, to), ctx.message.channel, True)
 
     @commands.command(pass_context=True)
     async def convert_length(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
@@ -108,8 +112,9 @@ class General:
             value = (LEN_UNITS[unit1] / LEN_UNITS[unit2]) * amount
             await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
         except Exception as e:
-            print(e)
-            await send(self.bot, 'Could not covert {} {} to {}'.format(amount, unit1, unit2), ctx.message.channel, True)
+            logger.error(e)
+            await send(self.bot, 'Could not convert {} {} to {}'.format(amount, unit1, unit2),
+                       ctx.message.channel, True)
 
     @commands.command(pass_context=True)
     async def convert_mass(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
@@ -124,16 +129,17 @@ class General:
             value = (MASS_UNITS[unit1] / MASS_UNITS[unit2]) * amount
             await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
         except Exception as e:
-            print(e)
-            await send(self.bot, 'Could not covert {} {} to {}'.format(amount, unit1, unit2), ctx.message.channel, True)
+            logger.error(e)
+            await send(self.bot, 'Could not convert {} {} to {}'.format(amount, unit1, unit2),
+                       ctx.message.channel, True)
 
     @commands.command(pass_context=True)
-    async def weather(self, ctx: commands.Context, country, city) -> None:
+    async def weather(self, ctx: commands.Context, city, country) -> None:
         """
         Gives info regarding the weather in a city
         :param ctx: the message context
-        :param country: the country
         :param city: the city
+        :param country: the country
         """
 
         owm = pyowm.OWM(CFG['weather']['api_key'])
@@ -143,7 +149,7 @@ class General:
             forecast = owm.weather_at_place('{},{}'.format(city, country))
             weather = forecast.get_weather()
             temperature = weather.get_temperature('celsius')['temp']
-            await self.bot.say('The weather in {}, {} is {}° C'.format(country, city, temperature))
+            await self.bot.say('The weather in {}, {} is {}° C'.format(city, country, temperature))
         except Exception as e:
             logger.error(e)
             await send(self.bot, 'Could not get the weather in {}, {}.'

@@ -40,9 +40,9 @@ def your_awesome_func():
 
 MESSAGE_SLEEP_TIME = 2
 MOD_LOG_CHANNEL_NAME = 'mod_log'
-LEN_UNITS = {'millimeter': 0.001, 'centimeter': 0.01, 'meter': 1, 'kilometer': 1000,
-             'inch': 0.0254, 'foot': 3.28084, 'yard': 1.09361}
-MASS_UNITS = {'milligram': 0.000001, 'gram': 0.001, 'kilogram': 1, 'ton': 1000,
+LEN_UNITS = {'millimeter': 0.001, 'mm': 0.001, 'centimeter': 0.01, 'cm': 0.01, 'meter': 1, 'm': 1, 'kilometer': 1000,
+             'km': 1000, 'inch': 0.0254, 'in': 0.0254, 'foot': 3.28084, 'ft': 3.28084, 'yard': 1.09361}
+MASS_UNITS = {'milligram': 0.000001, 'mg': 0.000001, 'gram': 0.001, 'g': 0.001, 'kilogram': 1, 'kg': 1, 'ton': 1000,
               'pound': 0.453592, 'ounce': 0.0283495}
 
 # Setup logging.
