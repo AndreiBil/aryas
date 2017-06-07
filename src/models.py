@@ -56,6 +56,8 @@ class User(DiscordModel):
     discriminator = CharField(default='')
     top_role = CharField(default='')
     is_bot = BooleanField(default=False)
+    # TODO: make this autoincrement
+    total_messages = IntegerField(default=0)
 
     @property
     def total_love(self):
@@ -85,7 +87,6 @@ class Message(DiscordModel):
     """
     user = ForeignKeyField(User, related_name='messages')
     channel = ForeignKeyField(Channel, related_name='messages')
-    server = ForeignKeyField(Server, related_name='messages')
     body = CharField()
     edited = DateTimeField(null=True)
     is_command = BooleanField(default=False)

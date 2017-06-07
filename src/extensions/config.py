@@ -90,6 +90,10 @@ def your_awesome_func():
     @property
     def possible_status(self):
         return {'away', 'vacation', 'active'}
+    
+    @property
+    def embed_color(self):
+        return 0xff80ff
 
 
 def setup(bot: commands.Bot) -> None:

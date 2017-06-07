@@ -8,7 +8,7 @@ bot = commands.Bot(command_prefix='?', description=description, pm_help=True, he
 
 # TODO: Build startup_extensions dynamically
 # Config and AryasORM must be loaded first
-startup_extensions = ['config', 'aryasorm', 'general', 'modtools', 'fun']
+startup_extensions = ['config', 'aryasorm', 'general', 'modtools', 'fun', 'statistics']
 
 
 @bot.event
