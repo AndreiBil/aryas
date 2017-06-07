@@ -44,8 +44,8 @@ MESSAGE_SLEEP_TIME = 2
 #Channel name to log moderation actions
 MOD_LOG_CHANNEL_NAME = 'mod_log'
 
-#Bool that determines whether anti-raid mode is enabled or disabled
-raid_mode = False
+#A dictionary containing channel names and their Anti-Raid status
+raid_mode = {}
 
 LEN_UNITS = {'millimeter': 0.001, 'centimeter': 0.01, 'meter': 1, 'kilometer': 1000,
              'inch': 0.0254, 'foot': 3.28084, 'yard': 1.09361}
