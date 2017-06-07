@@ -125,7 +125,7 @@ class General:
         """
         len_units = self.config.len_units
         try:
-            value = (len_units / len_units) * amount
+            value = (len_units[unit1] / len_units[unit2]) * amount
             await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
         except Exception as e:
             self.config.logger.error(e)
