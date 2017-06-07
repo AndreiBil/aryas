@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from src.utility import get_channel_by_name, send
+from src.utility import get_channel_by_name, send, command_error
 from src.globals import MOD_LOG_CHANNEL_NAME
 
 
@@ -44,20 +44,28 @@ class ModTools:
 
     @commands.command(pass_context=True)
     @commands.has_role('Admin')
-    async def clear(self, ctx: commands.Context, number: int) -> None:
+    async def clear(self, ctx: commands.Context, number: int, member: discord.Member=None) -> None:
         """
         Purges messages from the channel
         :param ctx: The message context
         :param number: The number of messages to purge
+        :param member: The member whose messages will be cleared
         """
+
+        if number < 1:
+            await command_error(ctx, "You must attempt to purge at least 1 message!")
+            return
+
+        def predicate(msg: discord.Message) -> bool:
+            return msg == ctx.message or member is None or msg.author == member
+
         if number <= 100:
-            # In order to delete the command message too, the number of messages to clear is incremented
-            msgs = await self.bot.purge_from(ctx.message.channel, limit=number + 1)
-            # msgs also contains the clear command message itself, so the actual number of cleared messages is the
-            # number of messages cleared minus one
-            await send(self.bot, '{} message(s) cleared.'.format(len(msgs) - 1), ctx.message.channel, True)
+            #  Add 1 to limit to include command message, subtract 1 from the return to not count it.
+            msgs = await self.bot.purge_from(ctx.message.channel, limit=number+1, check=predicate)
+            await send(self.bot, '{} message{} cleared.'.format(len(msgs)-1, "s" if len(msgs)-1 != 1 else ""),
+                       ctx.message.channel, True)
         else:
-            await send(self.bot, 'Cannot delete more than 100 messages at a time.', ctx.message.channel, True)
+            await command_error(ctx, 'Cannot delete more than 100 messages at a time.')
 
 
 def setup(bot):
