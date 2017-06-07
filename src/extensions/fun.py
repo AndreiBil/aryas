@@ -17,15 +17,13 @@ class Fun:
         self.bot: commands.Bot = bot
 
     @commands.command()
-    async def search(self, *, search) -> None:
+    async def lmgtfy(self, *, search) -> None:
         """
         For when Googling is enough
         """
         search = quote_plus(search)
         url = 'http://lmgtfy.com/?q={}'.format(search)
-        # Hide the link with some markdown (this currently only works in embeds)
-        embed = discord.Embed(description='[Here you go]({})'.format(url), color=0xff80ff)
-        await self.bot.say(embed=embed)
+        await self.bot.say(url)
 
     @commands.command(pass_context=True)
     async def roll(self, ctx: commands.Context) -> None:
