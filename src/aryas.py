@@ -1,22 +1,14 @@
 import discord
 from discord.ext import commands
-import logging
-from src.globals import logger
-from src.globals import CACHE_DIR, CFG
+
 
 description = 'A in development python bot for the discord platform'
 bot_prefix = '?'
 bot = commands.Bot(command_prefix='?', description=description, pm_help=True, help_attrs=dict(hidden=True))
 
-
-# Change this to get more/less logs.
-logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(filename=CACHE_DIR+'aryas.log', encoding='utf-8', mode='w')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-logger.addHandler(handler)
-
 # TODO: Build startup_extensions dynamically
-startup_extensions = ['general', 'modtools', 'fun', 'events']
+# Config and AryasORM must be loaded first
+startup_extensions = ['config', 'aryasorm', 'general', 'modtools', 'fun', 'statistics']
 
 
 @bot.event
@@ -35,4 +27,5 @@ def main():
         except Exception as e:
             raise e
 
-    bot.run(CFG['discord']['token'])
+    config = bot.cogs['Config']
+    bot.run(config['discord']['token'])

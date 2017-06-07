@@ -1,11 +1,24 @@
+from discord.ext import commands
 import asyncio
 from typing import Union
-
 from discord import Server, Channel
-from discord.ext import commands
+from src.extensions.config import Config
 
-from src.globals import MESSAGE_SLEEP_TIME, logger, MOD_LOG_CHANNEL_NAME
+_config = Config()
 
+
+def is_command(bot, cmd):
+    """
+    Checks if the supplied string is a bot command
+    :param bot: the bot
+    :param cmd: the command
+    :return: True if command is a bot command False otherwise
+    """
+    # if the string does not start with the prefix it cannot be a command
+    if not cmd.startswith(bot.command_prefix):
+        return False
+    cmd = cmd.lstrip(bot.command_prefix).split(' ')[0]
+    return cmd in bot.commands
 
 async def kick_user(user, mod, server, bot, reason):
     """
@@ -16,13 +29,13 @@ async def kick_user(user, mod, server, bot, reason):
     :param bot: Bot instance to kick and log 
     :param reason: Reason why user is being kicked
     """
-    channel = get_channel_by_name(server, MOD_LOG_CHANNEL_NAME)
+    channel = get_channel_by_name(server, _config['aryas']['mod_log_channel_name'])
     try:
         await bot.kick(user)
         msg = '{} was kicked by {}. Reason: {}'.format(user.name, mod.mention, reason)
         await send(bot, msg, channel, False)
     except Exception as e:
-        logger.error(e)
+        _config.logger.error(e)
         await send(bot, 'Failed to kick {} for {}'.format(user.mention, reason), channel, False)
 
 
@@ -39,8 +52,8 @@ def get_channel_by_name(server: Server, name: str) -> Union[Channel, None]:
     return None
 
 
-async def send(bot: commands.Bot, message: str, channel: Channel, delete=False, time=MESSAGE_SLEEP_TIME,
-               show_dots=True, bomb_themed_dots=False) -> None:
+async def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
+               time=_config['aryas']['message_sleep_time'], show_dots=True, bomb_themed_dots=False) -> None:
     """
     Sends a message to the server and deletes it after a period of time
     :param bot:     the bot used to send the message

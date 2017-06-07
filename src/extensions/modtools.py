@@ -1,12 +1,16 @@
 import discord
 from discord.ext import commands
 from src.utility import get_channel_by_name, send, command_error
-from src.globals import MOD_LOG_CHANNEL_NAME
+# The following are imported purely for typehints, do not use directly.
+from src.extensions.aryasorm import AryasORM
+from src.extensions.config import Config
 
 
 class ModTools:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
+        self.orm: AryasORM = self.bot.cogs['AryasORM']
+        self.config: Config = self.bot.cogs['Config']
 
     @commands.command(pass_context=True)
     @commands.has_role('Admin')
@@ -20,7 +24,8 @@ class ModTools:
         try:
             await self.bot.kick(member)
             msg = '{} was kicked by {}. Reason: {}'.format(member.name, ctx.message.author.mention, ' '.join(reason))
-            await send(self.bot, msg, get_channel_by_name(ctx.message.server, MOD_LOG_CHANNEL_NAME))
+            await send(self.bot, msg, get_channel_by_name(ctx.message.server,
+                                                          self.config['aryas']['mod_log_channel_name']))
         except Exception as e:
             print(e)
             await send(self.bot, 'Failed to kick ' + member.mention, ctx.message.channel, True)
@@ -37,7 +42,8 @@ class ModTools:
         try:
             await self.bot.ban(member)
             msg = '{} was banned by {}. Reason: {}'.format(member.name, ctx.message.author.mention, ' '.join(reason))
-            await send(self.bot, msg, get_channel_by_name(ctx.message.server, MOD_LOG_CHANNEL_NAME))
+            await send(self.bot, msg, get_channel_by_name(ctx.message.server,
+                                                          self.config['aryas']['mod_log_channel_name']))
         except Exception as e:
             print(e)
             await send(self.bot, 'Failed to ban ' + member.mention, ctx.message.channel, True)
