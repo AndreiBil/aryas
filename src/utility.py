@@ -52,20 +52,21 @@ async def send(bot: commands.Bot, message: str, channel: Channel, delete=False, 
     :param bomb_themed_dots: whether to theme the dots using a bomb and fuse instead of plain dots
     """
 
-    def dot_bar(width, progress):
+    def dot_bar(progress):
+        width = int(time)
         if bomb_themed_dots:
             return "\n`💣" + "-"*(width-progress) + "*`" if width-progress > 0 else "💥"
-        return "\n`" + "."*(width-progress) + " `"
+        return "\n`|" + "."*(width-progress) + " "*max(progress, 0) + "|`"
 
-    msg = await bot.send_message(channel, message + (dot_bar(int(time), 0) if show_dots else ""))
+    msg = await bot.send_message(channel, message + (dot_bar(0) if show_dots else ""))
     # Waits *time* seconds and deletes the confirmation message.
     if delete:
         if not show_dots:
             await asyncio.sleep(time)
         else:
-            for i in range(time):
+            for i in range(int(time)):
                 await asyncio.sleep(1)
-                await bot.edit_message(msg, message+dot_bar(int(time), i+1))
+                await bot.edit_message(msg, message+dot_bar(i+1))
         await bot.delete_message(msg)
 
 async def command_error(ctx: commands.Context, msg=None, prefix=True):
