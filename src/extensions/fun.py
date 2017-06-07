@@ -7,6 +7,7 @@ import grequests
 from bs4 import BeautifulSoup
 from discord.ext import commands
 from typing import List, Tuple
+from urllib.parse import quote_plus
 
 from src.globals import logger
 
@@ -14,6 +15,17 @@ from src.globals import logger
 class Fun:
     def __init__(self, bot):
         self.bot: commands.Bot = bot
+
+    @commands.command()
+    async def search(self, *, search) -> None:
+        """
+        For when Googling is enough
+        """
+        search = quote_plus(search)
+        url = 'http://lmgtfy.com/?q={}'.format(search)
+        # Hide the link with some markdown (this currently only works in embeds)
+        embed = discord.Embed(description='[Here you go]({})'.format(url), color=0xff80ff)
+        await self.bot.say(embed=embed)
 
     @commands.command(pass_context=True)
     async def roll(self, ctx: commands.Context) -> None:
