@@ -2,10 +2,11 @@ import discord
 import pyowm
 from discord.ext import commands
 from discord.ext.commands import bot as bot_module
-from src.utility import send, command_error
+from src.utility import send, command_error, update_user_fields
 from urllib import request
 import json
 import time
+import datetime
 # The following are imported purely for typehints, do not use directly.
 from src.extensions.aryasorm import AryasORM
 from src.extensions.config import Config
@@ -80,6 +81,62 @@ class General:
         for embed in pages:
             # This has been changed to send embeds
             await bot.send_message(destination, embed=embed)
+
+    @commands.command(pass_context=True)
+    async def whois(self, ctx: commands.Context, member: discord.Member) -> None:
+        """
+        Returns information about the given member
+        :param ctx: the message context
+        :param member: target member
+        """
+        user = self.orm.User.get_or_create(discord_id=member.id)[0]
+        update_user_fields(user, member)
+
+        if member.bot:
+            embed = discord.Embed(title=':robot: ' + member.name + '#' + member.discriminator,
+                                  description=member.created_at.strftime('User since %b %d %Y'),
+                                  timestamp=datetime.datetime.now(),
+                                  color=self.config.embed_color)
+        else:
+            embed = discord.Embed(title=member.display_name + '#' + member.discriminator,
+                                  description=member.created_at.strftime('User since %b %d %Y'),
+                                  timestamp=datetime.datetime.now(),
+                                  color=self.config.embed_color)
+
+        # send typing in case the db lookup takes a long time
+        await self.bot.send_typing(ctx.message.channel)
+
+        top_list = (self.orm.User
+                    .select()
+                    # peewee needs this to be ==
+                    .where(self.orm.User.is_bot == False)
+                    .order_by(self.orm.User.total_messages.desc())
+                    .limit(1000))
+        # if you're not in the top 1000 you're unranked
+        rank = 'Unranked'
+        for i, u in enumerate(top_list):
+            if user == u:
+                rank = '#{}'.format(i+1)
+                break
+
+        embed.set_thumbnail(url=member.avatar_url)
+        embed.add_field(name='Status', value=str(member.status).capitalize())
+
+        game = member.game if member.game is not None else 'Nothing'
+        embed.add_field(name='Playing', value=game)
+
+        embed.add_field(name='Total messages', value=user.total_messages)
+        embed.add_field(name='Rank', value=rank)
+        embed.add_field(name='Love', value=user.total_love)
+        embed.add_field(name='Joined', value=member.joined_at.strftime('%b %d %Y'))
+
+        roles = [str(role) for role in member.roles]
+        # @everyone is guaranteed to be the first rank, discard it
+        roles.pop(0)
+        if len(roles) > 0:
+            embed.add_field(name='Roles', value=', '.join(roles), inline=False)
+
+        await self.bot.say(embed=embed)
 
     @commands.command(pass_context=True)
     async def ping(self, ctx: commands.Context) -> None:
