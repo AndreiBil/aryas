@@ -13,7 +13,8 @@ elif _config.env == 'prod':
         database=_config.db['name'],
         user=_config.db['user'],
         password=_config.db['pass'],
-        host=_config.db['host']
+        host=_config.db['host'],
+        charset='utf8mb4'
     )
 else:
     raise Exception('{} is not a valid environment.'.format(_config.env))
@@ -56,6 +57,7 @@ class User(DiscordModel):
     discriminator = CharField(default='')
     top_role = CharField(default='')
     is_bot = BooleanField(default=False)
+    notes = TextField(default='')
     # TODO: make this autoincrement
     total_messages = IntegerField(default=0)
 
@@ -87,7 +89,7 @@ class Message(DiscordModel):
     """
     user = ForeignKeyField(User, related_name='messages')
     channel = ForeignKeyField(Channel, related_name='messages')
-    body = CharField()
+    body = TextField()
     edited = DateTimeField(null=True)
     is_command = BooleanField(default=False)
 
