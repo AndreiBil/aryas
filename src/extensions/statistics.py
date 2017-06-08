@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord.channel import PrivateChannel
 from src.utility import is_command
 import datetime
 # Imported for type hints
@@ -19,28 +20,29 @@ class Statistics:
         increments the users total messages.
         :param msg: the message
         """
-        user = self.orm.User.get_or_create(
-            discord_id=msg.author.id
-        )[0]
-        server = self.orm.Server.get_or_create(
-            discord_id=msg.channel.server.id
-        )[0]
-        channel = self.orm.Channel.get_or_create(
-            discord_id=msg.channel.id,
-            server=server
-        )[0]
-        self.orm.Message.create(
-            discord_id=msg.id,
-            user=user,
-            channel=channel,
-            body=msg.content,
-            is_command=is_command(self.bot, msg.content)
-        )
-        user.name = msg.author.name
-        user.is_bot = msg.author.bot
-        if not is_command(self.bot, msg.content):
-            user.total_messages += 1
-        user.save()
+        if not isinstance(msg.channel, PrivateChannel):
+            user = self.orm.User.get_or_create(
+                discord_id=msg.author.id
+            )[0]
+            server = self.orm.Server.get_or_create(
+                discord_id=msg.channel.server.id
+            )[0]
+            channel = self.orm.Channel.get_or_create(
+                discord_id=msg.channel.id,
+                server=server
+            )[0]
+            self.orm.Message.create(
+                discord_id=msg.id,
+                user=user,
+                channel=channel,
+                body=msg.content,
+                is_command=is_command(self.bot, msg.content)
+            )
+            user.name = msg.author.name
+            user.is_bot = msg.author.bot
+            if not is_command(self.bot, msg.content):
+                user.total_messages += 1
+            user.save()
 
     @commands.group(pass_context=True)
     @commands.has_role('Admin')
