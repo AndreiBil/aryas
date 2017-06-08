@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord.channel import PrivateChannel
 from src.utility import is_command
 import datetime
 # Imported for type hints
@@ -19,7 +20,7 @@ class Statistics:
         increments the users total messages.
         :param msg: the message
         """
-        if not is_command(self.bot, msg.content) and not msg.author.bot:
+        if not isinstance(msg.channel, PrivateChannel):
             user = self.orm.User.get_or_create(
                 discord_id=msg.author.id
             )[0]
@@ -39,7 +40,8 @@ class Statistics:
             )
             user.name = msg.author.name
             user.is_bot = msg.author.bot
-            user.total_messages += 1
+            if not is_command(self.bot, msg.content):
+                user.total_messages += 1
             user.save()
 
     @commands.group(pass_context=True)
@@ -60,7 +62,7 @@ class Statistics:
         :param ctx: the context
         """
         server = ctx.message.server
-        online = [1 if m.status == discord.Status.online else 0 for m in server.members]
+        online = [1 if m.status != discord.Status.offline else 0 for m in server.members]
         await self.bot.say('{} users online'.format(sum(online)))
 
     @stats.group(pass_context=True)
@@ -109,7 +111,7 @@ class Statistics:
         embed = discord.Embed(color=discord.Color(self.config.embed_color), timestamp=datetime.datetime.now())
         embed.set_footer(text='Global footer for all embeds', icon_url='https://cdn.discordapp.com/embed/avatars/2.png')
         for user in users:
-            embed.add_field(name=user.name, value='Total messages: {}'.format(user.total_messages))
+            embed.add_field(name=user.name, value='Total messages: {}'.format(user.total_messages), inline=False)
         await self.bot.say(content='Top active users:', embed=embed)
 
 
