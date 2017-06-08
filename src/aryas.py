@@ -1,10 +1,12 @@
 import discord
 from discord.ext import commands
+from src.formatter import AryasFormatter
 
-
-description = 'A in development python bot for the discord platform'
+description = 'An in development python bot for the discord platform'
 bot_prefix = '?'
-bot = commands.Bot(command_prefix='?', description=description, pm_help=True, help_attrs=dict(hidden=True))
+bot = commands.Bot(command_prefix=bot_prefix, description=description, pm_help=True, formatter=AryasFormatter())
+bot.remove_command('help')
+
 
 # TODO: Build startup_extensions dynamically
 # Config and AryasORM must be loaded first
