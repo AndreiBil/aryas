@@ -127,7 +127,7 @@ class AryasFormatter(HelpFormatter):
                 self._expand_group(command, '')
                 continue
 
-            entry = '{0} - {1}'.format(name, command.short_doc)
+            entry = '**{0}** - {1}'.format(name, command.short_doc)
             shortened = self.shorten(entry)
             self._paginator.add_line(shortened)
     
@@ -138,11 +138,11 @@ class AryasFormatter(HelpFormatter):
         :param prefix: prefix of the line
         """
         if not isinstance(group, Group):
-            entry = '{prefix}{0} - {1}'.format(group.name, group.short_doc, prefix=prefix)
+            entry = '**{prefix}{0}** - {1}'.format(group.name, group.short_doc, prefix=prefix)
             shortened = self.shorten(entry)
             self._paginator.add_line(shortened)
         else:
-            entry = '{prefix}{0} - {1}'.format(group.name, group.short_doc, prefix=prefix)
+            entry = '**{prefix}{0}** - {1}'.format(group.name, group.short_doc, prefix=prefix)
             shortened = self.shorten(entry)
             self._paginator.add_line(shortened)
             for subcommand in group.commands.copy().values():
