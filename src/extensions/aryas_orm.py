@@ -11,7 +11,7 @@ from src.models import get_models
 class AryasORM:
     def __init__(self, bot):
         self.bot = bot  # type: commands.Bot
-        self.config: Config = self.bot.cogs['Config']
+        self.config = self.bot.cogs['Config']  # type: Config
         # Uses the database proxy object for our db as we don't know which database provider to use until runtime.
         self.db, self.models = get_models(self.config)
 
