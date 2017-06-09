@@ -194,8 +194,9 @@ class Config:
 
     def _parse_config(self) -> dict:
         """
-        Parses configuration from the config file, checked against the DEFAULT_CFG constant.
-        This will throw an exception of the config is invalid.
+        Parses configuration from the config file, checked against _Constants.cfg_schema.
+        This will throw an exception if the config is invalid.
+        After checking, default values will be inserted and the config saved, *whether it was found valid or not*.
         :return: The config dict
         """
 
