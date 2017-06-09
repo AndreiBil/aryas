@@ -112,7 +112,7 @@ class Statistics:
                  .order_by(self.orm.User.total_messages.desc())
                  .limit(count))
 
-        embed = discord.Embed(color=discord.Color(self.config.embed_color), timestamp=datetime.datetime.now())
+        embed = discord.Embed(color=discord.Color(self.config.constants.embed_color), timestamp=datetime.datetime.now())
         embed.set_footer(text='Global footer for all embeds', icon_url='https://cdn.discordapp.com/embed/avatars/2.png')
         for user in users:
             embed.add_field(name=user.name, value='Total messages: {}'.format(user.total_messages), inline=False)

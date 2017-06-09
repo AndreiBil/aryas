@@ -26,7 +26,7 @@ class General:
         title = 'Welcome to Developers'
         desc = 'Stuff that happens here'
         message = discord.Embed(title=title, description=desc, color=0xff80ff)
-        message.add_field(name='Rules', value=self.config.rules, inline=False)
+        message.add_field(name='Rules', value=self.config.constants.rules, inline=False)
         message.set_footer(text='I am a bot BEEP BOOP')
 
         await self.bot.send_message(member, embed=message)
@@ -174,7 +174,7 @@ class General:
         :param unit1: the original unit
         :param unit2: the unit to convert to
         """
-        len_units = self.config.len_units
+        len_units = self.config.constants.len_units
         try:
             value = (len_units[unit1] / len_units[unit2]) * amount
             await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
@@ -192,7 +192,7 @@ class General:
         :param unit1: the original unit
         :param unit2: the unit to convert to
         """
-        mass_units = self.config.mass_units
+        mass_units = self.config.constants.mass_units
         try:
             value = (mass_units[unit1] / mass_units[unit2]) * amount
             await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
