@@ -10,7 +10,7 @@ bot.remove_command('help')
 
 # TODO: Build startup_extensions dynamically
 # Config and AryasORM must be loaded first
-startup_extensions = ['config', 'aryasorm', 'general', 'modtools', 'fun', 'statistics']
+startup_extensions = ['config', 'aryas_orm', 'general', 'modtools', 'fun', 'statistics']
 
 
 @bot.event

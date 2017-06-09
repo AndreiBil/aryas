@@ -7,7 +7,7 @@ from urllib import request
 import json
 import time
 # The following are imported purely for typehints, do not use directly.
-from src.extensions.aryasorm import AryasORM
+from src.extensions.aryas_orm import AryasORM
 from src.extensions.config import Config
 
 

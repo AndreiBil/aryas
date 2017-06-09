@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from src.utility import get_channel_by_name, send, command_error
 # The following are imported purely for typehints, do not use directly.
-from src.extensions.aryasorm import AryasORM
+from src.extensions.aryas_orm import AryasORM
 from src.extensions.config import Config
 
 

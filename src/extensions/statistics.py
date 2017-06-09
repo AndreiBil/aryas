@@ -4,7 +4,7 @@ from src.utility import is_command
 import datetime
 from peewee import OperationalError
 # Imported for type hints
-from src.extensions.aryasorm import AryasORM
+from src.extensions.aryas_orm import AryasORM
 from src.extensions.config import Config
 import discord
 
