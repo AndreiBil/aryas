@@ -9,7 +9,7 @@ import time
 import datetime
 from peewee import SQL, fn
 # The following are imported purely for typehints, do not use directly.
-from src.extensions.aryasorm import AryasORM
+from src.extensions.aryas_orm import AryasORM
 from src.extensions.config import Config
 
 
