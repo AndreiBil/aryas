@@ -4,4 +4,5 @@ grequests
 pyowm
 mysqlclient
 peewee
-jsonschema
+cerberus
+pyyaml
