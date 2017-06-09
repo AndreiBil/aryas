@@ -7,6 +7,7 @@ from urllib import request
 import json
 import time
 import datetime
+from peewee import SQL
 # The following are imported purely for typehints, do not use directly.
 from src.extensions.aryasorm import AryasORM
 from src.extensions.config import Config
@@ -93,15 +94,15 @@ class General:
         update_user_fields(user, member)
 
         if member.bot:
-            embed = discord.Embed(title=':robot: ' + member.name + '#' + member.discriminator,
-                                  description=member.created_at.strftime('User since %b %d %Y'),
-                                  timestamp=datetime.datetime.now(),
-                                  color=self.config.embed_color)
+            message = discord.Embed(title=':robot: ' + member.name + '#' + member.discriminator,
+                                    description=member.created_at.strftime('User since %b %d %Y'),
+                                    timestamp=datetime.datetime.now(),
+                                    color=self.config.embed_color)
         else:
-            embed = discord.Embed(title=member.display_name + '#' + member.discriminator,
-                                  description=member.created_at.strftime('User since %b %d %Y'),
-                                  timestamp=datetime.datetime.now(),
-                                  color=self.config.embed_color)
+            message = discord.Embed(title=member.display_name + '#' + member.discriminator,
+                                    description=member.created_at.strftime('User since %b %d %Y'),
+                                    timestamp=datetime.datetime.now(),
+                                    color=self.config.embed_color)
 
         # send typing in case the db lookup takes a long time
         await self.bot.send_typing(ctx.message.channel)
@@ -119,24 +120,36 @@ class General:
                 rank = '#{}'.format(i+1)
                 break
 
-        embed.set_thumbnail(url=member.avatar_url)
-        embed.add_field(name='Status', value=str(member.status).capitalize())
+        # Finds the most posted on channel for the user
+        # if the user hasn't posted anything it's None
+        try:
+            channel_id = (user.messages
+                          .select(self.orm.Message.is_command, self.orm.Channel)
+                          # peewee needs this to be ==
+                          .where(self.orm.Message.is_command == False)
+                          .annotate(self.orm.Channel)
+                          .order_by(SQL('count').desc())
+                          .limit(1))[0].channel.discord_id
+        except IndexError:
+            channel_id = None
 
-        game = member.game if member.game is not None else 'Nothing'
-        embed.add_field(name='Playing', value=game)
+        message.set_thumbnail(url=member.avatar_url)
+        message.add_field(name='Status', value=str(member.status).capitalize())
+        message.add_field(name='Favorite channel', value=self.bot.get_channel(channel_id))
+        message.add_field(name='Total messages', value=user.total_messages)
+        message.add_field(name='Rank', value=rank)
+        message.add_field(name='ID', value=member.id)
+        message.add_field(name='Joined', value=member.joined_at.strftime('%b %d %Y'))
 
-        embed.add_field(name='Total messages', value=user.total_messages)
-        embed.add_field(name='Rank', value=rank)
-        embed.add_field(name='Love', value=user.total_love)
-        embed.add_field(name='Joined', value=member.joined_at.strftime('%b %d %Y'))
-
+        if member.game:
+            message.add_field(name='Playing', value=member.game, inline=False)
         roles = [str(role) for role in member.roles]
         # @everyone is guaranteed to be the first rank, discard it
         roles.pop(0)
         if len(roles) > 0:
-            embed.add_field(name='Roles', value=', '.join(roles), inline=False)
+            message.add_field(name='Roles', value=', '.join(roles), inline=False)
 
-        await self.bot.say(embed=embed)
+        await self.bot.say(embed=message)
 
     @commands.command(pass_context=True)
     async def ping(self, ctx: commands.Context) -> None:
