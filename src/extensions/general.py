@@ -117,6 +117,10 @@ class General:
         :param member: the member to give the love to
         :param love: the amount of love to give
         """
+
+        if member == ctx.message.author:
+            await command_error(ctx, "You can't give yourself love!")
+
         if love < 0:
             await command_error(ctx, "You can't give someone negative love!")
             return
