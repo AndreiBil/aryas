@@ -118,7 +118,7 @@ class Statistics:
                  .order_by(self.orm.User.total_messages.desc())
                  .limit(count))
 
-        embed = discord.Embed(color=discord.Color(self.config.embed_color), timestamp=datetime.datetime.now())
+        embed = discord.Embed(color=discord.Color(self.config.constants.embed_color), timestamp=datetime.datetime.now())
         embed.set_footer(text='Global footer for all embeds', icon_url='https://cdn.discordapp.com/embed/avatars/2.png')
         for user in users:
             # the user might not have a name if he hasn't sent a message already
