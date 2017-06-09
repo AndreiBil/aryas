@@ -94,12 +94,14 @@ class General:
         await self.bot.say('{}ms'.format(latency))
 
     @commands.command(pass_context=True)
-    async def get_love(self, ctx: commands.Context, member: discord.Member) -> None:
+    async def get_love(self, ctx: commands.Context, member: discord.Member=None) -> None:
         """
         Gives info regarding the amount of love a user has
         :param ctx: the message context
         :param member: the member
         """
+        if member is None:
+            member = ctx.message.author
         love = self.orm.User.get(discord_id=member.id).total_love
 
         if not love:
