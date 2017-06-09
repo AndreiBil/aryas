@@ -2,22 +2,26 @@
 The database engine behind Aryas.
 """
 from discord.ext import commands
+from peewee import OperationalError
+
 from src.extensions.config import Config  # Imported for linting purposes only
-from src.models import *
+from src.models import get_models
 
 
 class AryasORM:
     def __init__(self, bot):
-        self.bot: commands.Bot = bot
+        self.bot = bot  # type: commands.Bot
         self.config: Config = self.bot.cogs['Config']
         # Uses the database proxy object for our db as we don't know which database provider to use until runtime.
-        self.db = database_proxy
+        self.db, self.models = get_models(self.config)
+
         # Is there a nice way to scope all models within AryaORM? Still want them defined in a separate file.
-        self.User = User
-        self.Message = Message
-        self.Channel = Channel
-        self.Server = Server
-        self.LoveTransaction = LoveTransaction
+        # Have I got a surprise for you, my dear Tom
+        self.User = self.models.User
+        self.Message = self.models.Message
+        self.Channel = self.models.Channel
+        self.Server = self.models.Server
+        self.LoveTransaction = self.models.LoveTransaction
 
     @commands.command(pass_context=True)
     @commands.has_role('Admin')
@@ -31,7 +35,8 @@ class AryasORM:
             if force == 'force':
                 await self.drop_all_tables()
             else:
-                self.db.create_tables([User, Message, Channel, Server, LoveTransaction])
+                self.db.create_tables([self.models.User, self.models.Message, self.models.Channel, self.models.Server,
+                                       self.models.LoveTransaction])
         except Exception as e:
             self.config.logger.error(e)
             await self.bot.say('The setup did not complete:\n`{}`'.format(e))
@@ -51,7 +56,8 @@ class AryasORM:
         Drops all tables in the database.
         """
         try:
-            self.db.drop_tables([User, Message, Channel, Server, LoveTransaction])
+            self.db.drop_tables([self.models.User, self.models.Message, self.models.Channel, self.models.Server,
+                                 self.models.LoveTransaction])
         except OperationalError as e:
             self.config.logger.error(e)
 
