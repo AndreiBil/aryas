@@ -92,6 +92,7 @@ class Message(DiscordModel):
     body = TextField()
     edited = DateTimeField(null=True)
     is_command = BooleanField(default=False)
+    is_embed = BooleanField(default=False)
 
 
 class ServerNick(BaseModel):
