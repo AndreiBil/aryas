@@ -29,7 +29,7 @@ class AryasPaginator:
         self._field_name = ''
         self._char_count = 0
         self._count = 0
-        self._current_page: discord.Embed = None
+        self._current_page: = None  # type: discord.Embed
         self._line_buffer = []
         self._pages = []
 
