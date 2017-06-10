@@ -70,8 +70,8 @@ CFG_SCHEMA = {
             'type': 'object',
             'properties': {
                 'api_key': {'type': 'string'},
-                'cse_id': {'type', 'string'},
-                'cse_name': {'type', 'string'}
+                'cse_id': {'type': 'string'},
+                'cse_name': {'type': 'string'}
             },
             'required': ['api_key','cse_id','cse_name']
     },
