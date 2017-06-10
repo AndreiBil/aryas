@@ -7,7 +7,7 @@ from urllib import request
 import json
 import time
 import datetime
-from peewee import SQL
+from peewee import SQL, fn
 # The following are imported purely for typehints, do not use directly.
 from src.extensions.aryasorm import AryasORM
 from src.extensions.config import Config
@@ -124,9 +124,11 @@ class General:
         # if the user hasn't posted anything it's None
         try:
             channel_id = (user.messages
-                          .select(self.orm.Message.is_command, self.orm.Channel)
+                          .select(self.orm.Message.channel)
+                          .join(self.orm.Server, on=(self.orm.Server.id == self.orm.Channel.server))
+                          .switch(self.orm.Message)
                           # peewee needs this to be ==
-                          .where(self.orm.Message.is_command == False)
+                          .where(self.orm.Message.is_command == False, self.orm.Server.discord_id == member.server.id)
                           .annotate(self.orm.Channel)
                           .order_by(SQL('count').desc())
                           .limit(1))[0].channel.discord_id
