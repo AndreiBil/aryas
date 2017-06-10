@@ -3,6 +3,9 @@ import asyncio
 from typing import Union
 from discord import Server, Channel
 from src.extensions.config import Config
+# imported for type hints
+from src import models
+from discord import Member
 
 _config = Config()
 
@@ -19,6 +22,17 @@ def is_command(bot, cmd):
         return False
     cmd = cmd.lstrip(bot.command_prefix).split(' ')[0]
     return cmd in bot.commands
+
+
+def update_user_fields(user: models.User, member: Member):
+    user.name = member.name
+    user.discriminator = member.discriminator
+    user.is_bot = member.bot
+    if not member.top_role.is_everyone:
+        user.top_role = str(member.top_role)
+    user.status = str(member.status)
+    user.game = str(member.game)
+    user.save()
 
 async def kick_user(user, mod, server, bot, reason):
     """
