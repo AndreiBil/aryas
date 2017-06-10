@@ -8,9 +8,7 @@ from src.extensions.config import Config as _Config
 
 
 class Models:
-    def __init__(self, base_model, discord_model, user, server, channel, message, server_nick, love_transaction):
-        self.BaseModel = base_model
-        self.DiscordModel = discord_model
+    def __init__(self, user, server, channel, message, server_nick, love_transaction):
         self.User = user
         self.Server = server
         self.Channel = channel
@@ -125,7 +123,7 @@ class Message(DiscordModel):
         receiver = ForeignKeyField(User, related_name='love_receivers', index=True)
         channel = ForeignKeyField(Channel)
 
-    models = Models(BaseModel, DiscordModel, User, Server, Channel, Message, ServerNick, LoveTransaction)
+    models = Models(User, Server, Channel, Message, ServerNick, LoveTransaction)
 
     database_proxy.initialize(database_)
     return database_proxy, models
