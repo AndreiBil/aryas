@@ -13,7 +13,7 @@ from peewee import Proxy
 
 
 class _Constants:
-    def __init__(self, config: Config):
+    def __init__(self, config):
         self._config = config
 
         default = self.default_config
