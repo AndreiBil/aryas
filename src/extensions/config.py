@@ -14,7 +14,9 @@ from peewee import Proxy
 
 
 class _Constants:
-    def __init__(self):
+    def __init__(self, config: Config):
+        self._config = config
+
         default = self.default_config
         self._config_schema = {
             'aryas': {'type': 'dict', 'required': True, 'default': default['aryas'], 'schema': {
@@ -129,10 +131,14 @@ def your_awesome_func():
     def message_sleep_time(self) -> int:
         return 2
 
+    @property
+    def env(self):
+        return self._config['aryas']['env']
+
 
 class Config:
     def __init__(self):
-        self._constants = _Constants()
+        self._constants = _Constants(self)
 
         self._config_dict = self._parse_config()
 
@@ -167,10 +173,6 @@ class Config:
         # Create a database proxy (placeholder) to be filled at runtime with the actual database object.
         self._config_dict['aryas']['db']['_db_proxy'] = Proxy()
         return self._config_dict['aryas']['db']
-
-    @property
-    def env(self):
-        return self._config_dict['aryas']['env']
 
     @property
     def constants(self) -> _Constants:
