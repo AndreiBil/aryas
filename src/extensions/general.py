@@ -255,6 +255,6 @@ class General:
             await self.bot.send_message(ctx.message.channel,"Something went wrong while googling.")
 
 
-def setup(bot):
+def setup(bot: commands.Bot) -> None:
     bot.add_cog(General(bot))
 
