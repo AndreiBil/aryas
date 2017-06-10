@@ -7,7 +7,6 @@ import json
 import logging
 from typing import Dict, Set, Tuple
 
-import yaml
 from cerberus import Validator
 from discord.ext import commands
 from peewee import Proxy
@@ -194,8 +193,10 @@ class Config:
             loaded = json.load(f)
         try:
             if not v.validate(loaded):
-                print(v.errors, type(v.errors))
-                raise ConfigParseException('There were errors with your config!\n' + yaml.dump(v.errors, indent=2))
+                with open(self.constants.cache_dir+"cfg_errors.json", "w") as f:
+                    json.dump(v.errors, f, indent=2)
+                raise ConfigParseException('There were errors with your config!\n'
+                                           'Error details were dumped to cfg_errors.json')
         finally:
             normalized = v.normalized(loaded)  # Insert default values for missing keys
             with open(self.constants.cfg_file, 'w') as f:
