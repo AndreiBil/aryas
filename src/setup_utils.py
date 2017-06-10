@@ -75,7 +75,7 @@ CFG_SCHEMA = {
             },
             'required': ['api_key','cse_id','cse_name']
     },
-    'required': ['discord', 'weather']
+    'required': ['discord', 'weather','google']
 }
 
 
