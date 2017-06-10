@@ -63,8 +63,6 @@ def your_awesome_func():
     return 1+1
 ```"""
 
-    # <editor-fold desc="conversions">
-
     @property
     def len_units(self) -> Dict[str, float]:
         return {'millimeter': 0.001, 'mm': 0.001, 'centimeter': 0.01, 'cm': 0.01, 'meter': 1, 'm': 1,
@@ -76,8 +74,6 @@ def your_awesome_func():
         return {'milligram': 0.000001, 'mg': 0.000001, 'gram': 0.001, 'g': 0.001, 'kilogram': 1, 'kg': 1,
                 'ton': 1000,
                 'pound': 0.453592, 'ounce': 0.0283495}
-
-    # </editor-fold>
 
     @property
     def possible_status(self) -> Set[str]:
@@ -95,8 +91,6 @@ def your_awesome_func():
                "INFO", 20, \
                "DEBUG", 10, \
                "NOTSET", 0
-
-    # <editor-fold desc="config">
 
     @property
     def default_config(self) -> dict:
@@ -123,10 +117,6 @@ def your_awesome_func():
     def config_schema(self) -> dict:
         return self._config_schema
 
-    # </editor-fold>
-
-    # <editor-fold desc="files">
-
     @property
     def cache_dir(self) -> str:
         return "./.aryas/"
@@ -134,8 +124,6 @@ def your_awesome_func():
     @property
     def cfg_file(self) -> str:
         return self.cache_dir + "cfg.json"
-
-    # </editor-fold>
 
     @property
     def message_sleep_time(self) -> int:
@@ -157,8 +145,6 @@ class Config:
         :return:
         """
         return self._config_dict[item]
-
-    # <editor-fold desc="props"
 
     @property
     def logger(self):
@@ -189,8 +175,6 @@ class Config:
     @property
     def constants(self) -> _Constants:
         return self._constants
-
-    # </editor-fold>
 
     def _parse_config(self) -> dict:
         """
