@@ -255,6 +255,7 @@ class General:
                     channel=ctx.message.channel,
                     check=lambda m: m.content.isnumeric() and int(m.content) in range(1, 6))
                 if response:
+                    await self.bot.send_typing(ctx.message.channel)
                     link = result['items'][int(response.content)-1]['link']
                     await self.bot.send_message(ctx.message.channel, link)
             else:
