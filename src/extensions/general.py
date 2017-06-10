@@ -105,7 +105,7 @@ class General:
         love = self.orm.User.get(discord_id=member.id).total_love
 
         if not love:
-            await send(self.bot, "{} doesn't have any ❤".format(member.mention, love), ctx.message.channel)
+            await send(self.bot, '{} doesn\'t have any ❤'.format(member.mention, love), ctx.message.channel)
         else:
             await send(self.bot, '{} has {}x❤'.format(member.mention, love), ctx.message.channel)
 
@@ -119,10 +119,10 @@ class General:
         """
 
         if member == ctx.message.author:
-            await command_error(ctx, "You can't give yourself love!")
+            await command_error(ctx, 'You can\'t give yourself love!')
 
         if love < 0:
-            await command_error(ctx, "You can't give someone negative love!")
+            await command_error(ctx, 'You can\'t give someone negative love!')
             return
 
         msg = ctx.message
