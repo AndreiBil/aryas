@@ -17,23 +17,23 @@ class _Constants:
     def __init__(self):
         default = self.default_config
         self._config_schema = {
-            "aryas": {"type": "dict", "required": True, "default": default["aryas"], "schema": {
-                "db": {"type": "dict", "required": True, "default": default["aryas"]["db"], "schema": {
-                    "host": {"type": "string", "required": True, "default": default["aryas"]["db"]["host"]},
-                    "name": {"type": "string", "required": True, "default": default["aryas"]["db"]["name"]},
-                    "user": {"type": "string", "required": True, "default": default["aryas"]["db"]["user"]},
-                    "pass": {"type": "string", "required": True, "default": default["aryas"]["db"]["pass"]}
+            'aryas': {'type': 'dict', 'required': True, 'default': default['aryas'], 'schema': {
+                'db': {'type': 'dict', 'required': True, 'default': default['aryas']['db'], 'schema': {
+                    'host': {'type': 'string', 'required': True, 'default': default['aryas']['db']['host']},
+                    'name': {'type': 'string', 'required': True, 'default': default['aryas']['db']['name']},
+                    'user': {'type': 'string', 'required': True, 'default': default['aryas']['db']['user']},
+                    'pass': {'type': 'string', 'required': True, 'default': default['aryas']['db']['pass']}
                 }},
-                "env": {"type": "string", "required": False, "default": default["aryas"]["env"],
-                        "allowed": ("prod", "dev")},
-                "log_level": {"type": ["string", "integer"], "required": False,
-                              "default": default["aryas"]["log_level"], "allowed": self.possible_log_levels}
+                'env': {'type': 'string', 'required': False, 'default': default['aryas']['env'],
+                        'allowed': ('prod', 'dev')},
+                'log_level': {'type': ['string', 'integer'], 'required': False,
+                              'default': default['aryas']['log_level'], 'allowed': self.possible_log_levels}
             }},
-            "discord": {"type": "dict", "required": True, "default": default["discord"], "schema": {
-                "token": {"type": "string", "required": True, "default": default["discord"]["token"]}
+            'discord': {'type': 'dict', 'required': True, 'default': default['discord'], 'schema': {
+                'token': {'type': 'string', 'required': True, 'default': default['discord']['token']}
             }},
-            "weather": {"type": "dict", "required": False, "default": default["weather"], "schema": {
-                "api_key": {"type": "string", "required": False, "default": default["weather"]["api_key"]}
+            'weather': {'type': 'dict', 'required': False, 'default': default['weather'], 'schema': {
+                'api_key': {'type': 'string', 'required': False, 'default': default['weather']['api_key']}
             }}
         }
 
@@ -85,31 +85,31 @@ def your_awesome_func():
 
     @property
     def possible_log_levels(self) -> Tuple:
-        return "CRITICAL", 50, \
-               "ERROR", 40, \
-               "WARNING", 30, \
-               "INFO", 20, \
-               "DEBUG", 10, \
-               "NOTSET", 0
+        return 'CRITICAL', 50, \
+               'ERROR', 40, \
+               'WARNING', 30, \
+               'INFO', 20, \
+               'DEBUG', 10, \
+               'NOTSET', 0
 
     @property
     def default_config(self) -> dict:
         return {
-            "aryas": {
-                "db": {
-                    "host": "127.0.0.1",
-                    "name": "",
-                    "user": "",
-                    "pass": ""
+            'aryas': {
+                'db': {
+                    'host': '127.0.0.1',
+                    'name': '',
+                    'user': '',
+                    'pass': ''
                 },
-                "env": "prod",
-                "log_level": 0
+                'env': 'prod',
+                'log_level': 0
             },
-            "discord": {
-                "token": ""
+            'discord': {
+                'token': ''
             },
-            "weather": {
-                "api_key": ""
+            'weather': {
+                'api_key': ''
             }
         }
 
@@ -119,11 +119,11 @@ def your_awesome_func():
 
     @property
     def cache_dir(self) -> str:
-        return "./.aryas/"
+        return './.aryas/'
 
     @property
     def cfg_file(self) -> str:
-        return self.cache_dir + "cfg.json"
+        return self.cache_dir + 'cfg.json'
 
     @property
     def message_sleep_time(self) -> int:
@@ -188,15 +188,15 @@ class Config:
             pass
 
         v = Validator(self.constants.config_schema)
-        with open(self.constants.cfg_file, "r") as f:
+        with open(self.constants.cfg_file, 'r') as f:
             loaded = json.load(f)
         try:
             if not v.validate(loaded):
                 print(v.errors, type(v.errors))
-                raise ConfigParseException("There were errors with your config!\n" + yaml.dump(v.errors, indent=2))
+                raise ConfigParseException('There were errors with your config!\n' + yaml.dump(v.errors, indent=2))
         finally:
             normalized = v.normalized(loaded)  # Insert default values for missing keys
-            with open(self.constants.cfg_file, "w") as f:
+            with open(self.constants.cfg_file, 'w') as f:
                 json.dump(normalized, f, indent=2)
 
         return normalized
