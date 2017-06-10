@@ -237,7 +237,8 @@ class General:
         # search terms to the service, and sets safesearch to medium
         # result is a dictionary with list values
         service = build(self.config['google']['cse_name'], "v1", developerKey=self.config['google']['api_key'])
-        result = service.cse().list(q=str(ctx.message.content.lstrip("$search")), cx=self.config['google']['cse_id'], safe="medium",).execute()
+        query = str(ctx.message.content.lstrip("$search"))
+        result = service.cse().list(q=query, cx=self.config['google']['cse_id'], safe="medium",).execute()
 
         try:
             if 'items' in result and len(result['items']) > 0:
@@ -247,12 +248,15 @@ class General:
                 else:
                     items = len(result['items'])
                 for i in range(items):
-                    lst += "**{}. {}**\n`{}`\n".format(i+1,result['items'][i]['title'], result['items'][i]['snippet'])
+                    lst += "**{}. {}**\n`{}`\n".format(i+1, result['items'][i]['title'], result['items'][i]['snippet'])
                 await send(self.bot, lst, ctx.message.channel, delete=True, time=20, show_dots=True)
-                response = await self.bot.wait_for_message(timeout=20, author=ctx.message.author, channel=ctx.message.channel, check=lambda m: m.content.isnumeric() and int(m.content) in range(1,6))
+                response = await self.bot.wait_for_message(
+                    timeout=20, author=ctx.message.author,
+                    channel=ctx.message.channel,
+                    check=lambda m: m.content.isnumeric() and int(m.content) in range(1, 6))
                 if response:
                     link = result['items'][int(response.content)-1]['link']
-                    await self.bot.send_message(ctx.message.channel,link)
+                    await self.bot.send_message(ctx.message.channel, link)
             else:
                 await self.bot.send_message(ctx.message.channel, 'No results found.')
         except Exception as e:
