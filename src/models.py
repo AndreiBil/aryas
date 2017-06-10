@@ -23,9 +23,9 @@ def get_models(config: _Config) -> Tuple[Proxy, Models]:
     database_proxy = db_cfg["_db_proxy"]
 
     # Based on the `env` config variable, use a different database provider
-    if config.env == 'dev':
+    if config.constants.env == 'dev':
         database_ = SqliteDatabase(config.constants.cache_dir + config.db['name'] + '.db')
-    elif config.env == 'prod':
+    elif config.constants.env == 'prod':
         database_ = MySQLDatabase(
             database=db_cfg['name'],
             user=db_cfg['user'],
@@ -34,7 +34,7 @@ def get_models(config: _Config) -> Tuple[Proxy, Models]:
             charset='utf8mb4'
         )
     else:
-        raise Exception('{} is not a valid environment.'.format(config.env))
+        raise Exception('{} is not a valid environment.'.format(config.constants.env))
 
     class BaseModel(Model):
         """
