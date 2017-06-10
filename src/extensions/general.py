@@ -94,16 +94,18 @@ class General:
         await self.bot.say('{}ms'.format(latency))
 
     @commands.command(pass_context=True)
-    async def get_love(self, ctx: commands.Context, member: discord.Member) -> None:
+    async def get_love(self, ctx: commands.Context, member: discord.Member=None) -> None:
         """
         Gives info regarding the amount of love a user has
         :param ctx: the message context
         :param member: the member
         """
+        if member is None:
+            member = ctx.message.author
         love = self.orm.User.get(discord_id=member.id).total_love
 
         if not love:
-            await send(self.bot, "{} doesn't have any ❤".format(member.mention, love), ctx.message.channel)
+            await send(self.bot, '{} doesn\'t have any ❤'.format(member.mention, love), ctx.message.channel)
         else:
             await send(self.bot, '{} has {}x❤'.format(member.mention, love), ctx.message.channel)
 
@@ -115,8 +117,12 @@ class General:
         :param member: the member to give the love to
         :param love: the amount of love to give
         """
+
+        if member == ctx.message.author:
+            await command_error(ctx, 'You can\'t give yourself love!')
+
         if love < 0:
-            await command_error(ctx, "You can't give someone negative love!")
+            await command_error(ctx, 'You can\'t give someone negative love!')
             return
 
         msg = ctx.message
