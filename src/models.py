@@ -17,7 +17,6 @@ class Models:
         self.LoveTransaction = love_transaction
 
 
-# noinspection PyClassHasNoInit
 def get_models(config: _Config) -> Tuple[Proxy, Models]:
 
     db_cfg = config.db
