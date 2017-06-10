@@ -1,8 +1,6 @@
 import datetime
-from typing import Tuple
 
-from peewee import SqliteDatabase, MySQLDatabase, Model, PrimaryKeyField, DateTimeField, FixedCharField, CharField, \
-    BooleanField, TextField, IntegerField, ForeignKeyField, CompositeKey, Proxy
+from peewee import *
 
 from src.extensions.config import Config as _Config
 
@@ -17,7 +15,7 @@ class Models:
         self.LoveTransaction = love_transaction
 
 
-def get_models(config: _Config) -> Tuple[Proxy, Models]:
+def get_models(config: _Config) -> (Proxy, Models):
 
     db_cfg = config.db
     database_proxy = db_cfg["_db_proxy"]
