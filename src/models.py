@@ -22,7 +22,7 @@ def get_models(config: _Config) -> (Proxy, Models):
 
     # Based on the `env` config variable, use a different database provider
     if config.constants.env == 'dev':
-        database_ = SqliteDatabase(config.constants.cache_dir + config.db['name'] + '.db')
+        database_ = SqliteDatabase(config.constants.cache_dir + 'aryas.db')
     elif config.constants.env == 'prod':
         database_ = MySQLDatabase(
             database=db_cfg['name'],
