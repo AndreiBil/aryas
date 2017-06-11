@@ -97,7 +97,7 @@ async def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
                     await bot.edit_message(msg, message+dot_bar(i+1))
             await bot.delete_message(msg)
 
-    asyncio.get_event_loop().create_task(send_inner)
+    asyncio.get_event_loop().create_task(send_inner())
 
 async def command_error(ctx: commands.Context, msg=None, prefix=True):
     error_msg = ("Oops! That command failed!\n```\n{}\n```".format(ctx.message.clean_content) if prefix else "") + \
