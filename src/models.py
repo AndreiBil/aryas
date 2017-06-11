@@ -1,7 +1,5 @@
 import datetime
-
 from peewee import *
-
 from src.extensions.config import Config as _Config
 
 
@@ -68,8 +66,6 @@ def get_models(config: _Config) -> (Proxy, Models):
         top_role = CharField(default='')
         is_bot = BooleanField(default=False)
         notes = TextField(default='')
-        # TODO: make this autoincrement
-        total_messages = IntegerField(default=0)
 
         @property
         def total_love(self):
