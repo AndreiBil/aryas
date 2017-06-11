@@ -24,11 +24,11 @@ class ModTools:
         try:
             await self.bot.kick(member)
             msg = '{} was kicked by {}. Reason: {}'.format(member.name, ctx.message.author.mention, ' '.join(reason))
-            await send(self.bot, msg, get_channel_by_name(ctx.message.server,
-                                                          self.config['aryas']['mod_log_channel_name']))
+            send(self.bot, msg, get_channel_by_name(ctx.message.server,
+                                                    self.config['aryas']['mod_log_channel_name']))
         except Exception as e:
             print(e)
-            await send(self.bot, 'Failed to kick ' + member.mention, ctx.message.channel, True)
+            send(self.bot, 'Failed to kick ' + member.mention, ctx.message.channel, True)
 
     @commands.command(pass_context=True)
     @commands.has_role('Admin')
@@ -42,15 +42,15 @@ class ModTools:
         try:
             await self.bot.ban(member)
             msg = '{} was banned by {}. Reason: {}'.format(member.name, ctx.message.author.mention, ' '.join(reason))
-            await send(self.bot, msg, get_channel_by_name(ctx.message.server,
-                                                          self.config['aryas']['mod_log_channel_name']))
+            send(self.bot, msg, get_channel_by_name(ctx.message.server,
+                                                    self.config['aryas']['mod_log_channel_name']))
         except Exception as e:
             print(e)
-            await send(self.bot, 'Failed to ban ' + member.mention, ctx.message.channel, True)
+            send(self.bot, 'Failed to ban ' + member.mention, ctx.message.channel, True)
 
     @commands.command(pass_context=True)
     @commands.has_role('Admin')
-    async def clear(self, ctx: commands.Context, number: int, member: discord.Member=None) -> None:
+    async def clear(self, ctx: commands.Context, number: int, member: discord.Member = None) -> None:
         """
         Purges messages from the channel
         :param ctx: The message context
@@ -67,9 +67,9 @@ class ModTools:
 
         if number <= 100:
             #  Add 1 to limit to include command message, subtract 1 from the return to not count it.
-            msgs = await self.bot.purge_from(ctx.message.channel, limit=number+1, check=predicate)
-            await send(self.bot, '{} message{} cleared.'.format(len(msgs)-1, "s" if len(msgs)-1 != 1 else ""),
-                       ctx.message.channel, True)
+            msgs = await self.bot.purge_from(ctx.message.channel, limit=number + 1, check=predicate)
+            send(self.bot, '{} message{} cleared.'.format(len(msgs) - 1, "s" if len(msgs) - 1 != 1 else ""),
+                 ctx.message.channel, True)
         else:
             await command_error(ctx, 'Cannot delete more than 100 messages at a time.')
 

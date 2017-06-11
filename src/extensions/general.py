@@ -117,7 +117,7 @@ class General:
         rank = 'Unranked'
         for i, u in enumerate(top_list):
             if user == u:
-                rank = '#{}'.format(i+1)
+                rank = '#{}'.format(i + 1)
                 break
 
         # Finds the most posted on channel for the user
@@ -166,7 +166,7 @@ class General:
         await self.bot.say('{}ms'.format(latency))
 
     @commands.command(pass_context=True)
-    async def get_love(self, ctx: commands.Context, member: discord.Member=None) -> None:
+    async def get_love(self, ctx: commands.Context, member: discord.Member = None) -> None:
         """
         Gives info regarding the amount of love a user has
         :param ctx: the message context
@@ -177,9 +177,9 @@ class General:
         love = self.orm.User.get(discord_id=member.id).total_love
 
         if not love:
-            await send(self.bot, '{} doesn\'t have any ❤'.format(member.mention, love), ctx.message.channel)
+            send(self.bot, '{} doesn\'t have any ❤'.format(member.mention, love), ctx.message.channel)
         else:
-            await send(self.bot, '{} has {}x❤'.format(member.mention, love), ctx.message.channel)
+            send(self.bot, '{} has {}x❤'.format(member.mention, love), ctx.message.channel)
 
     @commands.command(pass_context=True)
     async def show_love(self, ctx: commands.Context, member: discord.Member, love: int) -> None:
@@ -221,8 +221,8 @@ class General:
             channel=channel
         )
 
-        await send(self.bot, '{} showed {}x❤ to {}'
-                   .format(msg.author.mention, love, member.mention), ctx.message.channel)
+        send(self.bot, '{} showed {}x❤ to {}'
+             .format(msg.author.mention, love, member.mention), ctx.message.channel)
 
     @commands.command(pass_context=True)
     async def convert_currency(self, ctx: commands.Context, amount: float, base, to) -> None:
@@ -241,7 +241,7 @@ class General:
                 await self.bot.say(msg)
         except Exception as e:
             self.config.logger.error(e)
-            await send(self.bot, 'Could not convert {} {} to {}'.format(amount, base, to), ctx.message.channel, True)
+            send(self.bot, 'Could not convert {} {} to {}'.format(amount, base, to), ctx.message.channel, True)
 
     @commands.command(pass_context=True)
     async def convert_length(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
@@ -258,8 +258,8 @@ class General:
             await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
         except Exception as e:
             self.config.logger.error(e)
-            await send(self.bot, 'Could not convert {} {} to {}'.format(amount, unit1, unit2),
-                       ctx.message.channel, True)
+            send(self.bot, 'Could not convert {} {} to {}'.format(amount, unit1, unit2),
+                 ctx.message.channel, True)
 
     @commands.command(pass_context=True)
     async def convert_mass(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
@@ -276,8 +276,8 @@ class General:
             await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
         except Exception as e:
             self.config.logger.error(e)
-            await send(self.bot, 'Could not convert {} {} to {}'.format(amount, unit1, unit2),
-                       ctx.message.channel, True)
+            send(self.bot, 'Could not convert {} {} to {}'.format(amount, unit1, unit2),
+                 ctx.message.channel, True)
 
     @commands.command(pass_context=True)
     async def weather(self, ctx: commands.Context, city, country) -> None:
@@ -298,8 +298,8 @@ class General:
             await self.bot.say('The weather in {}, {} is {}° C'.format(city, country, temperature))
         except Exception as e:
             self.config.logger.error(e)
-            await send(self.bot, 'Could not get the weather in {}, {}.'
-                       .format(country, city), ctx.message.channel, True)
+            send(self.bot, 'Could not get the weather in {}, {}.'
+                 .format(country, city), ctx.message.channel, True)
 
 
 def setup(bot: commands.Bot) -> None:
