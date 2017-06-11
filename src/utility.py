@@ -98,7 +98,7 @@ def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
                     await bot.edit_message(msg, message + dot_bar(i + 1))
             await bot.delete_message(msg)
 
-    asyncio.get_event_loop().create_task(send_inner())
+    asyncio.ensure_future(send_inner())
 
 
 async def command_error(ctx: commands.Context, msg=None, prefix=True):
