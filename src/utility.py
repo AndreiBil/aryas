@@ -85,16 +85,19 @@ async def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
             return "\n`💣" + "-"*(width-progress) + "*`" if width-progress > 0 else "💥"
         return "\n`|" + "•"*(width-progress) + " "*max(progress, 0) + "|`"
 
-    msg = await bot.send_message(channel, message + (dot_bar(0) if delete and show_dots else ""))
-    # Waits *time* seconds and deletes the confirmation message.
-    if delete:
-        if not show_dots:
-            await asyncio.sleep(time)
-        else:
-            for i in range(int(time)):
-                await asyncio.sleep(1)
-                await bot.edit_message(msg, message+dot_bar(i+1))
-        await bot.delete_message(msg)
+    async def send_inner():
+        msg = await bot.send_message(channel, message + (dot_bar(0) if delete and show_dots else ""))
+        # Waits *time* seconds and deletes the confirmation message.
+        if delete:
+            if not show_dots:
+                await asyncio.sleep(time)
+            else:
+                for i in range(int(time)):
+                    await asyncio.sleep(1)
+                    await bot.edit_message(msg, message+dot_bar(i+1))
+            await bot.delete_message(msg)
+
+    asyncio.get_event_loop().create_task(send_inner)
 
 async def command_error(ctx: commands.Context, msg=None, prefix=True):
     error_msg = ("Oops! That command failed!\n```\n{}\n```".format(ctx.message.clean_content) if prefix else "") + \
