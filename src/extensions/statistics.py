@@ -23,6 +23,11 @@ class Statistics:
         """
         if not isinstance(msg.channel, PrivateChannel):
             try:
+                # append embeds list to message
+                body = msg.content
+                if msg.embeds:
+                    body += '\n' + str(msg.embeds)
+
                 user = self.orm.User.get_or_create(
                     discord_id=msg.author.id
                 )[0]
@@ -37,8 +42,9 @@ class Statistics:
                     discord_id=msg.id,
                     user=user,
                     channel=channel,
-                    body=msg.content,
-                    is_command=is_command(self.bot, msg.content)
+                    body=body,
+                    is_command=is_command(self.bot, msg.content),
+                    is_embed=True if msg.embeds else False
                 )
                 user.name = msg.author.name
                 user.is_bot = msg.author.bot
@@ -95,12 +101,12 @@ class Statistics:
 
     @messages.command()
     @commands.has_role('Admin')
-    async def users(self, count):
+    async def users(self, count=10):
         """
         Show users with the most messages
         :param count: number of users, min 1, max 20
         """
-        count = int(count)
+        count = count
         # Show at least 1 user and 20 at most
         count = max(1, count)
         count = min(20, count)
@@ -115,7 +121,10 @@ class Statistics:
         embed = discord.Embed(color=discord.Color(self.config.embed_color), timestamp=datetime.datetime.now())
         embed.set_footer(text='Global footer for all embeds', icon_url='https://cdn.discordapp.com/embed/avatars/2.png')
         for user in users:
-            embed.add_field(name=user.name, value='Total messages: {}'.format(user.total_messages), inline=False)
+            # the user might not have a name if he hasn't sent a message already
+            # so in that case use the id instead
+            name = user.name if user.name != '' else user.discord_id
+            embed.add_field(name=name, value='Total messages: {}'.format(user.total_messages), inline=False)
         await self.bot.say(content='Top active users:', embed=embed)
 
 
