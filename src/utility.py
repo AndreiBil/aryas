@@ -34,6 +34,7 @@ def update_user_fields(user: models.User, member: Member):
     user.game = str(member.game)
     user.save()
 
+
 async def kick_user(user, mod, server, bot, reason):
     """
     Kicks a user and then logs it to the 'mod_log' channel
@@ -47,10 +48,10 @@ async def kick_user(user, mod, server, bot, reason):
     try:
         await bot.kick(user)
         msg = '{} was kicked by {}. Reason: {}'.format(user.name, mod.mention, reason)
-        await send(bot, msg, channel, False)
+        send(bot, msg, channel, False)
     except Exception as e:
         _config.logger.error(e)
-        await send(bot, 'Failed to kick {} for {}'.format(user.mention, reason), channel, False)
+        send(bot, 'Failed to kick {} for {}'.format(user.mention, reason), channel, False)
 
 
 def get_channel_by_name(server: Server, name: str) -> Union[Channel, None]:
@@ -66,8 +67,8 @@ def get_channel_by_name(server: Server, name: str) -> Union[Channel, None]:
     return None
 
 
-async def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
-               time=_config['aryas']['message_sleep_time'], show_dots=True, bomb_themed_dots=False) -> None:
+def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
+         time=_config['aryas']['message_sleep_time'], show_dots=True, bomb_themed_dots=False) -> None:
     """
     Sends a message to the server and deletes it after a period of time
     :param bot:     the bot used to send the message
@@ -82,8 +83,8 @@ async def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
     def dot_bar(progress):
         width = int(time)
         if bomb_themed_dots:
-            return "\n`💣" + "-"*(width-progress) + "*`" if width-progress > 0 else "💥"
-        return "\n`|" + "•"*(width-progress) + " "*max(progress, 0) + "|`"
+            return "\n`💣" + "-" * (width - progress) + "*`" if width - progress > 0 else "💥"
+        return "\n`|" + "•" * (width - progress) + " " * max(progress, 0) + "|`"
 
     async def send_inner():
         msg = await bot.send_message(channel, message + (dot_bar(0) if delete and show_dots else ""))
@@ -94,12 +95,13 @@ async def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
             else:
                 for i in range(int(time)):
                     await asyncio.sleep(1)
-                    await bot.edit_message(msg, message+dot_bar(i+1))
+                    await bot.edit_message(msg, message + dot_bar(i + 1))
             await bot.delete_message(msg)
 
     asyncio.get_event_loop().create_task(send_inner())
 
+
 async def command_error(ctx: commands.Context, msg=None, prefix=True):
     error_msg = ("Oops! That command failed!\n```\n{}\n```".format(ctx.message.clean_content) if prefix else "") + \
-                ("\n"+msg if msg is not "" else "")
+                ("\n" + msg if msg is not "" else "")
     await ctx.bot.send_message(ctx.message.author, error_msg)
