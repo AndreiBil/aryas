@@ -53,7 +53,7 @@ def get_channel_by_name(server: Server, name: str) -> Union[Channel, None]:
 
 
 async def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
-               time=_config.constants.message_sleep_time, show_dots=True, bomb_themed_dots=False) -> None:
+               time=_config.constants.env['message_sleep_time'], show_dots=True, bomb_themed_dots=False) -> None:
     """
     Sends a message to the server and deletes it after a period of time
     :param bot:     the bot used to send the message

@@ -28,7 +28,10 @@ class _Constants:
                 'env': {'type': 'string', 'required': False, 'default': default['aryas']['env'],
                         'allowed': ('prod', 'dev')},
                 'log_level': {'type': ['string', 'integer'], 'required': False,
-                              'default': default['aryas']['log_level'], 'allowed': self.possible_log_levels}
+                              'default': default['aryas']['log_level'], 'allowed': self.possible_log_levels},
+                'message_sleep_time': {'type': 'number', 'required': True,
+                                       'default': default['aryas']['message_sleep_time']},
+                'mod_log_channel_name': {'type': 'string', 'required': True, 'empty': False}
             }},
             'discord': {'type': 'dict', 'required': True, 'default': default['discord'], 'schema': {
                 'token': {'type': 'string', 'required': True, 'default': default['discord']['token']}
@@ -104,7 +107,9 @@ def your_awesome_func():
                     'pass': ''
                 },
                 'env': 'prod',
-                'log_level': 0
+                'log_level': 0,
+                'message_sleep_time': 2,
+                'mod_log_channel_name': 'mod_log'
             },
             'discord': {
                 'token': ''
@@ -125,10 +130,6 @@ def your_awesome_func():
     @property
     def cfg_file(self) -> str:
         return self.cache_dir + 'cfg.json'
-
-    @property
-    def message_sleep_time(self) -> int:
-        return 2
 
     @property
     def env(self):
