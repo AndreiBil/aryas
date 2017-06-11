@@ -189,16 +189,21 @@ class Config:
             pass
 
         v = Validator(self.constants.config_schema)
-        with open(self.constants.cfg_file, 'r') as f:
-            loaded = json.load(f)
+        loaded = None
         try:
+            with open(self.constants.cfg_file, 'r') as f:
+                loaded = json.load(f)
+
             if not v.validate(loaded):
                 with open(self.constants.cache_dir+"cfg_errors.json", "w") as f:
                     json.dump(v.errors, f, indent=2)
                 raise ConfigParseException('There were errors with your config!\n'
                                            'Error details were dumped to cfg_errors.json')
+        except FileNotFoundError:
+            raise FileNotFoundError("Config file doesnt exist! Default config generated at " + self.constants.cfg_file)
         finally:
-            normalized = v.normalized(loaded)  # Insert default values for missing keys
+            normalized = v.normalized(loaded) \
+                if loaded is not None else self.constants.default_config  # Insert default values for missing keys
             with open(self.constants.cfg_file, 'w') as f:
                 json.dump(normalized, f, indent=2)
 
