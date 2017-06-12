@@ -237,7 +237,7 @@ class General:
         try:
             with request.urlopen('http://api.fixer.io/latest?base={}'.format(base)) as url:
                 data = json.loads(url.read().decode())
-                msg = '{} {} = {} {}'.format(amount, base, str(float(data['rates'][to]) * amount), to)
+                msg = '{} {} = {} {}'.format(amount, base.upper(), str(float(data['rates'][to.upper()]) * amount), to)
                 await self.bot.say(msg)
         except Exception as e:
             self.config.logger.error(e)
