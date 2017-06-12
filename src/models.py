@@ -90,16 +90,16 @@ def get_models(config: _Config) -> (Proxy, Models):
         """
         server = ForeignKeyField(Server, related_name='channels')
 
-class Message(DiscordModel):
-    """
-    Models a Discord message.
-    """
-    user = ForeignKeyField(User, related_name='messages')
-    channel = ForeignKeyField(Channel, related_name='messages')
-    body = TextField()
-    edited = DateTimeField(null=True)
-    is_command = BooleanField(default=False)
-    is_embed = BooleanField(default=False)
+    class Message(DiscordModel):
+        """
+        Models a Discord message.
+        """
+        user = ForeignKeyField(User, related_name='messages')
+        channel = ForeignKeyField(Channel, related_name='messages')
+        body = TextField()
+        edited = DateTimeField(null=True)
+        is_command = BooleanField(default=False)
+        is_embed = BooleanField(default=False)
 
     class ServerNick(BaseModel):
         """
