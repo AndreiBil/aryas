@@ -22,6 +22,11 @@ DEFAULT_CFG = {
     },
     'weather': {
         'api_key': ''
+    },
+    'google': {
+        'api_key': '',
+        'cse_id': '',
+        'cse_name': ''
     }
 }
 
@@ -60,9 +65,18 @@ CFG_SCHEMA = {
                 'api_key': {'type': 'string'}
             },
             'required': ['api_key']
-        }
+        },
+        'google': {
+            'type': 'object',
+            'properties': {
+                'api_key': {'type': 'string'},
+                'cse_id': {'type': 'string'},
+                'cse_name': {'type': 'string'}
+            },
+            'required': ['api_key','cse_id','cse_name']
+         }
     },
-    'required': ['discord', 'weather']
+    'required': ['discord', 'weather','google']
 }
 
 
@@ -94,3 +108,4 @@ def check_setup() -> bool:
     :return: A boolean stating whether the program should continue.
     """
     return cfg_file_is_valid()
+

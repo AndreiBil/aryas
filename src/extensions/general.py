@@ -6,6 +6,7 @@ from src.utility import send, command_error, update_user_fields
 from urllib import request
 import json
 import time
+from googleapiclient.discovery import build
 import datetime
 from peewee import SQL, fn
 # The following are imported purely for typehints, do not use directly.
@@ -300,6 +301,46 @@ class General:
             self.config.logger.error(e)
             send(self.bot, 'Could not get the weather in {}, {}.'
                  .format(country, city), ctx.message.channel, True)
+
+    @commands.command(pass_context=True)
+    @commands.has_role('Admin')
+    async def search(self, ctx) -> None:
+        """
+        Searches google, returns the title of the first 5 results along with their descriptions.
+        Allows users to select a result then returns a link.
+        :param ctx:     The message content.
+        """
+
+        # Creates a service for the CSE, passes the
+        # search terms to the service, and sets safesearch to medium
+        # result is a dictionary with list values
+        service = build(self.config['google']['cse_name'], "v1", developerKey=self.config['google']['api_key'])
+        query = str(ctx.message.content.lstrip("$search"))
+        result = service.cse().list(q=query, cx=self.config['google']['cse_id'], safe="medium",).execute()
+
+        try:
+            if 'items' in result and len(result['items']) > 0:
+                lst = "**Search results:** \n"
+                if len(result['items']) >= 5:
+                    items = 5
+                else:
+                    items = len(result['items'])
+                for i in range(items):
+                    lst += "**{}. {}**\n`{}`\n".format(i+1, result['items'][i]['title'], result['items'][i]['snippet'])
+                await send(self.bot, lst, ctx.message.channel, delete=True, time=20, show_dots=True)
+                response = await self.bot.wait_for_message(
+                    timeout=20, author=ctx.message.author,
+                    channel=ctx.message.channel,
+                    check=lambda m: m.content.isnumeric() and int(m.content) in range(1, 6))
+                if response:
+                    await self.bot.send_typing(ctx.message.channel)
+                    link = result['items'][int(response.content)-1]['link']
+                    await self.bot.send_message(ctx.message.channel, link)
+            else:
+                await self.bot.send_message(ctx.message.channel, 'No results found.')
+        except Exception as e:
+            self.config.logger.error(e)
+            await self.bot.send_message(ctx.message.channel, "Something went wrong while googling.")
 
 
 def setup(bot: commands.Bot) -> None:
