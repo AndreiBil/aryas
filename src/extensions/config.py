@@ -3,6 +3,8 @@ A special config extension. This extension does not hold any bot commands or eve
 to be used throughout the bot. All values in `cfg.json` can be accessed with standard dictionary, additional property
 methods are also available. Database variables should be accessed through the `db` property.
 """
+import os
+
 import json
 import logging
 from typing import Dict, Set, Tuple
@@ -201,6 +203,8 @@ class Config:
                 raise ConfigParseException('There were errors with your config!\n'
                                            'Error details were dumped to cfg_errors.json')
         except FileNotFoundError:
+            if not os.path.isdir(self.constants.cache_dir):
+                os.mkdir(self.constants.cache_dir)
             raise FileNotFoundError("Config file doesnt exist! Default config generated at " + self.constants.cfg_file)
         finally:
             normalized = v.normalized(loaded) \
