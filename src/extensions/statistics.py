@@ -1,7 +1,6 @@
 from discord.ext import commands
 from discord.channel import PrivateChannel
 from src.utility import is_command, update_user_fields
-from src import queries
 import datetime
 from peewee import OperationalError
 # Imported for type hints
@@ -93,7 +92,7 @@ class Statistics:
         :param ctx: command context
         """
         server = self.orm.Server.get(discord_id=ctx.message.server.id)
-        total_messages = await queries.server_total_messages(server)
+        total_messages = await self.orm.query.server_total_messages(server)
         await self.bot.say('Total messages: {}'.format(total_messages))
 
     @messages.command(pass_context=True)
@@ -110,7 +109,7 @@ class Statistics:
         count = min(20, count)
 
         server = self.orm.Server.get(discord_id=ctx.message.server.id)
-        users = await queries.user_top_list(count, server)
+        users = await self.orm.query.user_top_list(count, server)
 
         embed = discord.Embed(color=discord.Color(self.config.constants.embed_color), timestamp=datetime.datetime.now())
         embed.set_footer(text='Global footer for all embeds', icon_url='https://cdn.discordapp.com/embed/avatars/2.png')
