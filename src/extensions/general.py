@@ -215,8 +215,17 @@ class General:
         send(self.bot, '{} showed {}x❤ to {}'
              .format(msg.author.mention, love, member.mention), ctx.message.channel)
 
-    @commands.command(pass_context=True)
-    async def convert_currency(self, ctx: commands.Context, amount: float, base, to) -> None:
+    @commands.group(pass_context=True)
+    async def convert(self, ctx: commands.Context):
+        """
+        Group of conversion related commands
+        :param ctx: command context
+        """
+        if ctx.invoked_subcommand is None:
+            await self.bot.say('Usage: ?convert <subcommand>')
+
+    @convert.command(pass_context=True)
+    async def currency(self, ctx: commands.Context, amount: float, base, to) -> None:
         """
         Calculates the requested currency conversion
         :param ctx: the message context
@@ -234,8 +243,8 @@ class General:
             self.config.logger.error(e)
             send(self.bot, 'Could not convert {} {} to {}'.format(amount, base, to), ctx.message.channel, True)
 
-    @commands.command(pass_context=True)
-    async def convert_length(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
+    @convert.command(pass_context=True)
+    async def length(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
         """
         Calculates the requested length conversion
         :param ctx: the message context
@@ -252,8 +261,8 @@ class General:
             send(self.bot, 'Could not convert {} {} to {}'.format(amount, unit1, unit2),
                  ctx.message.channel, True)
 
-    @commands.command(pass_context=True)
-    async def convert_mass(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
+    @convert.command(pass_context=True)
+    async def mass(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
         """
         Calculates the requested mass conversion
         :param ctx: the message context
