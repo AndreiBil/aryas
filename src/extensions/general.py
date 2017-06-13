@@ -3,7 +3,6 @@ import pyowm
 from discord.ext import commands
 from discord.ext.commands import bot as bot_module
 from src.utility import send, command_error, update_user_fields
-from src import queries
 from urllib import request
 import json
 import time
@@ -98,17 +97,17 @@ class General:
             message = discord.Embed(title=':robot: ' + member.display_name + '#' + member.discriminator,
                                     description=member.created_at.strftime('User since %b %d %Y'),
                                     timestamp=datetime.datetime.now(),
-                                    color=self.config.embed_color)
+                                    color=self.config.constants.embed_color)
         else:
             message = discord.Embed(title=member.display_name + '#' + member.discriminator,
                                     description=member.created_at.strftime('User since %b %d %Y'),
                                     timestamp=datetime.datetime.now(),
-                                    color=self.config.embed_color)
+                                    color=self.config.constants.embed_color)
 
         # send typing in case the db lookup takes a long time
         await self.bot.send_typing(ctx.message.channel)
 
-        users = await queries.user_top_list(1000, server)
+        users = await self.orm.query.user_top_list(1000, server)
         # if you're not in the top 1000 you're unranked
         rank = 'Unranked'
         for i, u in enumerate(users):
@@ -119,12 +118,12 @@ class General:
         # Finds the most posted on channel for the user
         # if the user hasn't posted anything it's None
         try:
-            messages = await queries.channel_top_list(1, user, server)
+            messages = await self.orm.query.channel_top_list(1, user, server)
             channel_id = messages[0].channel.discord_id
         except IndexError:
             channel_id = None
 
-        total_messages = await queries.user_total_messages(user, server)
+        total_messages = await self.orm.query.user_total_messages(user, server)
 
         message.set_thumbnail(url=member.avatar_url)
         message.add_field(name='Status', value=str(member.status).capitalize())

@@ -4,7 +4,6 @@ from typing import Union
 from discord import Server, Channel
 from src.extensions.config import Config
 # imported for type hints
-from src import models
 from discord import Member
 
 _config = Config()
@@ -24,7 +23,12 @@ def is_command(bot, cmd):
     return cmd in bot.commands
 
 
-def update_user_fields(user: models.User, member: Member):
+def update_user_fields(user, member: Member):
+    """
+    Updates a users fields in the database with latest data from discord
+    :param user: a user instance from the database
+    :param member: member object from discord
+    """
     user.name = member.name
     user.discriminator = member.discriminator
     user.is_bot = member.bot
