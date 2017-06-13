@@ -225,6 +225,8 @@ class General:
         :param to: the conversion unit (e.g. ILS, GBP)
         """
         await self.bot.send_typing(ctx.message.channel)
+        base = base.upper()
+        to = to.upper()
         try:
             with request.urlopen('http://api.fixer.io/latest?base={}'.format(base)) as url:
                 data = json.loads(url.read().decode())
