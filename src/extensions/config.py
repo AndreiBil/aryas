@@ -41,10 +41,10 @@ class _Constants:
             'weather': {'type': 'dict', 'required': False, 'default': default['weather'], 'schema': {
                 'api_key': {'type': 'string', 'required': False, 'default': default['weather']['api_key']}
             }},
-            'google': {'type': 'dict', 'required': True, 'default': default['google'], 'schema': {
+            'google': {'type': 'dict', 'required': False, 'default': default['google'], 'schema': {
                 'api_key': {'type': 'string', 'required': False, 'default': default['google']['api_key']},
-                'cse_name': {'type': 'string', 'required': False, 'default': default['weather']['cse_name']},
-                'cse_id': {'type': 'string', 'required': False, 'default': default['weather']['api_key']}                
+                'cse_name': {'type': 'string', 'required': False, 'default': default['google']['cse_name']},
+                'cse_id': {'type': 'string', 'required': False, 'default': default['google']['cse_id']}                
             }}
         }
 
