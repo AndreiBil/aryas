@@ -44,7 +44,7 @@ class _Constants:
             'google': {'type': 'dict', 'required': False, 'default': default['google'], 'schema': {
                 'api_key': {'type': 'string', 'required': False, 'default': default['google']['api_key']},
                 'cse_name': {'type': 'string', 'required': False, 'default': default['google']['cse_name']},
-                'cse_id': {'type': 'string', 'required': False, 'default': default['google']['cse_id']}                
+                'cse_id': {'type': 'string', 'required': False, 'default': default['google']['cse_id']}
             }}
         }
 
