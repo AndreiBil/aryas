@@ -5,3 +5,4 @@ pyowm
 mysqlclient
 peewee
 cerberus
+google-api-python-client
