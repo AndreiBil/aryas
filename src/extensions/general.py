@@ -296,7 +296,6 @@ class General:
                  .format(country, city), ctx.message.channel, True)
 
     @commands.command(pass_context=True)
-    @commands.has_role('Admin')
     async def search(self, ctx:commands.Context) -> None:
         """
         Searches google, returns the title of the first 5 results along with their descriptions.
@@ -319,7 +318,7 @@ class General:
                 else:
                     items = len(result['items'])
                 for i in range(items):
-                    lst += "**{}. {}**\n`{}`\n".format(i+1, result['items'][i]['title'], result['items'][i]['snippet'])
+                    lst += "**{}. {}**\n{}\n".format(i+1, result['items'][i]['title'], result['items'][i]['snippet'])
                 send(self.bot, lst, ctx.message.channel, delete=True, time=20, show_dots=True)
                 response = await self.bot.wait_for_message(
                     timeout=20, author=ctx.message.author,
