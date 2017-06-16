@@ -123,6 +123,11 @@ def your_awesome_func():
             },
             'weather': {
                 'api_key': ''
+            },
+            'google': {
+                'api_key': '',
+                'cse_name': '',
+                'cse_id': ''
             }
         }
 
