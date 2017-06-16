@@ -320,7 +320,7 @@ class General:
                     items = len(result['items'])
                 for i in range(items):
                     lst += "**{}. {}**\n`{}`\n".format(i+1, result['items'][i]['title'], result['items'][i]['snippet'])
-                await send(self.bot, lst, ctx.message.channel, delete=True, time=20, show_dots=True)
+                send(self.bot, lst, ctx.message.channel, delete=True, time=20, show_dots=True)
                 response = await self.bot.wait_for_message(
                     timeout=20, author=ctx.message.author,
                     channel=ctx.message.channel,
