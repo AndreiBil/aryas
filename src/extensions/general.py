@@ -297,7 +297,7 @@ class General:
 
     @commands.command(pass_context=True)
     @commands.has_role('Admin')
-    async def search(self, ctx) -> None:
+    async def search(self, ctx:commands.Context) -> None:
         """
         Searches google, returns the title of the first 5 results along with their descriptions.
         Allows users to select a result then returns a link.
