@@ -2,7 +2,7 @@ import re
 
 from discord.ext import commands
 
-from aryasbot.utils import kick_user
+from ..utils import kick_user
 
 
 class Events:

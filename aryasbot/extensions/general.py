@@ -9,7 +9,7 @@ import time
 import datetime
 from googleapiclient.discovery import build
 # The following are imported purely for typehints, do not use directly.
-from aryasbot.extensions import AryasORM, Config
+from . import AryasORM, Config
 
 
 class General:

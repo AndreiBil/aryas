@@ -1,2 +1,2 @@
-from aryasbot.extensions.aryas_orm import AryasORM
-from aryasbot.extensions.config import Config
+from .aryas_orm import AryasORM
+from .config import Config

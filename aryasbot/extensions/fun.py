@@ -1,5 +1,6 @@
 from asyncio import sleep
 from random import randint
+
 import discord
 import requests
 import grequests
@@ -7,7 +8,8 @@ from bs4 import BeautifulSoup
 from discord.ext import commands
 from urllib.parse import quote_plus
 from typing import List, Tuple
-from aryasbot.extensions import Config
+
+from . import Config
 
 
 class Fun:

@@ -4,7 +4,7 @@ from aryasbot.utils import is_command, update_user_fields
 import datetime
 from peewee import OperationalError
 # Imported for type hints
-from aryasbot.extensions import AryasORM, Config
+from . import AryasORM, Config
 import discord
 
 

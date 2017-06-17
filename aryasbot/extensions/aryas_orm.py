@@ -4,8 +4,8 @@ The database engine behind Aryas.
 from discord.ext import commands
 from peewee import OperationalError, SQL
 
-from aryasbot.extensions import Config  # Imported for linting purposes only
-from aryasbot.utils import get_models
+from .config import Config  # Imported for linting purposes only
+from ..utils import models
 
 
 class Query:
@@ -13,8 +13,8 @@ class Query:
     This class acts as a namespace for useful queries
     """
 
-    def __init__(self, models):
-        self.models = models
+    def __init__(self, models_):
+        self.models = models_
 
     async def channel_top_list(self, count, user, server):
         """
@@ -97,7 +97,7 @@ class AryasORM:
         self.bot = bot  # type: commands.Bot
         self.config = self.bot.cogs['Config']  # type: Config
         # Uses the database proxy object for our db as we don't know which database provider to use until runtime.
-        self.db, self.models = get_models(self.config)
+        self.db, self.models = models.get_models(self.config)
         self.query = Query(self.models)
 
         # Is there a nice way to scope all models within AryaORM? Still want them defined in a separate file.
