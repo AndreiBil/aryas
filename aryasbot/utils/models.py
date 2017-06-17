@@ -1,6 +1,6 @@
 import datetime
 from peewee import *
-from src.extensions.config import Config as _Config
+from aryasbot.extensions.config import Config as _Config
 
 
 class Models:

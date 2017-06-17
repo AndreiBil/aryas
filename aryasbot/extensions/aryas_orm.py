@@ -4,8 +4,8 @@ The database engine behind Aryas.
 from discord.ext import commands
 from peewee import OperationalError, SQL
 
-from src.extensions.config import Config  # Imported for linting purposes only
-from src.models import get_models
+from aryasbot.extensions import Config  # Imported for linting purposes only
+from aryasbot.utils import get_models
 
 
 class Query:

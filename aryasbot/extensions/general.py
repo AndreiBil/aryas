@@ -2,15 +2,14 @@ import discord
 import pyowm
 from discord.ext import commands
 from discord.ext.commands import bot as bot_module
-from src.utility import send, command_error, update_user_fields
+from aryasbot.utils import send, command_error, update_user_fields
 from urllib import request
 import json
 import time
 import datetime
 from googleapiclient.discovery import build
 # The following are imported purely for typehints, do not use directly.
-from src.extensions.aryas_orm import AryasORM
-from src.extensions.config import Config
+from aryasbot.extensions import AryasORM, Config
 
 
 class General:

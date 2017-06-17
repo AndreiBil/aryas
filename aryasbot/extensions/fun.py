@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from discord.ext import commands
 from urllib.parse import quote_plus
 from typing import List, Tuple
-from src.extensions.config import Config
+from aryasbot.extensions import Config
 
 
 class Fun:
@@ -50,7 +50,7 @@ class Fun:
         # Build a new request object
         req: grequests.AsyncRequest = grequests.get('http://theoatmeal.com/djtaf/', timeout=1)
         # Send new request
-        res: List[requests.Response] = grequests.map([req], exception_handler=request_exception_handler)
+        res: List[requests.Response] = grequests.map([req], exception_handler=self.request_exception_handler)
 
         # Since we only have one request we can just fetch the first one.
         # res[0].content is the html in bytes
@@ -71,7 +71,7 @@ class Fun:
         # Build a new request object
         req: grequests.AsyncRequest = grequests.get('http://www.unkno.com/', timeout=1)
         # Send new request
-        res: List[requests.Response] = grequests.map([req], exception_handler=request_exception_handler)
+        res: List[requests.Response] = grequests.map([req], exception_handler=self.request_exception_handler)
 
         # Since we only have one request we can just fetch the first one.
         # res[0].content is the html in bytes
@@ -179,16 +179,15 @@ class Fun:
         em = discord.Embed(title=results_title, description=results_desc, colour=discord.Colour.dark_green())
         await self.bot.say('', embed=em)
 
-
-def request_exception_handler(request, exception) -> None:
-    """
-    An exception handler for failed HTTP requests
-    :param request: The request that failed
-    :param exception: 
-    """
-    logger = Config().logger
-    logger.exception('HTTP Request failed: {}'.format(request))
-    logger.exception('It failed with the following exception: \n {}'.format(exception))
+    def request_exception_handler(self, request, exception) -> None:
+        """
+        An exception handler for failed HTTP requests
+        :param request: The request that failed
+        :param exception:
+        """
+        logger = self.config.logger
+        logger.exception('HTTP Request failed: {}'.format(request))
+        logger.exception('It failed with the following exception: \n {}'.format(exception))
 
 
 def setup(bot) -> None:
