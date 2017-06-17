@@ -23,6 +23,18 @@ def is_command(bot, cmd):
     return cmd in bot.commands
 
 
+def in_channel(name):
+    """
+    Checks if command is sent in a given channel
+    :param name: name of the channel
+    :return:
+    """
+    def predicate(ctx):
+        return ctx.message.channel.name == name
+
+    return commands.check(predicate)
+
+
 def update_user_fields(user, member: Member):
     """
     Updates a users fields in the database with latest data from discord
