@@ -2,7 +2,7 @@ import discord
 import pyowm
 from discord.ext import commands
 from discord.ext.commands import bot as bot_module
-from src.utility import send, command_error, update_user_fields
+from src.utility import send, command_error, update_user_fields, in_channel
 from urllib import request
 import json
 import time
@@ -84,6 +84,7 @@ class General:
             await bot.send_message(destination, embed=embed)
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def whois(self, ctx: commands.Context, member: discord.Member) -> None:
         """
         Returns information about the given member
@@ -149,6 +150,7 @@ class General:
             self.config.logger.error('Cannot look up member in PrivateChannel')
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def ping(self, ctx: commands.Context) -> None:
         """
                 Responds with the latency time.
@@ -220,6 +222,7 @@ class General:
              .format(msg.author.mention, love, member.mention), ctx.message.channel)
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def convert_currency(self, ctx: commands.Context, amount: float, base, to) -> None:
         """
         Calculates the requested currency conversion
@@ -241,6 +244,7 @@ class General:
             send(self.bot, 'Could not convert {} {} to {}'.format(amount, base, to), ctx.message.channel, True)
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def convert_length(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
         """
         Calculates the requested length conversion
@@ -259,6 +263,7 @@ class General:
                  ctx.message.channel, True)
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def convert_mass(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
         """
         Calculates the requested mass conversion
@@ -277,6 +282,7 @@ class General:
                  ctx.message.channel, True)
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def weather(self, ctx: commands.Context, city, country) -> None:
         """
         Gives info regarding the weather in a city
@@ -299,6 +305,7 @@ class General:
                  .format(country, city), ctx.message.channel, True)
 
     @commands.command(pass_context=True)
+    @commands.has_any_role('Support', 'Moderator', 'Admin')
     async def search(self, ctx:commands.Context) -> None:
         """
         Searches google, returns the title of the first 5 results along with their descriptions.
