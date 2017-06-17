@@ -33,7 +33,7 @@ class General:
         await self.bot.send_message(member, embed=message)
 
     @commands.command(pass_context=True, name='help')
-    async def aryas_help(self, ctx, *commands):
+    async def aryas_help(self, ctx, *commands_):
         """Shows this message."""
         # Adapted from discord.ext.commands.bot._default_help_command.
         # The only thing that has been changed is the last send command
@@ -45,11 +45,11 @@ class General:
             return bot_module._mentions_transforms.get(obj.group(0), '')
 
         # help by itself just lists our own commands.
-        if len(commands) == 0:
+        if len(commands_) == 0:
             pages = bot.formatter.format_help_for(ctx, bot)
-        elif len(commands) == 1:
+        elif len(commands_) == 1:
             # try to see if it is a cog name
-            name = bot_module._mention_pattern.sub(repl, commands[0])
+            name = bot_module._mention_pattern.sub(repl, commands_[0])
             if name in bot.cogs:
                 command = bot.cogs[name]
             else:
@@ -60,13 +60,13 @@ class General:
 
             pages = bot.formatter.format_help_for(ctx, command)
         else:
-            name = bot_module._mention_pattern.sub(repl, commands[0])
+            name = bot_module._mention_pattern.sub(repl, commands_[0])
             command = bot.commands.get(name)
             if command is None:
                 await bot.send_message(destination, bot.command_not_found.format(name))
                 return
 
-            for key in commands[1:]:
+            for key in commands_[1:]:
                 try:
                     key = bot_module._mention_pattern.sub(repl, key)
                     command = command.commands.get(key)
@@ -295,7 +295,7 @@ class General:
                  .format(country, city), ctx.message.channel, True)
 
     @commands.command(pass_context=True)
-    async def search(self, ctx:commands.Context) -> None:
+    async def search(self, ctx: commands.Context) -> None:
         """
         Searches google, returns the title of the first 5 results along with their descriptions.
         Allows users to select a result then returns a link.
@@ -332,7 +332,6 @@ class General:
         except Exception as e:
             self.config.logger.error(e)
             await self.bot.send_message(ctx.message.channel, "Something went wrong while googling.")
-
 
 
 def setup(bot: commands.Bot) -> None:
