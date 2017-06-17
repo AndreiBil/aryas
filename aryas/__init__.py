@@ -1,1 +1,1 @@
-from aryas import aryasbot, extensions, utils
+from aryas import aryasbot, exceptions, extensions, utils

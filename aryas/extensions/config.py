@@ -13,7 +13,7 @@ from cerberus import Validator
 from discord.ext import commands
 from peewee import Proxy
 
-from ..utils import EarlyExitException
+from ..exceptions import EarlyExitException
 
 
 class _Constants:

@@ -1,0 +1,3 @@
+
+class EarlyExitException(Exception):
+    pass
