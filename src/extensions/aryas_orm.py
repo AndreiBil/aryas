@@ -53,7 +53,7 @@ class Query:
                         self.models.User.is_bot == False,
                         self.models.Server.id == server)
                  .annotate(self.models.Message)  # annotate alias to 'count'
-                 .order_by(SQL('count').desc())
+                 .order_by(SQL('count'))
                  .limit(count))
         return users
 
