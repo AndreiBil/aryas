@@ -10,6 +10,7 @@ from urllib.parse import quote_plus
 from typing import List, Tuple
 
 from . import Config
+from ..utils import in_channel
 
 
 class Fun:
@@ -18,6 +19,7 @@ class Fun:
         self.config: Config = self.bot.cogs['Config']
 
     @commands.command()
+    @commands.has_any_role('Support', 'Moderator', 'Admin')
     async def lmgtfy(self, *, search) -> None:
         """
         For when Googling is enough
@@ -27,6 +29,7 @@ class Fun:
         await self.bot.say(url)
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def roll(self, ctx: commands.Context) -> None:
         """
         Rolls a dice and outputs a message depending on the result
@@ -40,6 +43,7 @@ class Fun:
                 '{} The gods are with you, you rolled **{}**'.format(ctx.message.author.mention, random_dice))
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def telljoke(self, ctx: commands.Context) -> None:
         """
         Responds with a random joke from theoatmeal.com
@@ -62,6 +66,7 @@ class Fun:
         await self.bot.say(joke)
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def randomfact(self, ctx: commands.Context) -> None:
         """
         Responds with a random fact scraped from unkno.com
