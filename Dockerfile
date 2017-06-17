@@ -2,15 +2,21 @@ FROM python:3.6
 
 LABEL maintainer "nat@karmios.com"
 
-ADD ./requirements.txt ./
-RUN pip3 install -r requirements.txt
-RUN rm ./requirements.txt
-
 WORKDIR /root/
+
+
+ADD ./aryas ./aryas
+ADD ./bin ./bin
+ADD ./README.md ./
+ADD ./requirements.txt ./
+ADD ./setup.py ./
+
+RUN pip3 install -r requirements.txt
+RUN python3 setup.py install
+
+RUN rm ./*
+
 
 VOLUME ./.aryas/
 
-ADD ./run.py ./
-ADD ./src ./src
-
-CMD python3 ./run.py
+CMD python3 aryas
