@@ -20,7 +20,7 @@ class Statistics:
         increments the users total messages.
         :param msg: the message
         """
-        if not isinstance(msg.channel, PrivateChannel):
+        if not msg.channel.is_private:
             try:
                 # append embeds list to message
                 body = msg.content
@@ -53,7 +53,7 @@ class Statistics:
                 self.config.logger.error(e)
 
     @commands.group(pass_context=True)
-    @commands.has_role('Admin')
+    @commands.has_any_role('Admin', 'Moderator', 'Support')
     async def stats(self, ctx: commands.Context):
         """
         Group of statistics commands
@@ -63,7 +63,6 @@ class Statistics:
             await self.bot.say('`Usage: ?stats <subcommand>`')
 
     @stats.command(pass_context=True)
-    @commands.has_role('Admin')
     async def online(self, ctx: commands.Context):
         """
         Show total online users on sever
@@ -74,7 +73,6 @@ class Statistics:
         await self.bot.say('{} users online'.format(sum(online)))
 
     @stats.group(pass_context=True)
-    @commands.has_role('Admin')
     async def messages(self, ctx: commands.Context):
         """
         Group of message related commands
@@ -84,7 +82,6 @@ class Statistics:
             await self.bot.say('`Usage: ?stats messages <subcommand>`')
 
     @messages.command(pass_context=True)
-    @commands.has_role('Admin')
     async def total(self, ctx: commands.Context):
         """
         Show total amount of messages on server
@@ -95,7 +92,6 @@ class Statistics:
         await self.bot.say('Total messages: {}'.format(total_messages))
 
     @messages.command(pass_context=True)
-    @commands.has_role('Admin')
     async def users(self, ctx: commands.Context, count=10):
         """
         Show users with the most messages
