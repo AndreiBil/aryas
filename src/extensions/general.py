@@ -90,60 +90,63 @@ class General:
         :param ctx: the message context
         :param member: target member
         """
-        user = self.orm.User.get_or_create(discord_id=member.id)[0]
-        server = self.orm.Server.get(discord_id=member.server.id)
-        update_user_fields(user, member)
+        if not ctx.message.channel.is_private:
+            user = self.orm.User.get_or_create(discord_id=member.id)[0]
+            server = self.orm.Server.get(discord_id=member.server.id)
+            update_user_fields(user, member)
 
-        if member.bot:
-            message = discord.Embed(title=':robot: ' + member.display_name + '#' + member.discriminator,
-                                    description=member.created_at.strftime('User since %b %d %Y'),
-                                    timestamp=datetime.datetime.now(),
-                                    color=self.config.constants.embed_color)
+            if member.bot:
+                message = discord.Embed(title=':robot: ' + member.display_name + '#' + member.discriminator,
+                                        description=member.created_at.strftime('User since %b %d %Y'),
+                                        timestamp=datetime.datetime.now(),
+                                        color=self.config.constants.embed_color)
+            else:
+                message = discord.Embed(title=member.display_name + '#' + member.discriminator,
+                                        description=member.created_at.strftime('User since %b %d %Y'),
+                                        timestamp=datetime.datetime.now(),
+                                        color=self.config.constants.embed_color)
+
+            # send typing in case the db lookup takes a long time
+            await self.bot.send_typing(ctx.message.channel)
+
+            users = await self.orm.query.user_top_list(1000, server)
+            # if you're not in the top 1000 you're unranked
+            rank = 'Unranked'
+            for i, u in enumerate(users):
+                if user == u:
+                    rank = '#{}'.format(i + 1)
+                    break
+
+            # Finds the most posted on channel for the user
+            # if the user hasn't posted anything it's None
+            try:
+                messages = await self.orm.query.channel_top_list(1, user, server)
+                channel_id = messages[0].channel.discord_id
+            except IndexError:
+                channel_id = None
+
+            total_messages = await self.orm.query.user_total_messages(user, server)
+
+            message.set_thumbnail(url=member.avatar_url)
+            message.add_field(name='Status', value=str(member.status).capitalize())
+            message.add_field(name='Favorite channel', value=self.bot.get_channel(channel_id))
+            message.add_field(name='Total messages', value=total_messages)
+            message.add_field(name='Rank', value=rank)
+            message.add_field(name='ID', value=member.id)
+            message.add_field(name='Joined', value=member.joined_at.strftime('%b %d %Y'))
+
+            if member.game:
+                message.add_field(name='Playing', value=member.game, inline=False)
+
+            roles = [str(role) for role in member.roles]
+            # @everyone is guaranteed to be the first role, discard it
+            roles.pop(0)
+            if len(roles) > 0:
+                message.add_field(name='Roles', value=', '.join(roles), inline=False)
+
+            await self.bot.say(embed=message)
         else:
-            message = discord.Embed(title=member.display_name + '#' + member.discriminator,
-                                    description=member.created_at.strftime('User since %b %d %Y'),
-                                    timestamp=datetime.datetime.now(),
-                                    color=self.config.constants.embed_color)
-
-        # send typing in case the db lookup takes a long time
-        await self.bot.send_typing(ctx.message.channel)
-
-        users = await self.orm.query.user_top_list(1000, server)
-        # if you're not in the top 1000 you're unranked
-        rank = 'Unranked'
-        for i, u in enumerate(users):
-            if user == u:
-                rank = '#{}'.format(i + 1)
-                break
-
-        # Finds the most posted on channel for the user
-        # if the user hasn't posted anything it's None
-        try:
-            messages = await self.orm.query.channel_top_list(1, user, server)
-            channel_id = messages[0].channel.discord_id
-        except IndexError:
-            channel_id = None
-
-        total_messages = await self.orm.query.user_total_messages(user, server)
-
-        message.set_thumbnail(url=member.avatar_url)
-        message.add_field(name='Status', value=str(member.status).capitalize())
-        message.add_field(name='Favorite channel', value=self.bot.get_channel(channel_id))
-        message.add_field(name='Total messages', value=total_messages)
-        message.add_field(name='Rank', value=rank)
-        message.add_field(name='ID', value=member.id)
-        message.add_field(name='Joined', value=member.joined_at.strftime('%b %d %Y'))
-
-        if member.game:
-            message.add_field(name='Playing', value=member.game, inline=False)
-
-        roles = [str(role) for role in member.roles]
-        # @everyone is guaranteed to be the first role, discard it
-        roles.pop(0)
-        if len(roles) > 0:
-            message.add_field(name='Roles', value=', '.join(roles), inline=False)
-
-        await self.bot.say(embed=message)
+            self.config.logger.error('Cannot look up member in PrivateChannel')
 
     @commands.command(pass_context=True)
     async def ping(self, ctx: commands.Context) -> None:
