@@ -11,9 +11,10 @@ ADD ./README.md ./
 ADD ./requirements.txt ./
 ADD ./setup.py ./
 
+RUN pip3 install -r requirements.txt
 RUN python3 setup.py install
 
-RUN rm ./*
+RUN rm ./* -rf
 
 
 VOLUME ./.aryas/
