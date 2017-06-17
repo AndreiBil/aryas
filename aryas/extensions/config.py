@@ -137,7 +137,7 @@ def your_awesome_func():
 
     @property
     def cache_dir(self) -> str:
-        return './.aryas/'
+        return '~/.aryas/'
 
     @property
     def cfg_file(self) -> str:
