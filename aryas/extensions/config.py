@@ -204,9 +204,6 @@ class Config:
         :return: The config dict
         """
 
-        class ConfigParseException(Exception):
-            pass
-
         v = Validator(self.constants.config_schema)
         loaded = None
         try:
@@ -216,8 +213,8 @@ class Config:
             if not v.validate(loaded):
                 with open(self.constants.cache_dir+"cfg_errors.json", "w") as f:
                     json.dump(v.errors, f, indent=2)
-                raise ConfigParseException('There were errors with your config!\n'
-                                           'Error details were dumped to cfg_errors.json')
+                raise EarlyExitException('There were errors with your config!\n'
+                                         'Error details were dumped to cfg_errors.json')
         except FileNotFoundError:
             if not os.path.isdir(self.constants.cache_dir):
                 os.mkdir(self.constants.cache_dir)
