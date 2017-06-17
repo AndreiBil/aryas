@@ -138,8 +138,12 @@ def your_awesome_func():
         return self._config_schema
 
     @property
-    def cache_dir(self) -> str:
+    def cache_dir_raw(self) -> str:
         return '~/.aryas/'
+
+    @property
+    def cache_dir(self) -> str:
+        return os.path.expanduser(self.cache_dir_raw.replace("/", os.sep))
 
     @property
     def cfg_file(self) -> str:
