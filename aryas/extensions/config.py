@@ -38,7 +38,7 @@ class _Constants:
                 'mod_log_channel_name': {'type': 'string', 'required': True, 'empty': False}
             }},
             'discord': {'type': 'dict', 'required': True, 'default': default['discord'], 'schema': {
-                'token': {'type': 'string', 'required': True, 'default': default['discord']['token']}
+                'token': {'type': 'string', 'required': True, 'default': default['discord']['token'], 'empty': False}
             }},
             'weather': {'type': 'dict', 'required': False, 'default': default['weather'], 'schema': {
                 'api_key': {'type': 'string', 'required': False, 'default': default['weather']['api_key']}
