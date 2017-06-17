@@ -1,6 +1,8 @@
+import sys
+
 import discord
 from discord.ext import commands
-from aryas.utils import AryasFormatter
+from aryas.utils import AryasFormatter, EarlyExitException
 
 description = 'An in development python bot for the discord platform'
 bot_prefix = '?'
@@ -22,12 +24,15 @@ async def on_ready():
 
 
 def main():
-    for extension in startup_extensions:
-        extension = 'aryas.extensions.' + extension
-        try:
-            bot.load_extension(extension)
-        except Exception as e:
-            raise e
+    try:
+        for extension in startup_extensions:
+            extension = 'aryas.extensions.' + extension
+            try:
+                bot.load_extension(extension)
+            except Exception as e:
+                raise e
 
-    config = bot.cogs['Config']
-    bot.run(config['discord']['token'])
+        config = bot.cogs['Config']
+        bot.run(config['discord']['token'])
+    except EarlyExitException as e:
+        print(str(e), file=sys.stderr)

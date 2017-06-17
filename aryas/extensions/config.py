@@ -13,6 +13,8 @@ from cerberus import Validator
 from discord.ext import commands
 from peewee import Proxy
 
+from ..utils import EarlyExitException
+
 
 class _Constants:
     def __init__(self, config):
@@ -215,7 +217,7 @@ class Config:
         except FileNotFoundError:
             if not os.path.isdir(self.constants.cache_dir):
                 os.mkdir(self.constants.cache_dir)
-            raise FileNotFoundError("Config file doesnt exist! Default config generated at " + self.constants.cfg_file)
+            raise EarlyExitException("Config file doesnt exist! Default config generated at " + self.constants.cfg_file)
         finally:
             normalized = v.normalized(loaded) \
                 if loaded is not None else self.constants.default_config  # Insert default values for missing keys
