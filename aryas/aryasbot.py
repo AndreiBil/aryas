@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from .utils import AryasFormatter
+from aryas.utils import AryasFormatter
 
 description = 'An in development python bot for the discord platform'
 bot_prefix = '?'
@@ -23,7 +23,7 @@ async def on_ready():
 
 def main():
     for extension in startup_extensions:
-        extension = 'aryasbot.extensions.' + extension
+        extension = 'aryas.extensions.' + extension
         try:
             bot.load_extension(extension)
         except Exception as e:

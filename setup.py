@@ -15,11 +15,11 @@ def parse_requirements(file_name):
             requirements.append(line)
 
 setup(
-    name="AryasBot",
+    name="Aryas",
     version="0.1",
     packages=find_packages(exclude="tests"),
     long_description=open('README.md').read(),
     install_requires=parse_requirements("requirements.txt"),
-    entry_points={'console_scripts': ['aryas=aryasbot.__main__:main']},
+    entry_points={'console_scripts': ['aryas=aryas.__main__:main']},
     scripts=['bin/aryas'],
 )

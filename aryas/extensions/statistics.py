@@ -1,6 +1,6 @@
 from discord.ext import commands
 from discord.channel import PrivateChannel
-from aryasbot.utils import is_command, update_user_fields
+from ..utils import is_command, update_user_fields
 import datetime
 from peewee import OperationalError
 # Imported for type hints

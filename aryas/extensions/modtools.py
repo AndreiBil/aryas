@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from aryasbot.utils import get_channel_by_name, send, command_error
+from ..utils import get_channel_by_name, send, command_error
 # The following are imported purely for typehints, do not use directly.
 from . import AryasORM, Config
 

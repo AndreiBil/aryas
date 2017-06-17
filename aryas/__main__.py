@@ -1,5 +1,5 @@
 def main():
-    from aryasbot.aryas import main
+    from aryas.aryasbot import main
     main()
 
 if __name__ == '__main__':

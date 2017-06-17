@@ -2,7 +2,7 @@ import discord
 import pyowm
 from discord.ext import commands
 from discord.ext.commands import bot as bot_module
-from aryasbot.utils import send, command_error, update_user_fields
+from ..utils import send, command_error, update_user_fields
 from urllib import request
 import json
 import time
