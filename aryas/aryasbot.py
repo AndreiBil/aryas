@@ -2,7 +2,8 @@ import sys
 
 import discord
 from discord.ext import commands
-from aryas.utils import AryasFormatter, EarlyExitException
+from .utils import AryasFormatter
+from .exceptions import EarlyExitException
 
 description = 'An in development python bot for the discord platform'
 bot_prefix = '?'
