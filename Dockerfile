@@ -19,4 +19,4 @@ RUN rm ./* -rf
 
 VOLUME ./.aryas/
 
-CMD python3 aryas
+ENTRYPOINT aryas
