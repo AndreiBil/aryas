@@ -5,6 +5,6 @@ sudo echo > /dev/null # Get sudo permissions
 
 echo "Installing Python requirements:" \
   && sudo -H pip3 install -r ./requirements.txt \
-  && echo "\nInstalling Aryas:" \
+  && echo && echo "Installing Aryas:" \
   && sudo python3 ./setup.py install \
-  && echo "\nInstalled! Use 'aryas' to start."
+  && echo && echo "Installed! Use 'aryas' to start."
