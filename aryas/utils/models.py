@@ -1,6 +1,6 @@
 import datetime
 from peewee import *
-from src.extensions.config import Config as _Config
+from ..extensions.config import Config
 
 
 class Models:
@@ -13,7 +13,7 @@ class Models:
         self.LoveTransaction = love_transaction
 
 
-def get_models(config: _Config) -> (Proxy, Models):
+def get_models(config: Config) -> (Proxy, Models):
 
     db_cfg = config.db
     database_proxy = db_cfg["_db_proxy"]

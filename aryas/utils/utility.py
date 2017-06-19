@@ -1,12 +1,7 @@
 from discord.ext import commands
 import asyncio
 from typing import Union
-from discord import Server, Channel
-from src.extensions.config import Config
-# imported for type hints
-from discord import Member
-
-_config = Config()
+from discord import Server, Channel, Member
 
 
 def is_command(bot, cmd):
@@ -48,13 +43,16 @@ async def kick_user(user, mod, server, bot, reason):
     :param bot: Bot instance to kick and log 
     :param reason: Reason why user is being kicked
     """
-    channel = get_channel_by_name(server, _config['aryas']['mod_log_channel_name'])
+
+    config = bot.cogs['Config']
+
+    channel = get_channel_by_name(server, config['aryas']['mod_log_channel_name'])
     try:
         await bot.kick(user)
         msg = '{} was kicked by {}. Reason: {}'.format(user.name, mod.mention, reason)
         send(bot, msg, channel, False)
     except Exception as e:
-        _config.logger.error(e)
+        config.logger.error(e)
         send(bot, 'Failed to kick {} for {}'.format(user.mention, reason), channel, False)
 
 
@@ -72,7 +70,7 @@ def get_channel_by_name(server: Server, name: str) -> Union[Channel, None]:
 
 
 def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
-         time=_config['aryas']['message_sleep_time'], show_dots=True, bomb_themed_dots=False) -> None:
+         time=None, show_dots=True, bomb_themed_dots=False) -> None:
     """
     Sends a message to the server and deletes it after a period of time
     :param bot:     the bot used to send the message
@@ -83,6 +81,10 @@ def send(bot: commands.Bot, message: str, channel: Channel, delete=False,
     :param show_dots: whether to show countdown dots for message deletion (this will round down `time` if it is a float)
     :param bomb_themed_dots: whether to theme the dots using a bomb and fuse instead of plain dots
     """
+
+    config = bot.cogs['Config']
+    if time is None:
+        time = config['aryas']['message_sleep_time']
 
     def dot_bar(progress):
         width = int(time)

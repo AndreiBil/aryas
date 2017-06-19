@@ -1,19 +1,20 @@
 # Aryas-Bot
 A bot for the Developers Discord server
 
-## Running the bot
-1 Clone the repo and `cd` into its root folder.
 
-2. `$ docker build . -t aryas_bot`
+## Installation
 
-3. `$ ./run.sh`
+With Docker:
+<br />
+`$ ./install_docker.sh`
 
-4. `$ docker rm -f [CONTAINER HASH]`
+Without Docker *(Requires Python 3.6+)*:
+<br />
+`$ ./install_nodocker.sh`
 
-5. `Edit `~/.aryas/cfg.json`, add the necessary API keys.`
 
-6. `$ ./run.sh`
+## Usage
 
-7) ...
-
-8) Profit!
+`$ aryas`
+<br>
+*Note: If using Docker, you can run `$ aryas -d` to run in the background.*

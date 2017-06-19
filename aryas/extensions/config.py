@@ -13,6 +13,8 @@ from cerberus import Validator
 from discord.ext import commands
 from peewee import Proxy
 
+from ..exceptions import EarlyExitException
+
 
 class _Constants:
     def __init__(self, config):
@@ -36,7 +38,7 @@ class _Constants:
                 'mod_log_channel_name': {'type': 'string', 'required': True, 'empty': False}
             }},
             'discord': {'type': 'dict', 'required': True, 'default': default['discord'], 'schema': {
-                'token': {'type': 'string', 'required': True, 'default': default['discord']['token']}
+                'token': {'type': 'string', 'required': True, 'default': default['discord']['token'], 'empty': False}
             }},
             'weather': {'type': 'dict', 'required': False, 'default': default['weather'], 'schema': {
                 'api_key': {'type': 'string', 'required': False, 'default': default['weather']['api_key']}
@@ -136,8 +138,12 @@ def your_awesome_func():
         return self._config_schema
 
     @property
+    def cache_dir_raw(self) -> str:
+        return '~/.aryas/'
+
+    @property
     def cache_dir(self) -> str:
-        return './.aryas/'
+        return os.path.expanduser(self.cache_dir_raw.replace("/", os.sep))
 
     @property
     def cfg_file(self) -> str:
@@ -198,9 +204,6 @@ class Config:
         :return: The config dict
         """
 
-        class ConfigParseException(Exception):
-            pass
-
         v = Validator(self.constants.config_schema)
         loaded = None
         try:
@@ -210,12 +213,12 @@ class Config:
             if not v.validate(loaded):
                 with open(self.constants.cache_dir+"cfg_errors.json", "w") as f:
                     json.dump(v.errors, f, indent=2)
-                raise ConfigParseException('There were errors with your config!\n'
-                                           'Error details were dumped to cfg_errors.json')
+                raise EarlyExitException('There were errors with your config!\n'
+                                         'Error details were dumped to cfg_errors.json')
         except FileNotFoundError:
             if not os.path.isdir(self.constants.cache_dir):
                 os.mkdir(self.constants.cache_dir)
-            raise FileNotFoundError("Config file doesnt exist! Default config generated at " + self.constants.cfg_file)
+            raise EarlyExitException("Config file doesnt exist! Default config generated at " + self.constants.cfg_file)
         finally:
             normalized = v.normalized(loaded) \
                 if loaded is not None else self.constants.default_config  # Insert default values for missing keys

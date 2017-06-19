@@ -111,6 +111,7 @@ class AryasFormatter(HelpFormatter):
     Formats the help command. Adapted from discord.ext.commands.formatter.HelpFormatter
     """
     def __init__(self):
+        self._paginator = None
         super().__init__()
 
     def _add_entries(self, commands):
@@ -130,7 +131,7 @@ class AryasFormatter(HelpFormatter):
             entry = '**{0}** - {1}'.format(name, command.short_doc)
             shortened = self.shorten(entry)
             self._paginator.add_line(shortened)
-    
+
     def _expand_group(self, group, prefix):
         """
         Recursively expands a Group into paginator
