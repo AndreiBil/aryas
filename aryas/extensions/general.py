@@ -2,7 +2,7 @@ import discord
 import pyowm
 from discord.ext import commands
 from discord.ext.commands import bot as bot_module
-from ..utils import send, command_error, update_user_fields
+from ..utils import send, command_error, update_user_fields, in_channel
 from urllib import request
 import json
 import time
@@ -83,68 +83,73 @@ class General:
             await bot.send_message(destination, embed=embed)
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def whois(self, ctx: commands.Context, member: discord.Member) -> None:
         """
         Returns information about the given member
         :param ctx: the message context
         :param member: target member
         """
-        user = self.orm.User.get_or_create(discord_id=member.id)[0]
-        server = self.orm.Server.get(discord_id=member.server.id)
-        update_user_fields(user, member)
+        if not ctx.message.channel.is_private:
+            user = self.orm.User.get_or_create(discord_id=member.id)[0]
+            server = self.orm.Server.get(discord_id=member.server.id)
+            update_user_fields(user, member)
 
-        if member.bot:
-            message = discord.Embed(title=':robot: ' + member.display_name + '#' + member.discriminator,
-                                    description=member.created_at.strftime('User since %b %d %Y'),
-                                    timestamp=datetime.datetime.now(),
-                                    color=self.config.constants.embed_color)
+            if member.bot:
+                message = discord.Embed(title=':robot: ' + member.display_name + '#' + member.discriminator,
+                                        description=member.created_at.strftime('User since %b %d %Y'),
+                                        timestamp=datetime.datetime.now(),
+                                        color=self.config.constants.embed_color)
+            else:
+                message = discord.Embed(title=member.display_name + '#' + member.discriminator,
+                                        description=member.created_at.strftime('User since %b %d %Y'),
+                                        timestamp=datetime.datetime.now(),
+                                        color=self.config.constants.embed_color)
+
+            # send typing in case the db lookup takes a long time
+            await self.bot.send_typing(ctx.message.channel)
+
+            users = await self.orm.query.user_top_list(1000, server)
+            # if you're not in the top 1000 you're unranked
+            rank = 'Unranked'
+            for i, u in enumerate(users):
+                if user == u:
+                    rank = '#{}'.format(i + 1)
+                    break
+
+            # Finds the most posted on channel for the user
+            # if the user hasn't posted anything it's None
+            try:
+                messages = await self.orm.query.channel_top_list(1, user, server)
+                channel_id = messages[0].channel.discord_id
+            except IndexError:
+                channel_id = None
+
+            total_messages = await self.orm.query.user_total_messages(user, server)
+
+            message.set_thumbnail(url=member.avatar_url)
+            message.add_field(name='Status', value=str(member.status).capitalize())
+            message.add_field(name='Favorite channel', value=self.bot.get_channel(channel_id))
+            message.add_field(name='Total messages', value=total_messages)
+            message.add_field(name='Rank', value=rank)
+            message.add_field(name='ID', value=member.id)
+            message.add_field(name='Joined', value=member.joined_at.strftime('%b %d %Y'))
+
+            if member.game:
+                message.add_field(name='Playing', value=member.game, inline=False)
+
+            roles = [str(role) for role in member.roles]
+            # @everyone is guaranteed to be the first role, discard it
+            roles.pop(0)
+            if len(roles) > 0:
+                message.add_field(name='Roles', value=', '.join(roles), inline=False)
+
+            await self.bot.say(embed=message)
         else:
-            message = discord.Embed(title=member.display_name + '#' + member.discriminator,
-                                    description=member.created_at.strftime('User since %b %d %Y'),
-                                    timestamp=datetime.datetime.now(),
-                                    color=self.config.constants.embed_color)
-
-        # send typing in case the db lookup takes a long time
-        await self.bot.send_typing(ctx.message.channel)
-
-        users = await self.orm.query.user_top_list(1000, server)
-        # if you're not in the top 1000 you're unranked
-        rank = 'Unranked'
-        for i, u in enumerate(users):
-            if user == u:
-                rank = '#{}'.format(i + 1)
-                break
-
-        # Finds the most posted on channel for the user
-        # if the user hasn't posted anything it's None
-        try:
-            messages = await self.orm.query.channel_top_list(1, user, server)
-            channel_id = messages[0].channel.discord_id
-        except IndexError:
-            channel_id = None
-
-        total_messages = await self.orm.query.user_total_messages(user, server)
-
-        message.set_thumbnail(url=member.avatar_url)
-        message.add_field(name='Status', value=str(member.status).capitalize())
-        message.add_field(name='Favorite channel', value=self.bot.get_channel(channel_id))
-        message.add_field(name='Total messages', value=total_messages)
-        message.add_field(name='Rank', value=rank)
-        message.add_field(name='ID', value=member.id)
-        message.add_field(name='Joined', value=member.joined_at.strftime('%b %d %Y'))
-
-        if member.game:
-            message.add_field(name='Playing', value=member.game, inline=False)
-
-        roles = [str(role) for role in member.roles]
-        # @everyone is guaranteed to be the first role, discard it
-        roles.pop(0)
-        if len(roles) > 0:
-            message.add_field(name='Roles', value=', '.join(roles), inline=False)
-
-        await self.bot.say(embed=message)
+            self.config.logger.error('Cannot look up member in PrivateChannel')
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def ping(self, ctx: commands.Context) -> None:
         """
                 Responds with the latency time.
@@ -216,6 +221,7 @@ class General:
              .format(msg.author.mention, love, member.mention), ctx.message.channel)
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def convert_currency(self, ctx: commands.Context, amount: float, base, to) -> None:
         """
         Calculates the requested currency conversion
@@ -237,6 +243,7 @@ class General:
             send(self.bot, 'Could not convert {} {} to {}'.format(amount, base, to), ctx.message.channel, True)
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def convert_length(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
         """
         Calculates the requested length conversion
@@ -255,6 +262,7 @@ class General:
                  ctx.message.channel, True)
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def convert_mass(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
         """
         Calculates the requested mass conversion
@@ -273,6 +281,7 @@ class General:
                  ctx.message.channel, True)
 
     @commands.command(pass_context=True)
+    @in_channel('bot_info_channel')
     async def weather(self, ctx: commands.Context, city, country) -> None:
         """
         Gives info regarding the weather in a city
@@ -295,7 +304,8 @@ class General:
                  .format(country, city), ctx.message.channel, True)
 
     @commands.command(pass_context=True)
-    async def search(self, ctx: commands.Context) -> None:
+    @commands.has_any_role('Support', 'Moderator', 'Admin')
+    async def search(self, ctx:commands.Context) -> None:
         """
         Searches google, returns the title of the first 5 results along with their descriptions.
         Allows users to select a result then returns a link.
