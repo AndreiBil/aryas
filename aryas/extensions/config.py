@@ -51,30 +51,42 @@ class _Constants:
         }
 
     @property
-    def rules(self) -> str:
-        return """1. Be polite.
-2. Respect the opinion of others. ( Apple < Android  tho and fuck anyone who says otherwise)
+    def rules_general(self) -> str:
+        return """1. NSFW is not allowed, keep the chat racism free, clean, polite!
+2. There are moments when you won't agree with other users. Keep it civil, agree to disagree!
 3. Don't spam.
-4. Try Google before you ask questions here
-5. Don't advertise any other discord server in any of the channels/DMs unless given permission by a mod/admin.
-6. Use the appropriate channels for your question.
-7. Don't have anything relevant to add in the programming channels? Stay quiet :smiley: :kissing_heart:
-8. Don't post any NSFW content.
-9.  Use your common sense ¯\_(ツ)_/¯
-10. Don't ask people for help in PMs. Use the designated channels instead.
+4. Try Google and/or Stackoverflow before you ask your questions here
+5. Don't advertise any other discord server in any of the channels/DMs unless given permission by a mod/admin."""
 
-11. But most importantly, HAVE FUN! That's so corny and cringy but I had to add that for the lulz
+    @property
+    def rules_channels(self) -> str:
+        return """1. Use the appropriate channels for your question.
+2. Don't have anything relevant to add in the programming channels? Stay quiet!
+3. *#general* chat is for socializing with other peers, talk about life, parties, health, jobs and others, try to keep the topics serious , for rest use *#offtopic_chat*
+4. We have a channel for off-topic discussions, the channel is *#offtopic_chat* , use that for ex: fidget spinners discussions, iphone vs samsung discussions, etc
+5. Don't ask people for help in PMs. Use the designated channels instead.
+6. *#show_your_project* is a place where you can showplace your project. it must be hosted on github to be approved though."""
 
-**Code formatting**
+    @property
+    def rules_roles(self) -> str:
+        return """1. **Trusted** role is given to people who are active in the community --> Trusted role allows you to post links and images. To receive this role you need to PM a moderator
+2. **Support** role is given to people who are active in the community and who help other people who are in need of help --> To achieve this role there are 2 ways, either people will recommend you or you can ask for it and if you are worthy, you will receive it .
+3. Language roles are given for now to support role only , in the future this might change!"""
+
+    @property
+    def rules_code_formatting(self) -> str:
+        return """Discord has support for source code highlighting by doing
 \```python
 def your_awesome_func():
     return 1+1
 \```
-will produce
+you will get
 ```python
 def your_awesome_func():
     return 1+1
-```"""
+```
+
+But most importantly, HAVE FUN! If problems arise contact a moderator"""
 
     @property
     def len_units(self) -> Dict[str, float]:
@@ -94,7 +106,7 @@ def your_awesome_func():
 
     @property
     def embed_color(self) -> int:
-        return 0xff80ff
+        return 0x50A6C2
 
     @property
     def possible_log_levels(self) -> Tuple:

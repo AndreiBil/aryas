@@ -116,10 +116,8 @@ class Statistics:
             self.config.logger.error(e)
         else:
             users = await self.orm.query.user_top_list(count, server)
-
-            embed = discord.Embed(color=discord.Color(self.config.constants.embed_color), timestamp=datetime.datetime.now())
-            embed.set_footer(text='Global footer for all embeds', icon_url='https://cdn.discordapp.com/embed/avatars/2.png')
-
+            embed = discord.Embed(color=discord.Color(self.config.constants.embed_color),
+                                  timestamp=datetime.datetime.now())
             for user in users:
                 # the user might not have a name if s/he hasn't sent a message already
                 # so in that case use the id instead

@@ -25,10 +25,11 @@ class General:
         """
         # Create embed
         title = 'Welcome to Developers'
-        desc = 'Stuff that happens here'
-        message = discord.Embed(title=title, description=desc, color=0xff80ff)
-        message.add_field(name='Rules', value=self.config.constants.rules, inline=False)
-        message.set_footer(text='I am a bot BEEP BOOP')
+        message = discord.Embed(title=title, color=self.config.constants.embed_color, timestamp=datetime.datetime.now())
+        message.add_field(name='General rules:', value=self.config.constants.rules_general, inline=False)
+        message.add_field(name='Channel related rules:', value=self.config.constants.rules_channels, inline=False)
+        message.add_field(name='Role related rules:', value=self.config.constants.rules_roles, inline=False)
+        message.add_field(name='Code formatting:', value=self.config.constants.rules_code_formatting, inline=False)
 
         await self.bot.send_message(member, embed=message)
 
