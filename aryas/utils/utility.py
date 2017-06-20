@@ -2,6 +2,8 @@ from discord.ext import commands
 import asyncio
 from typing import Union
 from discord import Server, Channel, Member
+from discord import utils as discordutils
+import functools
 
 
 def is_command(bot, cmd):
@@ -20,11 +22,19 @@ def is_command(bot, cmd):
 
 def in_channel(name):
     """
-    Checks if command is sent in a given channel
+    Checks if command is sent in a given channel ignores high roles.
+    To be used as a decorator
     :param name: name of the channel
-    :return:
     """
     def predicate(ctx):
+        if ctx.message.channel.is_private:
+            return False
+
+        # Adapted from discord.ext.core.has_any_role
+        user_roles = functools.partial(discordutils.get, ctx.message.author.roles)
+        if any(user_roles(name=role) is not None for role in ['Admin', 'Moderator', 'Support']):
+            return True
+
         return ctx.message.channel.name == name
 
     return commands.check(predicate)
