@@ -3,6 +3,7 @@ from discord.channel import PrivateChannel
 from ..utils import is_command, update_user_fields
 import datetime
 from peewee import OperationalError
+from peewee import DoesNotExist
 # Imported for type hints
 from . import AryasORM, Config
 import discord
@@ -90,9 +91,14 @@ class Statistics:
         Show total amount of messages on server
         :param ctx: command context
         """
-        server = self.orm.Server.get(discord_id=ctx.message.server.id)
-        total_messages = await self.orm.query.server_total_messages(server)
-        await self.bot.say('Total messages: {}'.format(total_messages))
+        try:
+            server = self.orm.Server.get(discord_id=ctx.message.server.id)
+        except DoesNotExist as e:
+            # If there's no server in the db an exception will be raised
+            self.config.logger.error(e)
+        else:
+            total_messages = await self.orm.query.server_total_messages(server)
+            await self.bot.say('Total messages: {}'.format(total_messages))
 
     @messages.command(pass_context=True)
     @commands.has_role('Admin')
@@ -107,19 +113,24 @@ class Statistics:
         count = max(1, count)
         count = min(20, count)
 
-        server = self.orm.Server.get(discord_id=ctx.message.server.id)
-        users = await self.orm.query.user_top_list(count, server)
+        try:
+            server = self.orm.Server.get(discord_id=ctx.message.server.id)
+        except DoesNotExist as e:
+            # If there's no server in the db an exception will be raised
+            self.config.logger.error(e)
+        else:
+            users = await self.orm.query.user_top_list(count, server)
 
-        embed = discord.Embed(color=discord.Color(self.config.constants.embed_color), timestamp=datetime.datetime.now())
-        embed.set_footer(text='Global footer for all embeds', icon_url='https://cdn.discordapp.com/embed/avatars/2.png')
+            embed = discord.Embed(color=discord.Color(self.config.constants.embed_color), timestamp=datetime.datetime.now())
+            embed.set_footer(text='Global footer for all embeds', icon_url='https://cdn.discordapp.com/embed/avatars/2.png')
 
-        for user in users:
-            # the user might not have a name if s/he hasn't sent a message already
-            # so in that case use the id instead
-            name = user.name if user.name != '' else user.discord_id
-            embed.add_field(name=name, value='Total messages: {}'.format(user.count), inline=False)
+            for user in users:
+                # the user might not have a name if s/he hasn't sent a message already
+                # so in that case use the id instead
+                name = user.name if user.name != '' else user.discord_id
+                embed.add_field(name=name, value='Total messages: {}'.format(user.count), inline=False)
 
-        await self.bot.say(content='Top active users:', embed=embed)
+            await self.bot.say(content='Top active users:', embed=embed)
 
 
 def setup(bot: commands.Bot):
