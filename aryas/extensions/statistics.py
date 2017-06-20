@@ -58,7 +58,6 @@ class Statistics:
     async def stats(self, ctx: commands.Context):
         """
         Group of statistics commands
-        :param ctx: the context
         """
         if ctx.invoked_subcommand is None:
             await self.bot.say('`Usage: ?stats <subcommand>`')
@@ -67,7 +66,6 @@ class Statistics:
     async def online(self, ctx: commands.Context):
         """
         Show total online users on sever
-        :param ctx: the context
         """
         server = ctx.message.server
         online = [1 if m.status != discord.Status.offline else 0 for m in server.members]
@@ -77,7 +75,6 @@ class Statistics:
     async def messages(self, ctx: commands.Context):
         """
         Group of message related commands
-        :param ctx: the context
         """
         if ctx.invoked_subcommand is None:
             await self.bot.say('`Usage: ?stats messages <subcommand>`')
@@ -86,7 +83,6 @@ class Statistics:
     async def total(self, ctx: commands.Context):
         """
         Show total amount of messages on server
-        :param ctx: command context
         """
         try:
             server = self.orm.Server.get(discord_id=ctx.message.server.id)
@@ -101,8 +97,6 @@ class Statistics:
     async def users(self, ctx: commands.Context, count=10):
         """
         Show users with the most messages
-        :param ctx: command context
-        :param count: number of users, min 1, max 20
         """
         count = count
         # Show at least 1 user and 20 at most

@@ -33,7 +33,6 @@ class Fun:
     async def roll(self, ctx: commands.Context) -> None:
         """
         Rolls a dice and outputs a message depending on the result
-        :param ctx: The message context
         """
         random_dice = randint(1, 6)
         if random_dice < 4:
@@ -47,7 +46,6 @@ class Fun:
     async def telljoke(self, ctx: commands.Context) -> None:
         """
         Responds with a random joke from theoatmeal.com
-        :param ctx: The message context
         """
         # TODO: get more joke formats (or a better source)
         # Send typing as the request can take some time.
@@ -70,7 +68,6 @@ class Fun:
     async def randomfact(self, ctx: commands.Context) -> None:
         """
         Responds with a random fact scraped from unkno.com
-        :param ctx: The message context
         """
         # Send typing as the request can take some time.
         await self.bot.send_typing(ctx.message.channel)
@@ -86,13 +83,12 @@ class Fun:
         await self.bot.say(soup.find(id='content').text)
 
     @commands.command(pass_context=True)
-    @commands.has_role('Moderator')
+    @commands.has_any_role('Admin', 'Moderator', 'Support')
     async def poll(self, ctx: commands.Context) -> None:
         """
         Creates an interactive poll for the moderators
             The format to ask a question is :
                                '?survey <question here> ? <survey 1> - <survey 2> - ... ! <nb of minutes for timeout>')
-        :param ctx:     The context of the message (cf discord doc)
         """
 
         usage = "?poll <question>; <length in seconds>; <option 1>; <option 2>; ..."
