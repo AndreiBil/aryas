@@ -87,8 +87,6 @@ class General:
     async def whois(self, ctx: commands.Context, member: discord.Member) -> None:
         """
         Returns information about the given member
-        :param ctx: the message context
-        :param member: target member
         """
         if not ctx.message.channel.is_private:
             user = self.orm.User.get_or_create(discord_id=member.id)[0]
@@ -152,9 +150,9 @@ class General:
     @in_channel('bot_info_channel')
     async def ping(self, ctx: commands.Context) -> None:
         """
-                Responds with the latency time.
-                Time took for Aryas to reply
-                """
+        Responds with the latency time.
+        Time took for Aryas to reply
+        """
         before = time.monotonic()
         await self.bot.send_typing(ctx.message.author)
         after = time.monotonic()
@@ -165,8 +163,6 @@ class General:
     async def get_love(self, ctx: commands.Context, member: discord.Member = None) -> None:
         """
         Gives info regarding the amount of love a user has
-        :param ctx: the message context
-        :param member: the member
         """
         if member is None:
             member = ctx.message.author
@@ -181,9 +177,6 @@ class General:
     async def show_love(self, ctx: commands.Context, member: discord.Member, love: int) -> None:
         """
         Gives love to a user
-        :param ctx: the message context
-        :param member: the member to give the love to
-        :param love: the amount of love to give
         """
 
         if member == ctx.message.author:
@@ -225,10 +218,6 @@ class General:
     async def convert_currency(self, ctx: commands.Context, amount: float, base, to) -> None:
         """
         Calculates the requested currency conversion
-        :param ctx: the message context
-        :param amount: the amount to convert
-        :param base: the base unit (e.g. USD, EUR)
-        :param to: the conversion unit (e.g. ILS, GBP)
         """
         await self.bot.send_typing(ctx.message.channel)
         base = base.upper()
@@ -247,10 +236,6 @@ class General:
     async def convert_length(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
         """
         Calculates the requested length conversion
-        :param ctx: the message context
-        :param amount: the amount to convert
-        :param unit1: the original unit
-        :param unit2: the unit to convert to
         """
         len_units = self.config.constants.len_units
         try:
@@ -266,10 +251,6 @@ class General:
     async def convert_mass(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
         """
         Calculates the requested mass conversion
-        :param ctx: the message context
-        :param amount: the amount to convert
-        :param unit1: the original unit
-        :param unit2: the unit to convert to
         """
         mass_units = self.config.constants.mass_units
         try:
@@ -285,9 +266,6 @@ class General:
     async def weather(self, ctx: commands.Context, city, country) -> None:
         """
         Gives info regarding the weather in a city
-        :param ctx: the message context
-        :param city: the city
-        :param country: the country
         """
 
         owm = pyowm.OWM(self.config['weather']['api_key'])
@@ -309,7 +287,6 @@ class General:
         """
         Searches google, returns the title of the first 5 results along with their descriptions.
         Allows users to select a result then returns a link.
-        :param ctx:     The message content.
         """
 
         # Creates a service for the CSE, passes the
