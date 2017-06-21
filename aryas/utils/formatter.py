@@ -63,9 +63,10 @@ class AryasPaginator:
         if self._current_page is not None:
             self._pages.append(self._current_page)
         if timestamp:
-            self._current_page = discord.Embed(title=title, description=description, timestamp=datetime.datetime.now())
+            self._current_page = discord.Embed(title=title, description=description, color=0x50A6C2,
+                                               timestamp=datetime.datetime.now())
         else:
-            self._current_page = discord.Embed(title=title, description=description)
+            self._current_page = discord.Embed(title=title, description=description, color=0x50A6C2)
         self._current_page.set_footer(text=self._footer)
         self._count = 0
 
