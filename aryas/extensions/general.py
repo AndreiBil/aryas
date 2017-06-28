@@ -2,9 +2,8 @@ import discord
 import pyowm
 from discord.ext import commands
 from discord.ext.commands import bot as bot_module
-from ..utils import send, command_error, update_user_fields, in_channel
-from urllib import request
-import json
+from ..utils.utility import send, command_error, update_user_fields, in_channel
+from ..utils.converter import Converter as conv
 import time
 import datetime
 from googleapiclient.discovery import build
@@ -216,51 +215,16 @@ class General:
 
     @commands.command(pass_context=True)
     @in_channel('bot_info_channel')
-    async def convert_currency(self, ctx: commands.Context, amount: float, base, to) -> None:
+    async def convert(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
         """
-        Calculates the requested currency conversion
+        Calculates the requested unit conversion
         """
         await self.bot.send_typing(ctx.message.channel)
-        base = base.upper()
-        to = to.upper()
-        try:
-            with request.urlopen('http://api.fixer.io/latest?base={}'.format(base)) as url:
-                data = json.loads(url.read().decode())
-                msg = '{} {} = {} {}'.format(amount, base, str(float(data['rates'][to]) * amount), to)
-                await self.bot.say(msg)
-        except Exception as e:
-            self.config.logger.error(e)
-            send(self.bot, 'Could not convert {} {} to {}'.format(amount, base, to), ctx.message.channel, True)
-
-    @commands.command(pass_context=True)
-    @in_channel('bot_info_channel')
-    async def convert_length(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
-        """
-        Calculates the requested length conversion
-        """
-        len_units = self.config.constants.len_units
-        try:
-            value = (len_units[unit1] / len_units[unit2]) * amount
-            await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
-        except Exception as e:
-            self.config.logger.error(e)
-            send(self.bot, 'Could not convert {} {} to {}'.format(amount, unit1, unit2),
-                 ctx.message.channel, True)
-
-    @commands.command(pass_context=True)
-    @in_channel('bot_info_channel')
-    async def convert_mass(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
-        """
-        Calculates the requested mass conversion
-        """
-        mass_units = self.config.constants.mass_units
-        try:
-            value = (mass_units[unit1] / mass_units[unit2]) * amount
-            await self.bot.say('{} {} = {} {}'.format(amount, unit1, value, unit2))
-        except Exception as e:
-            self.config.logger.error(e)
-            send(self.bot, 'Could not convert {} {} to {}'.format(amount, unit1, unit2),
-                 ctx.message.channel, True)
+        result = conv.convert(amount, unit1, unit2)
+        if result == -1:
+            send(self.bot, 'Could not convert {} {} to {}'.format(amount, unit1, unit2), ctx.message.channel, True)
+        else:
+            await self.bot.say('{} {} = {} {}'.format(amount, unit1, result, unit2))
 
     @commands.command(pass_context=True)
     @in_channel('bot_info_channel')
