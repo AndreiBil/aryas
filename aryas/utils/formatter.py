@@ -40,7 +40,7 @@ class AryasPaginator:
         """
         self._char_count += len(line)
 
-        # if the field gets to large we can't send it to discord
+        # if the field gets too large we can't send it to discord
         # TODO: come up with a way to split the field nicely
         if self._char_count >= self._max_field_length:
             raise RuntimeError('Too many characters in field')
