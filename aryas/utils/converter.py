@@ -30,6 +30,10 @@ class Converter(object):
     def _convert_const(units, amount: float, unit1, unit2) -> float:
         """
         Calculates the requested conversion of constant units (i.e. mass, length, etc.)
+        :param units: a dict of units in the same category as unit1 and unit2
+        :param amount: the amount to convert
+        :param unit1: the original unit
+        :param unit2: the unit of conversion
         :returns: the conversion result
         """
         return units[unit1] / units[unit2] * amount
