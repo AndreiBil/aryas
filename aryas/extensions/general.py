@@ -216,14 +216,14 @@ def setup(bot: commands.Bot) -> None:
         @check_channel
         async def convert(self, ctx: commands.Context, amount: float, unit1, unit2) -> None:
             """
-            Calculates the requested unit conversion
-            """
             await bot.send_typing(ctx.message.channel)
             result = Converter.convert(amount, unit1, unit2)
             if result == -1:
                 send(bot, 'Could not convert {} {} to {}'.format(amount, unit1, unit2), ctx.message.channel, True)
             else:
                 await bot.say('{} {} = {} {}'.format(amount, unit1, result, unit2))
+            Calculates the requested unit conversion
+            """
 
         @commands.command(pass_context=True)
         @check_channel
