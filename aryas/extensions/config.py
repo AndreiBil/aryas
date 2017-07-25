@@ -54,11 +54,12 @@ class _Constants:
 
     @property
     def rules_general(self) -> str:
-        return """1. NSFW is not allowed, keep the chat racism free, clean, polite!
-2. There are moments when you won't agree with other users. Keep it civil, agree to disagree!
-3. Don't spam.
-4. Try Google and/or Stackoverflow before you ask your questions here
-5. Don't advertise any other discord server in any of the channels/DMs unless given permission by a mod/admin."""
+        return ("1. NSFW is not allowed, keep the chat racism free, clean, polite!\n"
+                "2. There are moments when you won't agree with other users. Keep it civil, agree to disagree!\n"
+                "3. Don't spam.\n"
+                "4. Try to solve your problem through Google and Stack Overflow before you ask your questions here\n"
+                "5. Don't advertise any other discord server in any of the channels/DMs unless given permission "
+                "by a mod/admin.")
 
     @property
     def rules_channels(self) -> str:
@@ -74,13 +75,12 @@ class _Constants:
 
     @property
     def rules_roles(self) -> str:
-        return (
-            "1. **Trusted** role is given to people who are active in the community --> "
-            "Trusted role allows you to post links and images. To receive this role you need to PM a moderator\n"
-            "2. **Support** role is given to people who are active in the community and who help other people "
-            "who are in need of help --> To achieve this role there are 2 ways, either people will recommend you "
-            "or you can ask for it and if you are worthy, you will receive it .\n"
-            "3. Language roles are given for now to support role only , in the future this might change!")
+        return ("1. **Trusted** role is given to people who are active in the community --> "
+                "Trusted role allows you to post links and images. To receive this role you need to PM a moderator\n"
+                "2. **Support** role is given to people who are active in the community and who help other people "
+                "who are in need of help --> To achieve this role there are 2 ways, either people will recommend you "
+                "or you can ask for it and if you are worthy, you will receive it .\n"
+                "3. Language roles are given for now to support role only , in the future this might change!")
 
     @property
     def rules_code_formatting(self) -> str:
