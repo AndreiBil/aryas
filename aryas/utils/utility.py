@@ -40,6 +40,10 @@ def in_channel(name):
     return commands.check(predicate)
 
 
+def in_bot_channel(cfg):
+    return in_channel(cfg['aryas']['bot_channel_name'])
+
+
 def update_user_fields(user, member: Member):
     """
     Updates a users fields in the database with latest data from discord
