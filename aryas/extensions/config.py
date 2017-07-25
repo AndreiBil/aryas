@@ -179,7 +179,7 @@ But most importantly, HAVE FUN! If problems arise contact a moderator"""
 
 
 class Vars:
-    def __init__(self, cfg: Config):
+    def __init__(self, cfg):
         self._vars: dict = dict()
         self._cfg: Config = cfg
         self._check_defaults()
