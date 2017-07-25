@@ -171,7 +171,7 @@ But most importantly, HAVE FUN! If problems arise contact a moderator"""
 
     @property
     def vars_file(self):
-        return self.cache_dir + 'vars.data'
+        return self.cache_dir + 'vars'  # File extensions are provided automatically by shelve.
 
     @property
     def env(self):
