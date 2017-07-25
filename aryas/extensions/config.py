@@ -32,6 +32,10 @@ class _Constants:
                     'user': {'type': 'string', 'required': True, 'default': default['aryas']['db']['user']},
                     'pass': {'type': 'string', 'required': True, 'default': default['aryas']['db']['pass']}
                 }},
+                'love': {'type': 'dict', 'required': False, 'default': default['aryas']['love'], 'schema': {
+                    'monthly_allowance':
+                        {'type': 'integer', 'required': False, 'default': default['aryas']['love']['monthly_allowance']}
+                }},
                 'env': {'type': 'string', 'required': False, 'default': default['aryas']['env'],
                         'allowed': ('prod', 'dev')},
                 'log_level': {'type': ['string', 'integer'], 'required': False,
@@ -127,6 +131,9 @@ But most importantly, HAVE FUN! If problems arise contact a moderator"""
                     'name': 'aryas',
                     'user': '',
                     'pass': ''
+                },
+                'love': {
+                    'monthly_allowance': 500
                 },
                 'env': 'prod',
                 'log_level': 0,
