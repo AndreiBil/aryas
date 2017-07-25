@@ -60,18 +60,25 @@ class _Constants:
 
     @property
     def rules_channels(self) -> str:
-        return """1. Use the appropriate channels for your question.
-2. Don't have anything relevant to add in the programming channels? Stay quiet!
-3. *#general* chat is for socializing with other peers, talk about life, parties, health, jobs and others, try to keep the topics serious , for rest use *#offtopic_chat*
-4. We have a channel for off-topic discussions, the channel is *#offtopic_chat* , use that for ex: fidget spinners discussions, iphone vs samsung discussions, etc
-5. Don't ask people for help in PMs. Use the designated channels instead.
-6. *#show_your_project* is a place where you can showplace your project. it must be hosted on github to be approved though."""
+        return ("1. Use the appropriate channels for your question.\n"
+                "2. Don't have anything relevant to add in the programming channels? Stay quiet!\n"
+                "3. *#general* chat is for socializing with other peers, talk about life, parties, health, "
+                "jobs and others, try to keep the topics serious , for rest use *#offtopic_chat*\n"
+                "4. We have a channel for off-topic discussions, the channel is *#offtopic_chat* , use that for ex: "
+                "fidget spinners discussions, iphone vs samsung discussions, etc\n"
+                "5. Don't ask people for help in PMs. Use the designated channels instead.\n"
+                "6. *#show_your_project* is a place where you can showplace your project; "
+                "it must be hosted on github to be approved.")
 
     @property
     def rules_roles(self) -> str:
-        return """1. **Trusted** role is given to people who are active in the community --> Trusted role allows you to post links and images. To receive this role you need to PM a moderator
-2. **Support** role is given to people who are active in the community and who help other people who are in need of help --> To achieve this role there are 2 ways, either people will recommend you or you can ask for it and if you are worthy, you will receive it .
-3. Language roles are given for now to support role only , in the future this might change!"""
+        return (
+            "1. **Trusted** role is given to people who are active in the community --> "
+            "Trusted role allows you to post links and images. To receive this role you need to PM a moderator\n"
+            "2. **Support** role is given to people who are active in the community and who help other people "
+            "who are in need of help --> To achieve this role there are 2 ways, either people will recommend you "
+            "or you can ask for it and if you are worthy, you will receive it .\n"
+            "3. Language roles are given for now to support role only , in the future this might change!")
 
     @property
     def rules_code_formatting(self) -> str:
