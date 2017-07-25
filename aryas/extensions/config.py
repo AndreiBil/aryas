@@ -7,6 +7,7 @@ import os
 
 import json
 import logging
+import shelve
 from typing import Set, Tuple
 
 from cerberus import Validator
@@ -157,13 +158,33 @@ But most importantly, HAVE FUN! If problems arise contact a moderator"""
         return self.cache_dir + 'cfg.json'
 
     @property
+    def vars_file(self):
+        return self.cache_dir + 'vars.data'
+
+    @property
     def env(self):
         return self._config['aryas']['env']
+
+
+class Vars:
+    def __init__(self, cfg: Config):
+        self._vars: dict = dict()
+        self._cfg: Config = cfg
+
+    def __getitem__(self, item):
+        with shelve.open(self._cfg.constants.vars_file, 'r') as shelf:
+            return shelf[item]
+
+    def __setitem__(self, key, value):
+        with shelve.open(self._cfg.constants.vars_file, 'w') as shelf:
+            shelf[key] = value
 
 
 class Config:
     def __init__(self):
         self._constants = _Constants(self)
+
+        self._vars = Vars(self)
 
         self._config_dict = self._parse_config()
 
@@ -178,7 +199,11 @@ class Config:
         return self._config_dict[item]
 
     @property
-    def logger(self):
+    def vars(self) -> Vars:
+        return self._vars
+
+    @property
+    def logger(self) -> logging.Logger:
         """
         Setups up the logger object to be used throughout the bot.
         This potentially belongs in its own extension.
@@ -218,7 +243,7 @@ class Config:
                 loaded = json.load(f)
 
             if not v.validate(loaded):
-                with open(self.constants.cache_dir+"cfg_errors.json", "w") as f:
+                with open(self.constants.cache_dir + "cfg_errors.json", "w") as f:
                     json.dump(v.errors, f, indent=2)
                 raise EarlyExitException('There were errors with your config!\n'
                                          'Error details were dumped to cfg_errors.json')
