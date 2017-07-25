@@ -16,6 +16,7 @@ from discord.ext import commands
 from peewee import Proxy
 
 from ..exceptions import EarlyExitException
+from ..utils.utility import in_channel
 
 
 class _Constants:
@@ -37,7 +38,10 @@ class _Constants:
                               'default': default['aryas']['log_level'], 'allowed': self.possible_log_levels},
                 'message_sleep_time': {'type': 'number', 'required': True,
                                        'default': default['aryas']['message_sleep_time']},
-                'mod_log_channel_name': {'type': 'string', 'required': True, 'empty': False}
+                'mod_log_channel_name': {'type': 'string', 'required': True, 'empty': False,
+                                         'default': default['aryas']['mod_log_channel_name']},
+                'bot_channel_name': {'type': 'string', 'required': False,
+                                     'default': default['aryas']['bot_channel_name']}
             }},
             'discord': {'type': 'dict', 'required': True, 'default': default['discord'], 'schema': {
                 'token': {'type': 'string', 'required': True, 'default': default['discord']['token'], 'empty': False}
@@ -127,7 +131,8 @@ But most importantly, HAVE FUN! If problems arise contact a moderator"""
                 'env': 'prod',
                 'log_level': 0,
                 'message_sleep_time': 2,
-                'mod_log_channel_name': 'mod_log'
+                'mod_log_channel_name': 'mod_log',
+                'bot_channel_name': 'bot_info_channel'
             },
             'discord': {
                 'token': ''
