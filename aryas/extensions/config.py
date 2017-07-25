@@ -27,7 +27,7 @@ class _Constants:
             'aryas': {'type': 'dict', 'required': True, 'default': default['aryas'], 'schema': {
                 'db': {'type': 'dict', 'required': True, 'default': default['aryas']['db'], 'schema': {
                     'host': {'type': 'string', 'required': True, 'default': default['aryas']['db']['host']},
-                    'name': {'type': 'string', 'required': True, 'default': default['aryas']['db']['name']},
+                    'name': {'type': 'string', 'required': False, 'default': default['aryas']['db']['name']},
                     'user': {'type': 'string', 'required': True, 'default': default['aryas']['db']['user']},
                     'pass': {'type': 'string', 'required': True, 'default': default['aryas']['db']['pass']}
                 }},
@@ -120,7 +120,7 @@ But most importantly, HAVE FUN! If problems arise contact a moderator"""
             'aryas': {
                 'db': {
                     'host': '127.0.0.1',
-                    'name': '',
+                    'name': 'aryas',
                     'user': '',
                     'pass': ''
                 },
