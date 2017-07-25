@@ -8,7 +8,8 @@ import os
 import json
 import logging
 import shelve
-from typing import Set, Tuple
+from datetime import datetime
+from typing import Set, Tuple, Dict, Callable
 
 from cerberus import Validator
 from discord.ext import commands
@@ -146,6 +147,17 @@ But most importantly, HAVE FUN! If problems arise contact a moderator"""
         return self._config_schema
 
     @property
+    def vars_defaults(self) -> Dict[str, Callable]:
+
+        # Vars schema guide:
+        #   'var_name': <supplier function for default value>
+        # If your default value is constant, just use lambda: myVal
+
+        return {
+            'last_love_reset': datetime.now
+        }
+
+    @property
     def cache_dir_raw(self) -> str:
         return '~/.aryas/'
 
@@ -170,14 +182,26 @@ class Vars:
     def __init__(self, cfg: Config):
         self._vars: dict = dict()
         self._cfg: Config = cfg
+        self._check_defaults()
+
+    def _open_shelf(self, flag):
+        if flag not in 'wrc':
+            raise ValueError('shelf flag must be \'w\', \'r\' or \'c\'')
+        return shelve.open(self._cfg.constants.vars_file, flag)
 
     def __getitem__(self, item):
-        with shelve.open(self._cfg.constants.vars_file, 'r') as shelf:
+        with self._open_shelf('r') as shelf:
             return shelf[item]
 
     def __setitem__(self, key, value):
-        with shelve.open(self._cfg.constants.vars_file, 'w') as shelf:
+        with self._open_shelf('w') as shelf:
             shelf[key] = value
+
+    def _check_defaults(self):
+        with self._open_shelf('c') as shelf:
+            for var_name, default_val_supplier in self._cfg.constants.vars_defaults.items():
+                if var_name not in shelf:
+                    shelf[var_name] = default_val_supplier()
 
 
 class Config:
