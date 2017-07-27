@@ -72,6 +72,13 @@ def get_models(config: Config) -> (Proxy, Models):
         def total_love(self) -> int:
             return sum([love.amount for love in LoveTransaction.select().where(LoveTransaction.receiver == self)])
 
+        @property
+        def remaining_givable_love(self) -> int:
+            return config['aryas']['love']['monthly_allowance'] - \
+                   sum([love.amount for love in LoveTransaction.select()
+                       .where((LoveTransaction.giver == self) &
+                              (LoveTransaction.created_at.between(config.vars['last_love_reset'], datetime.now())))])
+
     class Server(DiscordModel):
         """
         Models a Discord Server.
