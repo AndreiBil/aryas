@@ -8,7 +8,7 @@ import os
 import json
 import logging
 import shelve
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Set, Tuple, Dict, Callable
 
 from cerberus import Validator
@@ -16,7 +16,6 @@ from discord.ext import commands
 from peewee import Proxy
 
 from ..exceptions import EarlyExitException
-from ..utils.utility import in_channel
 
 
 class _Constants:
@@ -214,6 +213,10 @@ class Vars:
             for var_name, default_val_supplier in self._cfg.constants.vars_defaults.items():
                 if var_name not in shelf:
                     shelf[var_name] = default_val_supplier()
+
+    @property
+    def next_love_reset(self) -> datetime:
+        return self['last_love_reset'] + timedelta(days=30)
 
 
 class Config:
