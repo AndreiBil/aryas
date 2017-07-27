@@ -17,20 +17,22 @@ def setup(bot: commands.Bot) -> None:
     check_channel = in_bot_channel(config)
 
     class General:
-        async def on_member_join(self, member: discord.Member):
-            """
-            Sends a private message to new users with welcome information
-            :param member: the member
-            """
-            # Create embed
-            title = 'Welcome to Developers'
-            message = discord.Embed(title=title, color=config.constants.embed_color, timestamp=datetime.datetime.now())
-            message.add_field(name='General rules:', value=config.constants.rules_general, inline=False)
-            message.add_field(name='Channel related rules:', value=config.constants.rules_channels, inline=False)
-            message.add_field(name='Role related rules:', value=config.constants.rules_roles, inline=False)
-            message.add_field(name='Code formatting:', value=config.constants.rules_code_formatting, inline=False)
 
-            await bot.send_message(member, embed=message)
+        # (Commented out because it was throwing PEP8 warnings)
+        # async def on_member_join(self, member: discord.Member):
+        #   """
+        #   Sends a private message to new users with welcome information
+        #   :param member: the member
+        #   """
+        #   # Create embed
+        #   title = 'Welcome to Developers'
+        #   message = discord.Embed(title=title, color=config.constants.embed_color, timestamp=datetime.datetime.now())
+        #   message.add_field(name='General rules:', value=config.constants.rules_general, inline=False)
+        #   message.add_field(name='Channel related rules:', value=config.constants.rules_channels, inline=False)
+        #   message.add_field(name='Role related rules:', value=config.constants.rules_roles, inline=False)
+        #   message.add_field(name='Code formatting:', value=config.constants.rules_code_formatting, inline=False)
+        #
+        #   await bot.send_message(member, embed=message)
 
         @commands.command(pass_context=True, name='help')
         async def aryas_help(self, ctx, *commands_):
