@@ -165,14 +165,13 @@ def setup(bot: commands.Bot) -> None:
             """
             Gives info regarding the amount of love a user has
             """
-            if member is None:
-                member = ctx.message.author
-            love = orm.User.get(discord_id=member.id).total_love
-
-            if not love:
-                send(bot, '{} doesn\'t have any ❤'.format(member.mention, love), ctx.message.channel)
-            else:
-                send(bot, '{} has {}x❤'.format(member.mention, love), ctx.message.channel)
+            member = member if member is not None else ctx.message.author
+            user: orm.User = orm.User.get_or_create(discord_id=member.id)[0]
+            send(bot, ((f'{member.mention} has {user.total_love}❤' if user.total_love else
+                        f'{member.mention} doesn\'t have any ❤') +
+                       f' *({member.display_name} has {user.remaining_givable_love}❤ left to give until* '
+                       f'***{config.vars.next_love_reset.strftime("%Y/%m/%d")}*** *)*'),
+                 ctx.message.channel)
 
         @commands.command(pass_context=True)
         async def show_love(self, ctx: commands.Context, member: discord.Member, love: int) -> None:
