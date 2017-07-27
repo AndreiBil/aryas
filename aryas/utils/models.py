@@ -69,11 +69,8 @@ def get_models(config: Config) -> (Proxy, Models):
         notes = TextField(default='')
 
         @property
-        def total_love(self):
-            total = 0
-            for love in LoveTransaction.select().where(LoveTransaction.receiver == self):
-                total += love.amount
-            return total
+        def total_love(self) -> int:
+            return sum([love.amount for love in LoveTransaction.select().where(LoveTransaction.receiver == self)])
 
     class Server(DiscordModel):
         """
