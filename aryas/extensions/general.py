@@ -181,10 +181,10 @@ def setup(bot: commands.Bot) -> None:
             """
 
             if member == ctx.message.author:
-                await command_error(ctx, 'You can\'t give yourself love!')
+                await command_error(ctx, 'You can\'t give yourself ❤!')
 
-            if love < 0:
-                await command_error(ctx, 'You can\'t give someone negative love!')
+            if love <= 0:
+                await command_error(ctx, 'You must give at least 1❤!')
                 return
 
             msg = ctx.message
@@ -211,7 +211,7 @@ def setup(bot: commands.Bot) -> None:
                 channel=channel
             )
 
-            send(bot, '{} showed {}x❤ to {}'
+            send(bot, '{} showed {}❤ to {}'
                  .format(msg.author.mention, love, member.mention), ctx.message.channel)
 
         @commands.command(pass_context=True)
@@ -260,7 +260,7 @@ def setup(bot: commands.Bot) -> None:
             # result is a dictionary with list values
             service = build(config['google']['cse_name'], "v1", developerKey=config['google']['api_key'])
             query = str(ctx.message.content.lstrip("$search"))
-            result = service.cse().list(q=query, cx=config['google']['cse_id'], safe="medium",).execute()
+            result = service.cse().list(q=query, cx=config['google']['cse_id'], safe="medium", ).execute()
 
             try:
                 if 'items' in result and len(result['items']) > 0:
@@ -270,8 +270,8 @@ def setup(bot: commands.Bot) -> None:
                     else:
                         items = len(result['items'])
                     for i in range(items):
-                        lst += "**{}. {}**\n{}\n"\
-                               .format(i+1, result['items'][i]['title'], result['items'][i]['snippet'])
+                        lst += "**{}. {}**\n{}\n" \
+                            .format(i + 1, result['items'][i]['title'], result['items'][i]['snippet'])
                     send(bot, lst, ctx.message.channel, delete=True, time=20, show_dots=True)
                     response = await bot.wait_for_message(
                         timeout=20, author=ctx.message.author,
@@ -279,7 +279,7 @@ def setup(bot: commands.Bot) -> None:
                         check=lambda m: m.content.isnumeric() and int(m.content) in range(1, 6))
                     if response:
                         await bot.send_typing(ctx.message.channel)
-                        link = result['items'][int(response.content)-1]['link']
+                        link = result['items'][int(response.content) - 1]['link']
                         await bot.send_message(ctx.message.channel, link)
                 else:
                     await bot.send_message(ctx.message.channel, 'No results found.')
