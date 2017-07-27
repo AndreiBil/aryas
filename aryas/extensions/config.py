@@ -3,6 +3,7 @@ A special config extension. This extension does not hold any bot commands or eve
 to be used throughout the bot. All values in `cfg.json` can be accessed with standard dictionary, additional property
 methods are also available. Database variables should be accessed through the `db` property.
 """
+import asyncio
 import os
 
 import json
@@ -32,6 +33,8 @@ class _Constants:
                     'pass': {'type': 'string', 'required': True, 'default': default['aryas']['db']['pass']}
                 }},
                 'love': {'type': 'dict', 'required': False, 'default': default['aryas']['love'], 'schema': {
+                    'reset_check_interval': {'type': 'integer', 'required': False,
+                                             'default': default['aryas']['love']['reset_check_interval']},
                     'monthly_allowance':
                         {'type': 'integer', 'required': False, 'default': default['aryas']['love']['monthly_allowance']}
                 }},
@@ -132,6 +135,7 @@ But most importantly, HAVE FUN! If problems arise contact a moderator"""
                     'pass': ''
                 },
                 'love': {
+                    'reset_check_interval': 10,
                     'monthly_allowance': 500
                 },
                 'env': 'prod',
@@ -229,6 +233,8 @@ class Config:
 
         self._log = logging.getLogger('discord')
 
+        asyncio.ensure_future(self._check_love_reset())
+
     def __getitem__(self, item):
         """
 
@@ -297,6 +303,12 @@ class Config:
                 json.dump(normalized, f, indent=2)
 
         return normalized
+
+    async def _check_love_reset(self):
+        if datetime.now() > self.vars.next_love_reset:
+            self.vars['last_love_reset'] = datetime.now()
+        await asyncio.sleep(self['aryas']['love']['reset_check_interval']*60)
+        asyncio.ensure_future(self._check_love_reset())
 
 
 def setup(bot: commands.Bot) -> None:
