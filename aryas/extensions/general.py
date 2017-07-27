@@ -193,6 +193,13 @@ def setup(bot: commands.Bot) -> None:
             giver = orm.User.get_or_create(
                 discord_id=msg.author.id
             )[0]
+
+            if giver.remaining_givable_love < love:
+                await command_error(ctx, f'Not enough ❤! You only have '
+                                         f'{giver.remaining_givable_love}❤ left to give until '
+                                         f'**{config.vars.next_love_reset.strftime("%Y/%m/%d")}**.')
+                return
+
             receiver = orm.User.get_or_create(
                 discord_id=member.id
             )[0]
