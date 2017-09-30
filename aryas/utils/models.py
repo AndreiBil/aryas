@@ -1,5 +1,6 @@
-import datetime
+from datetime import datetime
 from peewee import *
+
 from ..extensions.config import Config
 
 
@@ -38,11 +39,11 @@ def get_models(config: Config) -> (Proxy, Models):
         """
         # All models have an auto incrementing integer primary key.
         id = PrimaryKeyField()
-        created_at = DateTimeField(default=datetime.datetime.now)
+        created_at = DateTimeField(default=datetime.now)
         updated_at = DateTimeField()
 
         def save(self, *args, **kwargs):
-            self.updated_at = datetime.datetime.now()
+            self.updated_at = datetime.now()
             return super(BaseModel, self).save(*args, **kwargs)
 
         class Meta:
@@ -68,11 +69,15 @@ def get_models(config: Config) -> (Proxy, Models):
         notes = TextField(default='')
 
         @property
-        def total_love(self):
-            total = 0
-            for love in LoveTransaction.select().where(LoveTransaction.receiver == self):
-                total += love.amount
-            return total
+        def total_love(self) -> int:
+            return sum([love.amount for love in LoveTransaction.select().where(LoveTransaction.receiver == self)])
+
+        @property
+        def remaining_givable_love(self) -> int:
+            return config['aryas']['love']['monthly_allowance'] - \
+                   sum([love.amount for love in LoveTransaction.select()
+                       .where((LoveTransaction.giver == self) &
+                              (LoveTransaction.created_at.between(config.vars['last_love_reset'], datetime.now())))])
 
     class Server(DiscordModel):
         """
